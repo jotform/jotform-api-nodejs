@@ -95,6 +95,24 @@ exports.getUserUsage = function(){
     return deferred.promise;
 }
 
+exports.getUserHistory = function(){
+    var deferred = Q.defer()
+    , endPoint = "/user/history"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
+exports.getUserInvoices = function(){
+    var deferred = Q.defer()
+    , endPoint = "/user/invoices"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
 exports.getUserReports = function(){
     var deferred = Q.defer()
     , endPoint = "/user/reports"
