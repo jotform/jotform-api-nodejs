@@ -1,0 +1,10 @@
+{
+  "name": "JotFormAPI-NodeJS",
+  "description": "JotFormAPI Client for NodeJS",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "request" : "2.21.0",
+    "q": "0.9.4"
+  }
+}
