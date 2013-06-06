@@ -12,9 +12,9 @@ var _url = defaults.url
 , request = require('request')
 , Q = require('q');
 
-function sendRequest(deferred, url, verb){
+function sendRequest(deferred, url, verb, postData){
     if(_debug){
-        console.log("Request URL:", url);
+        console.log(verb.toUpperCase() + " to URL:", url);
     }
 
     if(typeof _apiKey === "undefined"){
@@ -22,7 +22,16 @@ function sendRequest(deferred, url, verb){
     }
 
     else {
-        request({url: url, method: verb, json:true}, function(err, response, body){
+
+        var options = {
+            url: url, 
+            method: verb, 
+            json:true
+        }
+        if(verb==='post'){
+            options.body = typeof postData!=="undefined" ? require('querystring').stringify(postData) : ""
+        }
+        request(options, function(err, response, body){
             if(!err && response.statusCode == 200 && body.responseCode == 200){
                 deferred.resolve(body.content);
             }
@@ -217,6 +226,24 @@ exports.getUserSubmissionById = function(submissionId){
     var endPoint = "/submission"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+submissionId+"?apiKey="+_apiKey
     , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+exports.postSubmissionsByFormId = function(formId, submissions){
+    var deferred = Q.defer();
+    if(formId===undefined){
+        deferred.reject(new Error("Form ID is undefined"));
+    }
+
+    var endPoint = "/form"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/submissions"
+    , requestVerb =  "post"
+    , postData = {
+        apiKey: _apiKey,
+        submissions: submissions
+    }
+
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }

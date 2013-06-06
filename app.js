@@ -5,7 +5,7 @@ jf.options({
 	apiKey: "08311b2b434dbe05e5443784eb5852c5"
 });
 
-jf.getUserInvoices()
+jf.postSubmissionsByFormId("22851974964973")
 .then(function(r){
 	console.log("dsfdsf", r);
 })
