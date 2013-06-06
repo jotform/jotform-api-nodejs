@@ -230,14 +230,14 @@ exports.getUserSubmissionById = function(submissionId){
     return deferred.promise; 
 }
 
-exports.postSubmissionsByFormId = function(formId, submissions){
+exports.addSubmissionsByFormId = function(formId, submissions){
     var deferred = Q.defer();
     if(formId===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
 
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/submissions"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/submissions"+"?apiKey="+_apiKey
     , requestVerb =  "post"
     , postData = {
         apiKey: _apiKey,
@@ -247,5 +247,39 @@ exports.postSubmissionsByFormId = function(formId, submissions){
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
+
+exports.getWebhooksByFormID = function(formId){
+    var deferred = Q.defer();
+    if(formId===undefined){
+        deferred.reject(new Error("Form ID is undefined"));
+    }
+    var endPoint = "/form"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/webhooks"+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+exports.addWebhookToForm = function(formId, webhookURL){
+    var deferred = Q.defer();
+    if(formId===undefined){
+        deferred.reject(new Error("Form ID is undefined"));
+    }
+
+    if(webhookURL===undefined){
+        deferred.reject(new Error("webhookURL is undefined"));
+    }
+
+    var endPoint = "/form"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/webhooks"+"?apiKey="+_apiKey
+    , requestVerb =  "post"
+    , postData = {
+        webhookURL: webhookURL
+    }
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
 
 
