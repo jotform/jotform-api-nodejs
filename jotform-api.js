@@ -68,34 +68,7 @@ exports.getUser = function(){
     return deferred.promise;
 }
 
-exports.getUserForms = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/forms"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getUserFolders = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/folders"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getUserSettings = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/settings"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getUserUsage = function(){
+exports.getUsage = function(){
     var deferred = Q.defer()
     , endPoint = "/user/usage"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
@@ -104,25 +77,43 @@ exports.getUserUsage = function(){
     return deferred.promise;
 }
 
-exports.getUserHistory = function(){
+exports.getForms = function(){
     var deferred = Q.defer()
-    , endPoint = "/user/history"
+    , endPoint = "/user/forms"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
 }
 
-exports.getUserInvoices = function(){
+exports.getSubmissions = function(){
     var deferred = Q.defer()
-    , endPoint = "/user/invoices"
+    , endPoint = "user/submissions"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
 }
 
-exports.getUserReports = function(){
+exports.getSubusers = function(){
+    var deferred = Q.defer()
+    , endPoint = "user/subusers"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
+exports.getFolders = function(){
+    var deferred = Q.defer()
+    , endPoint = "/user/folders"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
+exports.getReports = function(){
     var deferred = Q.defer()
     , endPoint = "/user/reports"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
@@ -131,113 +122,83 @@ exports.getUserReports = function(){
     return deferred.promise;
 }
 
-exports.getUserSettingsBySettingKey = function(settingsKey){
-    var deferred = Q.defer();
-    if(settingsKey===undefined){
-        deferred.reject(new Error("Settings key is undefined"));
-    }
-    var endPoint = "/user/settings"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+settingsKey+"?apiKey="+_apiKey
+exports.getSettings = function(){
+    var deferred = Q.defer()
+    , endPoint = "/user/settings"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise; 
+    return deferred.promise;
 }
 
-exports.getFormById = function(formId){
+exports.getHistory = function(){
+    var deferred = Q.defer()
+    , endPoint = "/user/history"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
+exports.getForm = function(formID){
     var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
 
-exports.getFilesByFormId = function(formId){
+exports.getFormQuestions = function(formID){
     var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/files"+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/questions"+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
 
-exports.getQuestionsByFormId = function(formId){
+exports.getFormQuestion = function(formID, qid){
     var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
-    var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/questions"+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise; 
-}
-
-exports.getSubmissionsByFormId = function(formId){
-    var deferred = Q.defer();
-    if(formId===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/submissions"+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise; 
-}
-
-exports.getQuestionById = function(formId, questionId){
-    var deferred = Q.defer();
-    if(formId===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    if(questionId===undefined){
+    if(qid===undefined){
         deferred.reject(new Error("Question ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/question/"+questionId+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/question/"+qid+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
 
-exports.getUserReportById = function(reportId){
+exports.getFormSubmissions = function(formID){
     var deferred = Q.defer();
-    if(reportId===undefined){
-        deferred.reject(new Error("Report ID is undefined"));
+    if(formID===undefined){
+        deferred.reject(new Error("Form ID is undefined"));
     }
-    var endPoint = "/report"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+reportId+"?apiKey="+_apiKey
+    var endPoint = "/form"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
 
-exports.getUserSubmissionById = function(submissionId){
+exports.createFormSubmission = function(formID, submissions){
     var deferred = Q.defer();
-    if(submissionId===undefined){
-        deferred.reject(new Error("Submission ID is undefined"));
-    }
-    var endPoint = "/submission"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+submissionId+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise; 
-}
-
-exports.addSubmissionsByFormId = function(formId, submissions){
-    var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
 
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/submissions"+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
     , requestVerb =  "post"
     , postData = {
         apiKey: _apiKey,
@@ -248,21 +209,33 @@ exports.addSubmissionsByFormId = function(formId, submissions){
     return deferred.promise; 
 }
 
-exports.getWebhooksByFormID = function(formId){
+exports.getFormFiles = function(formID){
     var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/webhooks"+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/files"+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
 
-exports.addWebhookToForm = function(formId, webhookURL){
+exports.getFormWebhooks = function(formID){
     var deferred = Q.defer();
-    if(formId===undefined){
+    if(formID===undefined){
+        deferred.reject(new Error("Form ID is undefined"));
+    }
+    var endPoint = "/form"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/webhooks"+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+exports.createFormWebhook = function(formID, webhookURL){
+    var deferred = Q.defer();
+    if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
 
@@ -271,7 +244,7 @@ exports.addWebhookToForm = function(formId, webhookURL){
     }
 
     var endPoint = "/form"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formId+"/webhooks"+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/webhooks"+"?apiKey="+_apiKey
     , requestVerb =  "post"
     , postData = {
         webhookURL: webhookURL
@@ -280,6 +253,73 @@ exports.addWebhookToForm = function(formId, webhookURL){
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
 }
+
+exports.getSubmission = function(sid){
+    var deferred = Q.defer();
+    if(sid===undefined){
+        deferred.reject(new Error("Submission ID is undefined"));
+    }
+    var endPoint = "/submission"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+sid+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+exports.getReport = function(reportID){
+    var deferred = Q.defer();
+    if(reportID===undefined){
+        deferred.reject(new Error("Report ID is undefined"));
+    }
+    var endPoint = "/report"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+reportID+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+exports.getFolder = function(folderID){
+    var deferred = Q.defer();
+    if(folderID===undefined){
+        deferred.reject(new Error("Folder ID is undefined"));
+    }
+    var endPoint = "/folder"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+folderID+"?apiKey="+_apiKey
+    , requestVerb =  "get";
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
+
+
+
+
+
+
+// exports.getUserInvoices = function(){
+//     var deferred = Q.defer()
+//     , endPoint = "/user/invoices"
+//     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+//     , requestVerb =  "get";
+//     sendRequest(deferred, requestUrl, requestVerb);
+//     return deferred.promise;
+// }
+
+// exports.getUserSettingsBySettingKey = function(settingsKey){
+//     var deferred = Q.defer();
+//     if(settingsKey===undefined){
+//         deferred.reject(new Error("Settings key is undefined"));
+//     }
+//     var endPoint = "/user/settings"
+//     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+settingsKey+"?apiKey="+_apiKey
+//     , requestVerb =  "get";
+//     sendRequest(deferred, requestUrl, requestVerb);
+//     return deferred.promise; 
+// }
+
+
+
+
+
 
 
 
