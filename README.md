@@ -8,7 +8,7 @@ It was developed with promise pattern according to [CommonJS Promise Interface](
 
 ##Example
 
-var jotform = require("jotform-api-nodejs")
+'var jotform = require("jotform-api-nodejs")'
 
 jf.options({
 	debug: true,
