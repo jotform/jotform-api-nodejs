@@ -8,7 +8,8 @@ It was developed with promise pattern according to [CommonJS Promise Interface](
 
 ##Example
 
-'var jotform = require("jotform-api-nodejs")'
+```javascript
+var jotform = require("jotform-api-nodejs")
 
 jf.options({
 	debug: true,
@@ -22,6 +23,7 @@ jf.getUser()
 .fail(function(e){
 	/* handle error */
 }
+```
 
 See [Documentation](http://api.jotform.com) for full list of methods available
 
