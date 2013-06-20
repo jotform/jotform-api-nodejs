@@ -8,7 +8,7 @@
   "name": "jotform-api-nodejs",
   "description": "jotform-api-nodejs ==================",
   "version": "0.0.0",
-  "main": "JotForm.js",
+  "main": "jotform.js",
   "directories": {
     "test": "test"
   },
