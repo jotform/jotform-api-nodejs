@@ -1,4 +1,3 @@
-
 var defaults = {
     url: "http://api.jotform.com",
     apiKey: undefined,
