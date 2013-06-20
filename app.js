@@ -1,11 +1,11 @@
-var jf = require("./jotform-api");
+var jf = require("./jotform");
 
 jf.options({
 	debug: true,
-	apiKey: "08311b2b434dbe05e5443784eb5852c5"
+	apiKey: "f08b6b42e1737803390d37d7c33e80df"
 });
 
-jf.postSubmissionsByFormId("22851974964973")
+jf.getUser()
 .then(function(r){
 	console.log("dsfdsf", r);
 })
