@@ -1,12 +1,20 @@
-jotform-api-nodejs
-==================
+jotform-api-python 
+===============
+[JotForm API](http://api.jotform.com/docs/) - NodeJS Client
 
-##What's this?
+### Installation
 
-A Client for Jotform API written for NodeJS
-It was developed with promise pattern according to [CommonJS Promise Interface](http://wiki.commonjs.org/wiki/Promises) using [Request](https://github.com/mikeal/request) and [Q](https://github.com/kriskowal/q)
+npm install jotform
 
-##Example
+### Documentation
+
+You can find the docs for the API of this client at [http://api.jotform.com/docs/](http://api.jotform.com/docs)
+
+### Authentication
+
+JotForm API requires API key for all user related calls. You can create your API Keys at  [API section](http://www.jotform.com/myaccount/api) of My Account page.
+
+### Examples
 
 ```javascript
 var jotform = require("jotform")
