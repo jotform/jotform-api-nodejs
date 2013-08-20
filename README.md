@@ -1,4 +1,4 @@
-jotform-api-python 
+jotform-api-nodejs 
 ===============
 [JotForm API](http://api.jotform.com/docs/) - NodeJS Client
 
