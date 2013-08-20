@@ -5,9 +5,9 @@
   },
   "readmeFilename": "README.md",
   "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
-  "name": "jotform-api-nodejs",
-  "description": "jotform-api-nodejs ==================",
-  "version": "0.0.2",
+  "name": "jotform",
+  "description": "jotform API nodejs client",
+  "version": "0.0.3",
   "main": "jotform.js",
   "directories": {
     "test": "test"

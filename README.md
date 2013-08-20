@@ -9,7 +9,7 @@ It was developed with promise pattern according to [CommonJS Promise Interface](
 ##Example
 
 ```javascript
-var jotform = require("jotform-api-nodejs")
+var jotform = require("jotform")
 
 jf.options({
 	debug: true,
