@@ -146,10 +146,24 @@ exports.getSettings = function(){
     return deferred.promise;
 }
 
-exports.getHistory = function(){
+exports.getHistory = function(query){
+    var action, date, sortBy, startDate, endDate;
+    if (query && typeof query === 'object') {
+        action = query.action || action;
+        date = query.date || date;
+        sortBy = query.sortBy || sortBy;
+        startDate = query.startDate || startDate;
+        endDate = query.endDate || endDate;
+    }        
+
     var deferred = Q.defer()
     , endPoint = "/user/history"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey+
+        (action !== undefined ? "&action=" + action : "&action=all") + 
+        (date !== undefined ? "&date=" + date : "") + 
+        (sortBy !== undefined ? "&sortBy=" + sortBy : "&sortBy=ASC") + 
+        (startDate !== undefined ? "&startDate=" + startDate : "") + 
+        (endDate !== undefined ? "&endDate=" + endDate : "")    
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
