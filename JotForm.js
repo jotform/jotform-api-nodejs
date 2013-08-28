@@ -112,7 +112,7 @@ exports.getSubmissions = function(query){
 
 exports.getSubusers = function(){
     var deferred = Q.defer()
-    , endPoint = "user/subusers"
+    , endPoint = "/user/subusers"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
