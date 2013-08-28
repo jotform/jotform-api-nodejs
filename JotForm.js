@@ -208,13 +208,28 @@ exports.getFormQuestion = function(formID, qid){
     return deferred.promise; 
 }
 
-exports.getFormSubmissions = function(formID){
+exports.getFormSubmissions = function(formID, query){
+
+    var filter, offset, limit, orderby, direction;
+    if (query && typeof query === 'object') {
+        if (typeof query.filter === 'object' || query.filter) { filter = query.filter || filter; }
+        offset = query.offset || offset;
+        limit = query.limit || limit;
+        orderby = query.orderby || orderby;
+        if (query.direction === 'ASC' || query.direction === 'DESC') { direction =  query.direction || direction; }
+    }
+
     var deferred = Q.defer();
     if(formID===undefined){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
+        + (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") + 
+                (offset !== undefined ? "&offset=" + offset : "") + 
+                (limit !== undefined ? "&limit=" + limit : "") + 
+                (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") + 
+                (direction !== undefined ? "," + direction : "")
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
