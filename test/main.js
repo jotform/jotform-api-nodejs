@@ -38,12 +38,151 @@ jf.getSubmissions({
     offset: 10,
     limit: 10,
     filter: {"updated_at:lt": "2013"},
-    // orderby: "created_at",
+    orderby: "created_at",
     direction : 'ASC'
 })
 .then(function(r){
     /* successful response after request */
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getSubusers()
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getFolders()
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getReports()
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getSettings()
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getHistory({
+    action : 'formCreation',
+    date:'lastWeek',
+    sortBy : 'DESC',
+    startDate : '20/08/2013',
+    endDate : '27/08/2013'
+})
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getForm('30804287175961')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getFormQuestions('30804287175961')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getFormSubmissions('30804287175961', {
+    offset: 10,
+    limit: 10,
+    filter: {"updated_at:lt": "2013"},
+    orderby: "created_at",
+    direction : 'ASC'
+})
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.createFormSubmission('32393265075860', 
+    {
+        "submission[1]": "answer of Question 444",
+        "submission[2]": "answer of Question 555"
+
+    })
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+    console.log("error")
+});
+
+
+jf.getFormFiles('30804287175961')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getFormWebhooks('30804287175961')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.createFormWebhook('30804287175961', 'http://www.a.com/ppppp.php')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getSubmission("243510723431851030")
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getReport("32393972741057")
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+});
+
+jf.getFolder("511369454e0b63771d000003")
+.then(function(r){
     console.log(r);
+    // console.log(r);
 })
 .fail(function(e){
     /* handle error */
