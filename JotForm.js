@@ -29,7 +29,9 @@ function sendRequest(deferred, url, verb, postData){
             json:true
         }
         if(verb==='post'){
-            options.body = typeof postData!=="undefined" ? require('querystring').stringify(postData) : ""
+            console.log(postData);
+            options.form = typeof postData!=="undefined" ? postData : {};
+            // console.log(require('querystring').stringify(postData));
         }
         request(options, function(err, response, body){
             if(!err && response.statusCode == 200 && body.responseCode == 200){
@@ -244,12 +246,9 @@ exports.createFormSubmission = function(formID, submissions){
     var endPoint = "/form"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
     , requestVerb =  "post"
-    , postData = {
-        apiKey: _apiKey,
-        submissions: submissions
-    }
+    , postData = submissions
 
-    sendRequest(deferred, requestUrl, requestVerb);
+    sendRequest(deferred, requestUrl, requestVerb, postData);
     return deferred.promise; 
 }
 
