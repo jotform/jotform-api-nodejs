@@ -387,7 +387,7 @@ exports.cloneForm = function(formID) {
     return deferred.promise;     
 }
 
-exports.addQuestion = function(formID, questionData) {
+exports.addFormQuestion = function(formID, questionData) {
     var deferred = Q.defer();
     if(typeof questionData != 'object' || questionData == null) {
         return;
@@ -401,7 +401,7 @@ exports.addQuestion = function(formID, questionData) {
     return deferred.promise;     
 }
 
-exports.addQuestions = function(formID, questionData) {
+exports.addFormQuestions = function(formID, questionData) {
     var deferred = Q.defer();
     if(typeof questionData != 'object' || questionData == null) {
         return;
@@ -414,6 +414,17 @@ exports.addQuestions = function(formID, questionData) {
 
     sendRequest(deferred, requestUrl, requestVerb, postData);
     return deferred.promise;     
+}
+
+exports.deleteFormQuestion = function(formID, questionID) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID + "/question/" + questionID
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "delete";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;    
 }
 
 

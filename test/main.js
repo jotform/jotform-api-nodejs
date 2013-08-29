@@ -244,7 +244,7 @@ jf.getFolder("511369454e0b63771d000003")
 //     console.log('error on del')
 // });
 // 
-// jf.addQuestion( '32403867403956' ,
+// jf.addFormQuestion( '32403867403956' ,
 //     {
 //         "question[type]": "control_head",
 //         "question[text]": "Created form questions shit",
@@ -260,24 +260,32 @@ jf.getFolder("511369454e0b63771d000003")
 //     console.log("error on form creattion")
 // });
 // 
-jf.addQuestions( '32403867403956' ,
-    {
-        "questions":{
-            "1":{
-                "type":"control_head",
-                "text":"Text 111",
-                "name":"Header1"
-            }, "2":{
-                "type":"control_head",
-                "text":"Text 222",
-                "name":"Header2"
-            }
-        }
-    })
+// jf.addFormQuestions( '32403867403956' ,
+//     {
+//         "questions":{
+//             "1":{
+//                 "type":"control_head",
+//                 "text":"Text 111",
+//                 "name":"Header1"
+//             }, "2":{
+//                 "type":"control_head",
+//                 "text":"Text 222",
+//                 "name":"Header2"
+//             }
+//         }
+//     })
+// .then(function(r){
+//     // console.log(r);
+// })
+// .fail(function(e){
+//     /* handle error */
+//     console.log("error on form creattion")
+// });
+jf.deleteFormQuestion('32403867403956', '1')
 .then(function(r){
     // console.log(r);
 })
 .fail(function(e){
     /* handle error */
-    console.log("error on form creattion")
+    console.log('error on del')
 });
