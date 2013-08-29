@@ -254,6 +254,21 @@ exports.createFormSubmission = function(formID, submissions){
     return deferred.promise; 
 }
 
+exports.createFormSubmissions = function(formID, submissionData) {
+    var deferred = Q.defer();
+    if(typeof submissionData != 'object' || submissionData == null) {
+        return;
+    }
+
+    var endPoint = "/form/" + formID + "/submissions"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "put"
+    , postData = submissionData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
 exports.getFormFiles = function(formID){
     var deferred = Q.defer();
     if(formID===undefined){
@@ -299,6 +314,17 @@ exports.createFormWebhook = function(formID, webhookURL){
     return deferred.promise; 
 }
 
+exports.deleteFormWebhook = function(formID, webhookID) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID + "/webhooks/" + webhookID
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "delete";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;    
+}
+
 exports.getSubmission = function(sid){
     var deferred = Q.defer();
     if(sid===undefined){
@@ -309,6 +335,31 @@ exports.getSubmission = function(sid){
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+}
+
+exports.editSubmission = function(sid, submissionData) {
+    var deferred = Q.defer();
+    if(typeof submissionData != 'object' || submissionData == null) {
+        return;
+    }
+    var endPoint = "/submission/" + sid
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "post"
+    , postData = submissionData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
+exports.deleteSubmission = function(sid) {
+    var deferred = Q.defer();
+
+    var endPoint = "/submission/" + sid
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "delete";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;    
 }
 
 exports.getReport = function(reportID){
@@ -466,6 +517,19 @@ exports.addFormProperties = function(formID, propertyData) {
     sendRequest(deferred, requestUrl, requestVerb, postData);
     return deferred.promise;     
 }
+
+exports.getFormPropertyByKey = function(formID, key) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID + "/properties/" + key
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "get";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;     
+}
+
+
 
 
 
