@@ -281,9 +281,18 @@ jf.getFolder("511369454e0b63771d000003")
 //     /* handle error */
 //     console.log("error on form creattion")
 // });
-jf.deleteFormQuestion('32403867403956', '1')
+// jf.deleteFormQuestion('32403867403956', '1')
+// .then(function(r){
+//     // console.log(r);
+// })
+// .fail(function(e){
+//     /* handle error */
+//     console.log('error on del')
+// });
+
+jf.getFormProperties('32403867403956')
 .then(function(r){
-    // console.log(r);
+    console.log(r);
 })
 .fail(function(e){
     /* handle error */

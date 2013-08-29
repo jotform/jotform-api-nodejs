@@ -427,6 +427,46 @@ exports.deleteFormQuestion = function(formID, questionID) {
     return deferred.promise;    
 }
 
+exports.getFormProperties = function(formID) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID + "/properties"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "get";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;     
+}
+
+exports.addFormProperty = function(formID, propertyData) {
+    var deferred = Q.defer();
+    if(typeof propertyData != 'object' || propertyData == null) {
+        return;
+    }
+    var endPoint = "/form/" + formID + "/properties"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "post"
+    , postData = propertyData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
+exports.addFormProperties = function(formID, propertyData) {
+    var deferred = Q.defer();
+    if(typeof propertyData != 'object' || propertyData == null) {
+        return;
+    }
+
+    var endPoint = "/form/" + formID + "/properties"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "put"
+    , postData = propertyData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
 
 
 
