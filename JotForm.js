@@ -352,9 +352,9 @@ exports.createForm = function(formData) {
 
 exports.createForms = function(formsData) {
     var deferred = Q.defer();
-    // if(typeof formsData != 'object' || formsData == null) {
-    //     return;
-    // }
+    if(typeof formsData != 'object' || formsData == null) {
+        return;
+    }
 
     var endPoint = "/user/forms"
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
@@ -362,6 +362,28 @@ exports.createForms = function(formsData) {
     , postData = formsData
 
     sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
+exports.deleteForm = function(formID) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "delete";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;    
+}
+
+exports.cloneForm = function(formID) {
+    var deferred = Q.defer();
+
+    var endPoint = "/form/" + formID + "/clone"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "post";
+
+    sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;     
 }
 

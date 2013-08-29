@@ -205,26 +205,41 @@ jf.getFolder("511369454e0b63771d000003")
 //     console.log("error on form creattion")
 // });
 
-jf.createForms({
-    "questions" : [{
-        "type":"control_head",
-         "text":"Form Title-PUT th shit",
-         "order":"1",
-         "name":"Header"
-    }], 
-    "properties":{
-      "title":"New Form11- put the hit",
-      "height":"600"
-    }
-})
+// jf.createForms({
+//     "questions" : [{
+//         "type":"control_head",
+//          "text":"Form Title-PUT th shit",
+//          "order":"1",
+//          "name":"Header"
+//     }], 
+//     "properties":{
+//       "title":"New Form11- put the hit",
+//       "height":"600"
+//     }
+// })
+// .then(function(r){
+//     // console.log(r);
+// })
+// .fail(function(e){
+//     /* handle error */
+//     console.log("error on form creattion");
+//     console.log(e);
+// });
+
+jf.deleteForm('32404090109948')
 .then(function(r){
     // console.log(r);
 })
 .fail(function(e){
     /* handle error */
-    console.log("error on form creattion");
-    console.log(e);
+    console.log('error on del')
 });
 
-
-
+jf.cloneForm('32403867403956')
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+    console.log('error on del')
+});
