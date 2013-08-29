@@ -333,6 +333,21 @@ exports.getFolder = function(folderID){
     return deferred.promise; 
 }
 
+exports.createForm = function(formData) {
+    var deferred = Q.defer();
+    if(typeof formData != 'object' || formData == null) {
+        return;
+    }
+
+    var endPoint = "/user/forms"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "post"
+    , postData = formData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
 
 
 

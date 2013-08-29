@@ -181,11 +181,28 @@ jf.getReport("32393972741057")
 
 jf.getFolder("511369454e0b63771d000003")
 .then(function(r){
-    console.log(r);
     // console.log(r);
 })
 .fail(function(e){
     /* handle error */
+});
+
+jf.createForm(
+    {
+        "questions[0][type]": "control_head",
+        "questions[0][text]": "Created form title",
+        "questions[0][order]": "0",
+        "questions[0][name]":"Header",
+        "properties[title]": "Created by api 3",
+        "properties[height]" : "600"
+
+    })
+.then(function(r){
+    // console.log(r);
+})
+.fail(function(e){
+    /* handle error */
+    console.log("error on form creattion")
 });
 
 
