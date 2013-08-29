@@ -387,6 +387,20 @@ exports.cloneForm = function(formID) {
     return deferred.promise;     
 }
 
+exports.addQuestion = function(formID, questionData) {
+    var deferred = Q.defer();
+    if(typeof questionData != 'object' || questionData == null) {
+        return;
+    }
+    var endPoint = "/form/" + formID + "/questions"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "post"
+    , postData = questionData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
 
 
 

@@ -226,20 +226,36 @@ jf.getFolder("511369454e0b63771d000003")
 //     console.log(e);
 // });
 
-jf.deleteForm('32404090109948')
-.then(function(r){
-    // console.log(r);
-})
-.fail(function(e){
-    /* handle error */
-    console.log('error on del')
-});
+// jf.deleteForm('32404090109948')
+// .then(function(r){
+//     // console.log(r);
+// })
+// .fail(function(e){
+//     /* handle error */
+//     console.log('error on del')
+// });
 
-jf.cloneForm('32403867403956')
+// jf.cloneForm('32403867403956')
+// .then(function(r){
+//     // console.log(r);
+// })
+// .fail(function(e){
+//     /* handle error */
+//     console.log('error on del')
+// });
+// 
+jf.addQuestion( '32403867403956' ,
+    {
+        "question[type]": "control_head",
+        "question[text]": "Created form questions shit",
+        "question[order]": "1",
+        "question[name]":"clickTo",
+
+    })
 .then(function(r){
     // console.log(r);
 })
 .fail(function(e){
     /* handle error */
-    console.log('error on del')
+    console.log("error on form creattion")
 });
