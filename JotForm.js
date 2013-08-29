@@ -29,9 +29,11 @@ function sendRequest(deferred, url, verb, postData){
             json:true
         }
         if(verb==='post'){
-            console.log(postData);
             options.form = typeof postData!=="undefined" ? postData : {};
             // console.log(require('querystring').stringify(postData));
+        }
+        if(verb==='put') {
+            options.body = typeof postData!=="undefined" ? JSON.stringify(postData) : "{}";
         }
         request(options, function(err, response, body){
             if(!err && response.statusCode == 200 && body.responseCode == 200){
@@ -343,6 +345,21 @@ exports.createForm = function(formData) {
     , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
     , requestVerb =  "post"
     , postData = formData
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;     
+}
+
+exports.createForms = function(formsData) {
+    var deferred = Q.defer();
+    // if(typeof formsData != 'object' || formsData == null) {
+    //     return;
+    // }
+
+    var endPoint = "/user/forms"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb =  "put"
+    , postData = formsData
 
     sendRequest(deferred, requestUrl, requestVerb, postData);
     return deferred.promise;     
