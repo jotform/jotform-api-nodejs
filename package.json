@@ -8,7 +8,6 @@
   "name": "jotform",
   "description": "jotform API nodejs client",
   "version": "0.0.6",
-  "main": "jotform.js",
   "directories": {
     "test": "test"
   },
