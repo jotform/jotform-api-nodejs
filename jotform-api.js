@@ -290,7 +290,31 @@ exports.getFolder = function(folderID){
     return deferred.promise; 
 }
 
+exports.registerUser = function(username, password, email){
+    var deferred = Q.defer();
+    if(username===undefined){
+        deferred.reject(new Error("username is undefined"));
+    }
+    if(password===undefined){
+        deferred.reject(new Error("password is undefined"));
+    }
+    if(email===undefined){
+        deferred.reject(new Error("email is undefined"));
+    }
 
+
+    var endPoint = "/user"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+"register"
+    , requestVerb =  "post"
+    , postData = {
+        username: username,
+        password: password,
+        email: email
+    }
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise; 
+}
 
 
 
