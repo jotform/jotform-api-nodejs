@@ -19,12 +19,12 @@ JotForm API requires API key for all user related calls. You can create your API
 ```javascript
 var jotform = require("jotform")
 
-jf.options({
+jotform.options({
 	debug: true,
 	apiKey: "YOUR_API_KEY"
 });
 
-jf.getUser()
+jotform.getUser()
 .then(function(r){
 	/* successful response after request */
 })
