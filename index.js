@@ -81,10 +81,25 @@ exports.getUsage = function(){
     return deferred.promise;
 }
 
-exports.getForms = function(){
+exports.getForms = function(query){
+
+    var filter, offset, limit, orderby, direction;
+    if (query && typeof query === 'object') {
+        if (typeof query.filter === 'object' || query.filter) { filter = query.filter || filter; }
+        offset = query.offset || offset;
+        limit = query.limit || limit;
+        orderby = query.orderby || orderby;
+        if (query.direction === 'ASC' || query.direction === 'DESC') { direction =  query.direction || direction; }
+    } 
+
     var deferred = Q.defer()
     , endPoint = "/user/forms"
-    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"?apiKey="+_apiKey+
+            (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") + 
+            (offset !== undefined ? "&offset=" + offset : "") + 
+            (limit !== undefined ? "&limit=" + limit : "") + 
+            (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") + 
+            (direction !== undefined ? "," + direction : "")
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
