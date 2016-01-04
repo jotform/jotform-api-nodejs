@@ -99,6 +99,7 @@ exports.getForms = function(query){
             (offset !== undefined ? "&offset=" + offset : "") + 
             (limit !== undefined ? "&limit=" + limit : "") + 
             (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") + 
+            (fullText !== undefined ? "&fullText=" + fullText : "") +
             (direction !== undefined ? "," + direction : "")
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
@@ -107,13 +108,14 @@ exports.getForms = function(query){
 
 exports.getSubmissions = function(query){
 
-    var filter, offset, limit, orderby, direction;
+    var filter, offset, limit, orderby, direction, fullText;
     if (query && typeof query === 'object') {
         if (typeof query.filter === 'object' || query.filter) { filter = query.filter || filter; }
         offset = query.offset || offset;
         limit = query.limit || limit;
         orderby = query.orderby || orderby;
         if (query.direction === 'ASC' || query.direction === 'DESC') { direction =  query.direction || direction; }
+        fullText = query.fullText || fullText;
     } 
 
     var deferred = Q.defer()
