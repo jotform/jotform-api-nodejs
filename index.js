@@ -108,7 +108,7 @@ exports.getForms = function(query){
 
 exports.getSubmissions = function(query){
 
-    var filter, offset, limit, orderby, direction, fullText;
+    var filter, offset, limit, orderby, direction, fullText, nocache;
     if (query && typeof query === 'object') {
         if (typeof query.filter === 'object' || query.filter) { filter = query.filter || filter; }
         offset = query.offset || offset;
@@ -116,6 +116,7 @@ exports.getSubmissions = function(query){
         orderby = query.orderby || orderby;
         if (query.direction === 'ASC' || query.direction === 'DESC') { direction =  query.direction || direction; }
         fullText = query.fullText || fullText;
+        nocache = query.nocache || nocache;
     } 
 
     var deferred = Q.defer()
@@ -124,7 +125,8 @@ exports.getSubmissions = function(query){
             +_apiKey + (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") + 
             (offset !== undefined ? "&offset=" + offset : "") + 
             (limit !== undefined ? "&limit=" + limit : "") + 
-            (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") + 
+            (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") +
+            (nocache !== undefined ? "&nocache=" + nocache : "") +
             (direction !== undefined ? "," + direction : "")
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
