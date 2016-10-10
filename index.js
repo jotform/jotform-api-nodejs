@@ -83,7 +83,7 @@ exports.getUsage = function(){
 
 exports.getForms = function(query){
 
-    var filter, offset, limit, orderby, direction;
+    var filter, offset, limit, orderby, direction, fullText;
     if (query && typeof query === 'object') {
         if (typeof query.filter === 'object' || query.filter) { filter = query.filter || filter; }
         offset = query.offset || offset;
