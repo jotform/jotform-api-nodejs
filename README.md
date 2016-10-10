@@ -4,7 +4,9 @@ jotform-api-nodejs
 
 ### Installation
 
-npm install jotform
+```sh
+$ npm install jotform
+```
 
 ### Documentation
 
@@ -33,5 +35,5 @@ jotform.getUser()
 }
 ```
 
-See [Documentation](http://api.jotform.com) for full list of methods available
+See [Documentation](http://api.jotform.com) for full list of methods available.
 
