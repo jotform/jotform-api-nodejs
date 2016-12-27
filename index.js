@@ -2,13 +2,15 @@ var defaults = {
     url: "http://api.jotform.com",
     apiKey: undefined,
     version: "latest",
-    debug: false
+    debug: false,
+    timeout: null
 }
 
 var _url = defaults.url
 , _apiKey = defaults.apiKey
 , _version = defaults.version
 , _debug = defaults.debug
+, _timeout = defaults.timeout
 , request = require('request')
 , Q = require('q');
 
@@ -26,7 +28,8 @@ function sendRequest(deferred, url, verb, postData){
         var options = {
             url: url, 
             method: verb, 
-            json:true
+            json:true,
+            timeout: _timeout,
         }
         if(verb==='post'){
             options.form = typeof postData!=="undefined" ? postData : {};
@@ -36,14 +39,15 @@ function sendRequest(deferred, url, verb, postData){
             options.body = typeof postData!=="undefined" ? JSON.stringify(postData) : "{}";
         }
         request(options, function(err, response, body){
-            if(!err && response.statusCode == 200 && body.responseCode == 200){
+            if(err){
+                deferred.reject(err);
+                return;
+            }
+            if(response.statusCode == 200 && body.responseCode == 200){
                 deferred.resolve(body.content);
             }
             if(response.statusCode != 200){
                 deferred.reject(new Error(body.message));
-            }
-            if(err){
-                deferred.reject(new Error("Error while request, reason unknown"));
             }
         });
     }
@@ -56,7 +60,8 @@ exports.options = function(options){
     _url = options.url || defaults.url
     , _apiKey = options.apiKey || defaults.apiKey
     , _version = options.version || defaults.version
-    , _debug = options.debug || defaults.debug;
+    , _debug = options.debug || defaults.debug
+    , _timeout = options.timeout || defaults.timeout;
 
     if(_debug){
         console.log("jotform API client options\n", {url: _url, apiKey: _apiKey, version: _version, debug: _debug});
