@@ -1,3 +1,7 @@
+var Q = require("q");
+var qs = require("qs");
+var request = require("request");
+
 var defaults = {
     url: "http://api.jotform.com",
     apiKey: undefined,
@@ -10,9 +14,7 @@ var _url = defaults.url
 , _apiKey = defaults.apiKey
 , _version = defaults.version
 , _debug = defaults.debug
-, _timeout = defaults.timeout
-, request = require('request')
-, Q = require('q');
+, _timeout = defaults.timeout;
 
 function sendRequest(deferred, url, verb, postData){
     if(_debug){

@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "q": "^0.9.4",
+    "qs": "^6.5.2",
     "request": "^2.88.0"
   },
   "readmeFilename": "README.md",
