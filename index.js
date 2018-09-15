@@ -12,7 +12,6 @@ var _url = defaults.url
 , _apiKey = defaults.apiKey
 , _debug = defaults.debug
 , request = require('request')
-, Q = require('q');
 
 function sendRequest(deferred, url, verb, postData){
     if(_debug){
@@ -84,7 +83,7 @@ exports.getUsage = function(){
 
 exports.getForms = function(query){
 
-    let query = query || {}
+    query = query || {}
     , filter = query.filter || {}
     , offset = query.offset || ""
     , limit = query.limit || ""
@@ -109,11 +108,11 @@ exports.getSubmissions = function(query){
 
     query = query || {};
     var filter = query.filter || {}
-    , offset = query.offset || "";
-    , limit = query.limit || "";
-    , orderby = query.orderby || "";
-    , direction = query.direction || "";
-    , fullText = query.fullText || "";
+    , offset = query.offset || ""
+    , limit = query.limit || ""
+    , orderby = query.orderby || ""
+    , direction = query.direction || ""
+    , fullText = query.fullText || ""
     , nocache = query.nocache || "";
 
     var deferred = Q.defer()
