@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "request": "2.21.0",
-    "q": "0.9.4"
+    "q": "^0.9.4",
+    "request": "^2.88.0"
   },
   "readmeFilename": "README.md",
   "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
@@ -11,7 +11,9 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
   "scripts": {
     "test": "mocha test/*.js"
   },
