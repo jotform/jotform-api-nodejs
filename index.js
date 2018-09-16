@@ -1,5 +1,4 @@
 var Q = require("q");
-var qs = require("qs");
 var request = require("request");
 
 var defaults = {
@@ -10,44 +9,44 @@ var defaults = {
 
 var _url = defaults.url
 , _apiKey = defaults.apiKey
-, _debug = defaults.debug
-, request = require('request')
+, _debug = defaults.debug;
 
-function sendRequest(deferred, url, verb, postData){
-    if(_debug){
-        console.log(verb.toUpperCase() + " to URL:", url);
-    }
+/* sends a request, returns a promise 
+ * path: gets appended to _url.
+ * verb: HTTP verb
+ * opts: options object
+ *	params: url params, encoded with qs
+ *	data: request body
+ */
+function sendRequest(path, verb, opts){
+    if(!_apiKey)
+        throw new Error("API Key is undefined");
 
-    if(typeof _apiKey === "undefined"){
-        deferred.reject(new Error("API Key is undefined"));
-    }
+    opts = opts || {};
+    params = opts.params || {};
+    params.apiKey = _apiKey;
 
-    else {
+    var options = {
+        url: _url + path,
+        method: verb,
+        json: true,
+        qs: params,
+        body: opts.data || {}
+    };
+    if(_debug)
+        console.log(verb.toUpperCase() + " to URL:", options.url);
 
-        var options = {
-            url: url,
-            method: verb,
-            json: true,
+    var defer = Q.defer();
+    request(options, function(err, response, body){
+        if(err){
+            defer.reject(err);
+        }else if(response.statusCode == 200 && body.responseCode == 200){
+            defer.resolve(body.content);
+        }else{
+            defer.reject(new Error(body.message));
         }
-        if(verb==='post'){
-            options.form = typeof postData!=="undefined" ? postData : {};
-        }
-        if(verb==='put') {
-            options.body = typeof postData!=="undefined" ? JSON.stringify(postData) : "{}";
-        }
-        request(options, function(err, response, body){
-            if(err){
-                deferred.reject(err);
-                return;
-            }
-            if(response.statusCode == 200 && body.responseCode == 200){
-                deferred.resolve(body.content);
-            }
-            else{
-                deferred.reject(new Error(body.message));
-            }
-        });
-    }
+    });
+    return defer.promise;
 }
 
 exports.options = function(options){
@@ -56,7 +55,7 @@ exports.options = function(options){
 
     _url = options.url || defaults.url
     , _apiKey = options.apiKey || defaults.apiKey
-    , _debug = options.debug || defaults.debug
+    , _debug = options.debug || defaults.debug;
 
     if(_debug){
         console.log("jotform API client options\n", {url: _url, apiKey: _apiKey, debug: _debug});
@@ -64,44 +63,18 @@ exports.options = function(options){
 }
 
 exports.getUser = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/user", "get");
 }
 
 exports.getUsage = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/usage"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/user/usage", "get");
 }
 
 exports.getForms = function(query){
-
-    query = query || {}
-    , filter = query.filter || {}
-    , offset = query.offset || ""
-    , limit = query.limit || ""
-    , orderby = query.orderby || ""
-    , direction = query.direction || "";
-
-    var deferred = Q.defer()
-    , endPoint = "/user/forms"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey+
-            (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") +
-            (offset !== undefined ? "&offset=" + offset : "") +
-            (limit !== undefined ? "&limit=" + limit : "") +
-            (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") +
-            (fullText !== undefined ? "&fullText=" + fullText : "") +
-            (direction !== undefined ? "," + direction : "")
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    query = query || {};
+    if(query.filter)
+        query.filter = JSON.stringify(query.filter);
+    return sendRequest("/user/forms", "get", { params: query });
 }
 
 exports.getSubmissions = function(query){
