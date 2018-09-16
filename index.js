@@ -43,7 +43,7 @@ function sendRequest(deferred, url, verb, postData){
             if(response.statusCode == 200 && body.responseCode == 200){
                 deferred.resolve(body.content);
             }
-            if(response.statusCode != 200){
+            else{
                 deferred.reject(new Error(body.message));
             }
         });
@@ -221,8 +221,8 @@ exports.getFormQuestion = function(formID, qid){
         deferred.reject(new Error("Question ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/question/"+qid+"?apiKey="+_apiKey
-    , requestVerb =  "get";
+    , requestUrl = _url + endPoint + "/" + formID + "/question/" + qid + "?apiKey=" + _apiKey
+    , requestVerb = "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
 }
@@ -242,7 +242,7 @@ exports.getFormSubmissions = function(formID, query){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
+    , requestUrl = _url + endPoint + "/" + formID + "/submissions" + "?apiKey=" + _apiKey
         + (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") +
                 (offset !== undefined ? "&offset=" + offset : "") +
                 (limit !== undefined ? "&limit=" + limit : "") +
@@ -289,7 +289,7 @@ exports.getFormFiles = function(formID){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/files"+"?apiKey="+_apiKey
+    , requestUrl = _url + endPoint + "/" + formID + "/files" + "?apiKey=" + _apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
@@ -301,7 +301,7 @@ exports.getFormWebhooks = function(formID){
         deferred.reject(new Error("Form ID is undefined"));
     }
     var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/webhooks"+"?apiKey="+_apiKey
+    , requestUrl = _url + endPoint + "/" + formID + "/webhooks" + "?apiKey=" + _apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
@@ -382,7 +382,7 @@ exports.getReport = function(reportID){
         deferred.reject(new Error("Report ID is undefined"));
     }
     var endPoint = "/report"
-    , requestUrl = _url + endPoint+"/"+reportID+"?apiKey="+_apiKey
+    , requestUrl = _url + endPoint + "/" + reportID + "?apiKey=" + _apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
@@ -394,7 +394,7 @@ exports.getFolder = function(folderID){
         deferred.reject(new Error("Folder ID is undefined"));
     }
     var endPoint = "/folder"
-    , requestUrl = _url + endPoint+"/"+folderID+"?apiKey="+_apiKey
+    , requestUrl = _url + endPoint + "/" + folderID + "?apiKey=" + _apiKey
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;
