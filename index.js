@@ -4,12 +4,12 @@ var request = require("request");
 var defaults = {
     url: "http://api.jotform.com",
     apiKey: undefined,
-    debug: false,
+    debug: false
 }
 
-var _url = defaults.url
-, _apiKey = defaults.apiKey
-, _debug = defaults.debug;
+var _url = defaults.url;
+var _apiKey = defaults.apiKey;
+var _debug = defaults.debug;
 
 /* sends a request, returns a promise 
  * path: gets appended to _url.
@@ -23,16 +23,21 @@ function sendRequest(path, verb, opts){
         throw new Error("API Key is undefined");
 
     opts = opts || {};
-    params = opts.params || {};
+    var params = opts.params || {};
     params.apiKey = _apiKey;
+    var data = opts.data || {};
 
     var options = {
         url: _url + path,
         method: verb,
         json: true,
-        qs: params,
-        body: opts.data || {}
+        qs: params
     };
+    if(verb == "post")
+        options.form = data;
+    if(verb == "put")
+        options.body = data;
+
     if(_debug)
         console.log(verb.toUpperCase() + " to URL:", options.url);
 
@@ -50,12 +55,11 @@ function sendRequest(path, verb, opts){
 }
 
 exports.options = function(options){
-
-    if(!options) options = {};
+    var options = options || {};
 
     _url = options.url || defaults.url
-    , _apiKey = options.apiKey || defaults.apiKey
-    , _debug = options.debug || defaults.debug;
+    _apiKey = options.apiKey || defaults.apiKey
+    _debug = options.debug || defaults.debug;
 
     if(_debug){
         console.log("jotform API client options\n", {url: _url, apiKey: _apiKey, debug: _debug});
@@ -70,6 +74,97 @@ exports.getUsage = function(){
     return sendRequest("/user/usage", "get");
 }
 
+exports.getSubmissions = function(query){
+    query = query || {};
+    if(query.filter)
+        query.filter = JSON.stringify(query.filter);
+    return sendRequest("/user/submissions", "get", { params: query });
+}
+
+exports.getSubusers = function(){
+    return sendRequest("/user/subusers", "get");
+}
+
+exports.getFolders = function(){
+    return sendRequest("/user/folders", "get");
+}
+
+exports.getReports = function(){
+    return sendRequest("/user/reports", "get");
+}
+
+exports.getSettings = function(){
+    return sendRequest("/user/settings", "get");
+}
+
+exports.getHistory = function(query){
+    return sendRequest("/user/history", "get", { params: query });
+}
+
+exports.getForm = function(formID){
+    return sendRequest("/form/"+formID, "get");
+}
+
+exports.getFormQuestions = function(formID){
+    return sendRequest("/form/"+formID+"/questions", "get");
+}
+
+exports.getFormQuestion = function(formID, qid){
+    return sendRequest("/form/"+formID+"/question/"+qid, "get");
+}
+
+exports.getFormSubmissions = function(formID, query){
+    query = query || {};
+    if(query.filter)
+        query.filter = JSON.stringify(query.filter);
+    return sendRequest("/form/"+formID+"/submissions", "get", { params: query });
+}
+
+exports.createFormSubmission = function(formID, submissions){
+    return sendRequest("/form/"+formID+"/submissions", "post", { data: submissions });
+}
+
+exports.createFormSubmissions = function(formID, submissionData) {
+    return sendRequest("/form/"+formID+"/submissions", "put", { data: submissionData });
+}
+
+exports.getFormFiles = function(formID){
+    return sendRequest("/form/"+formID+"/files", "get");
+}
+
+exports.getFormWebhooks = function(formID){
+    return sendRequest("/form/"+formID+"/webhooks", "get");
+}
+
+exports.createFormWebhook = function(formID, webhookURL){
+    var data = { webhookURL: webhookURL };
+    return sendRequest("/form/"+formID+"/webhooks", "post", { data: data });
+}
+
+exports.deleteFormWebhook = function(formID, webhookID) {
+    return sendRequest("/form/"+formID+"/webhooks/"+webhookID, "delete");
+}
+
+exports.getSubmission = function(sid){
+    return sendRequest("/submission/"+sid, "get");
+}
+
+exports.editSubmission = function(sid, submissionData) {
+    return sendRequest("/submission/"+sid, "post", { data: submissionData });
+}
+
+exports.deleteSubmission = function(sid) {
+    return sendRequest("/submission/"+sid, "delete");
+}
+
+exports.getReport = function(reportID){
+    return sendRequest("/report/"+reportID, "get");
+}
+
+exports.getFolder = function(folderID){
+    return sendRequest("/folder/"+folderID, "get");
+}
+
 exports.getForms = function(query){
     query = query || {};
     if(query.filter)
@@ -77,441 +172,46 @@ exports.getForms = function(query){
     return sendRequest("/user/forms", "get", { params: query });
 }
 
-exports.getSubmissions = function(query){
-
-    query = query || {};
-    var filter = query.filter || {}
-    , offset = query.offset || ""
-    , limit = query.limit || ""
-    , orderby = query.orderby || ""
-    , direction = query.direction || ""
-    , fullText = query.fullText || ""
-    , nocache = query.nocache || "";
-
-    var deferred = Q.defer()
-    , endPoint = "/user/submissions"
-    , requestUrl = _url + endPoint+"?apiKey="
-            +_apiKey + (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") +
-            (offset !== undefined ? "&offset=" + offset : "") +
-            (limit !== undefined ? "&limit=" + limit : "") +
-            (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") +
-            (nocache !== undefined ? "&nocache=" + nocache : "") +
-            (direction !== undefined ? "," + direction : "")
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getSubusers = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/subusers"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFolders = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/folders"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getReports = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/reports"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getSettings = function(){
-    var deferred = Q.defer()
-    , endPoint = "/user/settings"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getHistory = function(query){
-
-    query = query || {};
-    var action = query.action || ""
-    , date = query.date || ""
-    , sortBy = query.sortBy || ""
-    , startDate = query.startDate || ""
-    , endDate = query.endDate || "";
-
-
-    var deferred = Q.defer()
-    , endPoint = "/user/history"
-    , requestUrl = _url + endPoint+"?apiKey="+_apiKey+
-        (action !== undefined ? "&action=" + action : "&action=all") +
-        (date !== undefined ? "&date=" + date : "") +
-        (sortBy !== undefined ? "&sortBy=" + sortBy : "&sortBy=ASC") +
-        (startDate !== undefined ? "&startDate=" + startDate : "") +
-        (endDate !== undefined ? "&endDate=" + endDate : "")
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getForm = function(formID){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFormQuestions = function(formID){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/questions"+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFormQuestion = function(formID, qid){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    if(qid===undefined){
-        deferred.reject(new Error("Question ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint + "/" + formID + "/question/" + qid + "?apiKey=" + _apiKey
-    , requestVerb = "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFormSubmissions = function(formID, query){
-
-    query = query || {};
-
-    var filter = query.filter || {}
-    , offset = query.offset || ""
-    , limit = query.limit || ""
-    , orderby = query.orderby || ""
-    , direction = query.direction || "";
-
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint + "/" + formID + "/submissions" + "?apiKey=" + _apiKey
-        + (filter !== undefined ? "&filter=" + JSON.stringify(filter) : "") +
-                (offset !== undefined ? "&offset=" + offset : "") +
-                (limit !== undefined ? "&limit=" + limit : "") +
-                (orderby !== undefined ? "&orderby=" + orderby : "&orderby=created_at") +
-                (direction !== undefined ? "," + direction : "")
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.createFormSubmission = function(formID, submissions){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/submissions"+"?apiKey="+_apiKey
-    , requestVerb =  "post"
-    , postData = submissions
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
-}
-
-exports.createFormSubmissions = function(formID, submissionData) {
-    var deferred = Q.defer();
-    if(typeof submissionData != 'object' || submissionData == null) {
-        return;
-    }
-
-    var endPoint = "/form/" + formID + "/submissions"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "put"
-    , postData = submissionData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
-}
-
-exports.getFormFiles = function(formID){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint + "/" + formID + "/files" + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFormWebhooks = function(formID){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint + "/" + formID + "/webhooks" + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.createFormWebhook = function(formID, webhookURL){
-    var deferred = Q.defer();
-    if(formID===undefined){
-        deferred.reject(new Error("Form ID is undefined"));
-    }
-
-    if(webhookURL===undefined){
-        deferred.reject(new Error("webhookURL is undefined"));
-    }
-
-    var endPoint = "/form"
-    , requestUrl = _url + endPoint+"/"+formID+"/webhooks"+"?apiKey="+_apiKey
-    , requestVerb =  "post"
-    , postData = {
-        webhookURL: webhookURL
-    }
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
-}
-
-exports.deleteFormWebhook = function(formID, webhookID) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID + "/webhooks/" + webhookID
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "delete";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getSubmission = function(sid){
-    var deferred = Q.defer();
-    if(sid===undefined){
-        deferred.reject(new Error("Submission ID is undefined"));
-    }
-    var endPoint = "/submission"
-    , requestUrl = _url + endPoint+"/"+sid+"?apiKey="+_apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.editSubmission = function(sid, submissionData) {
-    var deferred = Q.defer();
-    if(typeof submissionData != 'object' || submissionData == null) {
-        return;
-    }
-    var endPoint = "/submission/" + sid
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "post"
-    , postData = submissionData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
-}
-
-exports.deleteSubmission = function(sid) {
-    var deferred = Q.defer();
-
-    var endPoint = "/submission/" + sid
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "delete";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getReport = function(reportID){
-    var deferred = Q.defer();
-    if(reportID===undefined){
-        deferred.reject(new Error("Report ID is undefined"));
-    }
-    var endPoint = "/report"
-    , requestUrl = _url + endPoint + "/" + reportID + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
-exports.getFolder = function(folderID){
-    var deferred = Q.defer();
-    if(folderID===undefined){
-        deferred.reject(new Error("Folder ID is undefined"));
-    }
-    var endPoint = "/folder"
-    , requestUrl = _url + endPoint + "/" + folderID + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
-}
-
 exports.createForm = function(formData) {
-    var deferred = Q.defer();
-    if(typeof formData != 'object' || formData == null) {
-        return;
-    }
-
-    var endPoint = "/user/forms"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "post"
-    , postData = formData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/user/forms", "post", { data: formData });
 }
 
 exports.createForms = function(formsData) {
-    var deferred = Q.defer();
-    if(typeof formsData != 'object' || formsData == null) {
-        return;
-    }
-
-    var endPoint = "/user/forms"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "put"
-    , postData = formsData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/user/forms", "put", { data: formsData });
 }
 
 exports.deleteForm = function(formID) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "delete";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/form/"+formID, "delete");
 }
 
 exports.cloneForm = function(formID) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID + "/clone"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "post";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/clone", "post");
 }
 
 exports.addFormQuestion = function(formID, questionData) {
-    var deferred = Q.defer();
-    if(typeof questionData != 'object' || questionData == null) {
-        return;
-    }
-    var endPoint = "/form/" + formID + "/questions"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "post"
-    , postData = questionData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/questions", "post", { data: questionData });
 }
 
 exports.addFormQuestions = function(formID, questionData) {
-    var deferred = Q.defer();
-    if(typeof questionData != 'object' || questionData == null) {
-        return;
-    }
-
-    var endPoint = "/form/" + formID + "/questions"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "put"
-    , postData = questionData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/questions", "put", { data: questionData });
 }
 
 exports.deleteFormQuestion = function(formID, questionID) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID + "/question/" + questionID
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "delete";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/question/"+questionID, "delete");
 }
 
 exports.getFormProperties = function(formID) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID + "/properties"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/properties", "get");
 }
 
 exports.addFormProperty = function(formID, propertyData) {
-    var deferred = Q.defer();
-    if(typeof propertyData != 'object' || propertyData == null) {
-        return;
-    }
-    var endPoint = "/form/" + formID + "/properties"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "post"
-    , postData = propertyData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/properties", "post", { data: propertyData });
 }
 
 exports.addFormProperties = function(formID, propertyData) {
-    var deferred = Q.defer();
-    if(typeof propertyData != 'object' || propertyData == null) {
-        return;
-    }
-
-    var endPoint = "/form/" + formID + "/properties"
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "put"
-    , postData = propertyData
-
-    sendRequest(deferred, requestUrl, requestVerb, postData);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/properties", "put", { data: propertyData });
 }
 
 exports.getFormPropertyByKey = function(formID, key) {
-    var deferred = Q.defer();
-
-    var endPoint = "/form/" + formID + "/properties/" + key
-    , requestUrl = _url + endPoint + "?apiKey=" + _apiKey
-    , requestVerb =  "get";
-
-    sendRequest(deferred, requestUrl, requestVerb);
-    return deferred.promise;
+    return sendRequest("/form/"+formID+"/properties/"+key, "get");
 }
