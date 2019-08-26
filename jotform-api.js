@@ -1,8 +1,9 @@
 var defaults = {
-    url: "http://api.jotform.com",
+    url: "https://api.jotform.com",
     apiKey: undefined,
     version: "latest",
-    debug: false
+    debug: false,
+    timeout: 10000 // 10 seconds
 }
 
 var _url = defaults.url
