@@ -7,7 +7,7 @@
   "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
   "name": "jotform",
   "description": "jotform API nodejs client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "directories": {
     "test": "test"
   },
