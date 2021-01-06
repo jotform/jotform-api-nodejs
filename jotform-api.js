@@ -265,6 +265,21 @@ exports.getSubmission = function(sid){
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+
+exports.updateSubmission = function(sid, submission){
+    var deferred = Q.defer();
+    if(sid===undefined){
+      deferred.reject(new Error("Submission ID is undefined"));
+    }
+    var endPoint = "/submission"
+    , requestUrl = _url + (_version==="latest" ? "" : "/v"+_version)+endPoint+"/"+sid
+    , requestVerb =  "post"
+    , postData = {
+        apiKey: _apiKey,
+        submissions: submission
+    }
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;
 }
 
 exports.getReport = function(reportID){
