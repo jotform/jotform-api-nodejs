@@ -265,6 +265,7 @@ exports.getSubmission = function(sid){
     , requestVerb =  "get";
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+}
 
 exports.updateSubmission = function(sid, submission){
     var deferred = Q.defer();
