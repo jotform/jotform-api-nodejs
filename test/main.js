@@ -1,4 +1,4 @@
-var jf = require("../JotForm")
+var jf = require("../.")
 
 
 jf.options({
@@ -124,7 +124,7 @@ jf.getFormSubmissions('30804287175961', {
     /* handle error */
 });
 
-jf.createFormSubmission('32393265075860', 
+jf.createFormSubmission('32393265075860',
     {
         "submission[1]": "answer of Question 444",
         "submission[2]": "answer of Question 555"
@@ -211,7 +211,7 @@ jf.getFolder("511369454e0b63771d000003")
 //          "text":"Form Title-PUT th shit",
 //          "order":"1",
 //          "name":"Header"
-//     }], 
+//     }],
 //     "properties":{
 //       "title":"New Form11- put the hit",
 //       "height":"600"
@@ -243,7 +243,7 @@ jf.getFolder("511369454e0b63771d000003")
 //     /* handle error */
 //     console.log('error on del')
 // });
-// 
+//
 // jf.addFormQuestion( '32403867403956' ,
 //     {
 //         "question[type]": "control_head",
@@ -259,7 +259,7 @@ jf.getFolder("511369454e0b63771d000003")
 //     /* handle error */
 //     console.log("error on form creattion")
 // });
-// 
+//
 // jf.addFormQuestions( '32403867403956' ,
 //     {
 //         "questions":{
