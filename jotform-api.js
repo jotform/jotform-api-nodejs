@@ -206,8 +206,8 @@ exports.createFormSubmission = function(formID, submissions){
         submissions: submissions
     }
 
-    sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+    sendRequest(deferred, requestUrl, requestVerb, postData);
 }
 
 exports.getFormFiles = function(formID){
@@ -251,8 +251,8 @@ exports.createFormWebhook = function(formID, webhookURL){
         webhookURL: webhookURL
     }
 
-    sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+    sendRequest(deferred, requestUrl, requestVerb, postData);
 }
 
 exports.getSubmission = function(sid){
@@ -328,8 +328,8 @@ exports.registerUser = function(username, password, email){
         email: email
     }
 
-    sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise; 
+    sendRequest(deferred, requestUrl, requestVerb, postData);
 }
 
 
