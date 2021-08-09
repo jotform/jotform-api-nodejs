@@ -1,39 +1,82 @@
-jotform-api-nodejs 
-===============
-[JotForm API](http://api.jotform.com/docs/) - NodeJS Client
+<p align="center">
+	<img src="https://www.jotform.com/resources/assets/logo/jotform-logo-transparent-400x100.png" alt="logo" height="70">
+</p>
+<br />
 
+# Jotform Node.js SDK
+
+> JotForm's Node.js SDK. 
+
+
+- [x] Full TypeScript support. 
+- [x] Promise based.
+
+#
 ### Installation
-
 ```sh
 $ npm install jotform
 ```
 
-### Documentation
+#
+### Usage
 
-You can find the docs for the API of this client at [http://api.jotform.com/docs/](http://api.jotform.com/docs)
+- Initialize the SDK.
+```ts
+import JotForm from 'jotform';
 
-### Authentication
-
-JotForm API requires API key for all user related calls. You can create your API Keys at  [API section](http://www.jotform.com/myaccount/api) of My Account page.
-
-### Examples
-
-```javascript
-var jotform = require("jotform")
-
-jotform.options({
-	debug: true,
-	apiKey: "YOUR_API_KEY"
-});
-
-jotform.getUser()
-.then(function(r){
-	/* successful response after request */
-})
-.fail(function(e){
-	/* handle error */
-}
+const JF = new JotForm();
 ```
 
-See [Documentation](http://api.jotform.com) for full list of methods available.
+- Authenticate with JotForm.
+```ts
+JF.setApiKey('your-api-key');
+```
+
+- Simple examples.
+```ts
+JF.user
+  .getUser()
+  .then((response: object) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    throw new Error(error);
+  });
+```
+
+```ts
+const data = {
+  questions: {
+    '1': {
+      type: 'control_head',
+      text: 'Text 1',
+      order: '1',
+      name: 'Header1',
+    },
+    '2': {
+      type: 'control_head',
+      text: 'Text 2',
+      order: '2',
+      name: 'Header2',
+    },
+  },
+};
+
+JF.form
+  .addNewQuestionToForm(formId, data)
+  .then((response: object) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    throw new Error(error);
+  });
+```
+
+- Detailed information of params: [https://api.jotform.com/docs](https://api.jotform.com/docs).
+
+#
+### License
+
+- This project is under the [GPLv3 license](LICENSE.md). Copyright (c) 2021 JotForm and it's contributors.
+
 

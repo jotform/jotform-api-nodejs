@@ -1,27 +1,90 @@
 {
-  "dependencies": {
-    "request": "2.88.0",
-    "q": "0.9.4"
-  },
-  "readmeFilename": "README.md",
-  "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
-  "name": "jotform",
-  "description": "jotform API nodejs client",
-  "version": "0.1.5",
+  "name": "jotform-nodejs-sdk",
+  "version": "2.0.0",
+  "description": "JotForm Node.js SDK",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "mocha test/*.js"
+    "clean": "rimraf dist coverage .nyc_output",
+    "prebuild": "run-s clean lint fix",
+    "build": "tsc",
+    "lint": "run-s lint:prettier lint:eslint",
+    "lint:prettier": "prettier --check \"{src,test}/**/*.ts\"",
+    "lint:eslint": "eslint . --cache --format stylish",
+    "fix": "run-s fix:eslint fix:prettier",
+    "fix:prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "fix:eslint": "eslint . --format stylish --fix",
+    "test": "jest --detectOpenHandles",
+    "coverage": "nyc jest --detectOpenHandles",
+    "pack": "npm pack",
+    "circularDepCheck": "madge --circular src/index.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jotform/jotform-api-nodejs.git"
+    "url": "git+https://github.com/jotform/jotform-api-nodejs.git"
   },
-  "author": "mustafa dikici",
-  "license": "MIT",
+  "keywords": [
+    "JotForm",
+    "JotForm Api",
+    "JotForm Node.js SDK",
+    "JotForm Node.js",
+    "jotform",
+    "jotform api",
+    "jotform node.js sdk",
+    "jotform node.js"
+  ],
+  "author": "Berkcan Uçan <berkcan@vivaldi.net> (bw3u)",
+  "contributors": [
+    "Mustafa Dikici"
+  ],
+  "license": "GPLv3",
   "bugs": {
     "url": "https://github.com/jotform/jotform-api-nodejs/issues"
+  },
+  "homepage": "https://github.com/jotform/jotform-api-nodejs#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.13",
+    "@typescript-eslint/eslint-plugin": "^4.29.0",
+    "@typescript-eslint/parser": "^4.29.0",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.6",
+    "madge": "^5.0.1",
+    "npm-run-all": "^4.1.5",
+    "nyc": "^15.1.0",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.0.4",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/*.spec.ts"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "./tsconfig.json",
+        "diagnostics": false
+      }
+    }
   }
 }
