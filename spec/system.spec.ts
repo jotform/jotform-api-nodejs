@@ -20,4 +20,13 @@ describe('System tests', () => {
         throw new Error(error);
       });
   });
+
+  it('Should fail with non existing plan', () => {
+    JF.system.getPlans('SOMETHING').catch((error) => {
+      expect(error.responseCode).toEqual(404);
+      expect(error.message).toEqual(
+        'Requested URL (/system/plan/SOMETHING) is not available!'
+      );
+    });
+  });
 });

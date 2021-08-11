@@ -78,7 +78,7 @@ describe('Form tests', () => {
         });
     });
 
-    it('Add new question to form', () => {
+    it('Add new question to form', async () => {
       const data = {
         questions: {
           '1': {
@@ -96,7 +96,7 @@ describe('Form tests', () => {
         },
       };
 
-      JF.form
+      await JF.form
         .addNewQuestionToForm(formId, data)
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -107,8 +107,8 @@ describe('Form tests', () => {
         });
     });
 
-    it('Create form report', () => {
-      JF.form
+    it('Create form report', async () => {
+      await JF.form
         .createFormReport(formId, 'Test report', 'csv', '')
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -119,7 +119,7 @@ describe('Form tests', () => {
         });
     });
 
-    it('Create/Edit form property', () => {
+    it('Create/Edit form property', async () => {
       const data = {
         properties: {
           activeRedirect: 'default',
@@ -129,7 +129,7 @@ describe('Form tests', () => {
         },
       };
 
-      JF.form
+      await JF.form
         .createOrEditFormProperty(formId, data)
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -140,7 +140,7 @@ describe('Form tests', () => {
         });
     });
 
-    it('Create a form submission', () => {
+    it('Create a form submission', async () => {
       const data = [
         {
           '1': {
@@ -160,7 +160,7 @@ describe('Form tests', () => {
         },
       ];
 
-      JF.form
+      await JF.form
         .createFormSubmissions(formId, data)
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -171,8 +171,8 @@ describe('Form tests', () => {
         });
     });
 
-    it('Create a form webhook', () => {
-      JF.form
+    it('Create a form webhook', async () => {
+      await JF.form
         .createFormWebhook(formId, 'http://www.example.com/post.php')
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -284,8 +284,8 @@ describe('Form tests', () => {
   });
 
   describe('Delete form tests', () => {
-    it('Delete form question', async () => {
-      await JF.form
+    it('Delete form question', () => {
+      JF.form
         .deleteFormQuestion(formId, '1')
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -295,8 +295,8 @@ describe('Form tests', () => {
         });
     });
 
-    it('Delete form webhook', async () => {
-      await JF.form
+    it('Delete form webhook', () => {
+      JF.form
         .deleteFormWebhook(formId, '0')
         .then((response: any) => {
           expect(response.responseCode).toEqual(200);
@@ -307,8 +307,8 @@ describe('Form tests', () => {
     });
   });
 
-  it('Delete form', async () => {
-    await JF.form
+  it('Delete form', () => {
+    JF.form
       .deleteForm(formId)
       .then((response: any) => {
         expect(response.responseCode).toEqual(200);
