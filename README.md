@@ -1,5 +1,7 @@
 <p align="center">
 	<img src="https://www.jotform.com/resources/assets/logo/jotform-logo-transparent-400x100.png" alt="logo" height="70">
+  <br />
+  <a href='https://bw3u.semaphoreci.com/badges/jotform-api-nodejs/branches/master.svg'> <img src='https://bw3u.semaphoreci.com/badges/jotform-api-nodejs/branches/master.svg' alt='Build Status'></a>
 </p>
 <br />
 
