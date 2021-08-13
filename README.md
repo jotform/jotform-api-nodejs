@@ -24,7 +24,7 @@ $ npm install jotform
 
 - Initialize the SDK.
 ```ts
-import JotForm from 'jotform';
+import { JotForm } from 'jotform';
 
 const JF = new JotForm();
 ```

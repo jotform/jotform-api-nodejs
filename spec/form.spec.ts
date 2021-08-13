@@ -1,11 +1,11 @@
-import JotForm from '../src/index';
+import { JotForm } from '../src/index';
 import 'dotenv/config';
 
 const JF = new JotForm();
 let formId: string;
 
 beforeAll(() => {
-  JF.setApiKey(process.env.JF_APIKEY);
+  JF.setApiKey(process.env.JF_APIKEY as string);
 });
 
 describe('Form tests', () => {

@@ -10,5 +10,5 @@
     "outDir": "./dist" /* Specify an output folder for all emitted files. */,
     "types": ["node", "jest"]
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "spec"]
 }

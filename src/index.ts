@@ -6,8 +6,8 @@ import { Report } from './core/classes/report';
 import { Folder } from './core/classes/folder';
 import { System } from './core/classes/system';
 
-export default class JotForm {
-  client: Client;
+export class JotForm {
+  private client: Client;
   public user: User;
   public form: Form;
   public submission: Submission;
