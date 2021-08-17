@@ -32,7 +32,7 @@ jotform.getUser()
 })
 .fail(function(e){
 	/* handle error */
-}
+})
 ```
 
 See [Documentation](http://api.jotform.com) for full list of methods available.
