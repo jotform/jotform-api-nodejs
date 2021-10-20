@@ -1,7 +1,7 @@
 {
   "name": "jotform-nodejs-sdk",
   "version": "2.0.0",
-  "description": "JotForm Node.js SDK",
+  "description": "Jotform Node.js SDK",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "directories": {
@@ -27,16 +27,16 @@
     "url": "git+https://github.com/jotform/jotform-api-nodejs.git"
   },
   "keywords": [
-    "JotForm",
-    "JotForm Api",
-    "JotForm Node.js SDK",
-    "JotForm Node.js",
+    "Jotform",
+    "Jotform Api",
+    "Jotform Node.js SDK",
+    "Jotform Node.js",
     "jotform",
     "jotform api",
     "jotform node.js sdk",
     "jotform node.js"
   ],
-  "author": "Berkcan Uçan <berkcan@vivaldi.net> (bw3u)",
+  "author": "Berkcan Uçan <berkcan@jotform.com>",
   "contributors": [
     "Mustafa Dikici"
   ],
@@ -68,7 +68,7 @@
     "axios": "^0.21.1"
   },
   "jest": {
-    "collectCoverage": true,
+    "collectCoverage": false,
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },

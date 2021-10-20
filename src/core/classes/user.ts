@@ -42,7 +42,7 @@ export class User implements IUser {
   }
 
   /**
-   * Get user account details for this JotForm user. Including user account type, avatar URL, name, email, website URL and account limits.
+   * Get user account details for this Jotform user. Including user account type, avatar URL, name, email, website URL and account limits.
    */
   getUser = (): Promise<object> => {
     return this.client.Request('GET', '/user');

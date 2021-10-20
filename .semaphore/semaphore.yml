@@ -1,14 +1,14 @@
 version: v1.0
-name: '@JotForm/SDK'
+name: '@Jotform/SDK'
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: Build & Unit Tests
+  - name: Build & Test
     task:
       jobs:
-        - name: Build & Test
+        - name: Build & Unit Tests
           commands:
             - checkout
             - sem-version node 12
@@ -25,7 +25,7 @@ blocks:
     run:
       when: tag =~ '.*'
     dependencies:
-      - Build & Unit Tests
+      - Build & Test
     task:
       secrets:
         - name: NPM

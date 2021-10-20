@@ -1,10 +1,10 @@
-import { JotForm } from '../src/index';
+import { Jotform } from '../src/index';
 import 'dotenv/config';
 
-const JF = new JotForm();
+const JF = new Jotform();
 
 beforeAll(() => {
-  JF.setApiKey(process.env.JF_APIKEY as string);
+  JF.initializeSDK(process.env.JF_APIKEY as string);
 });
 
 describe('System tests', () => {
@@ -17,7 +17,6 @@ describe('System tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 

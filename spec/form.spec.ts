@@ -1,11 +1,11 @@
-import { JotForm } from '../src/index';
+import { Jotform } from '../src/index';
 import 'dotenv/config';
 
-const JF = new JotForm();
+const JF = new Jotform();
 let formId: string;
 
 beforeAll(() => {
-  JF.setApiKey(process.env.JF_APIKEY as string);
+  JF.initializeSDK(process.env.JF_APIKEY as string);
 });
 
 describe('Form tests', () => {
@@ -58,7 +58,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -74,7 +73,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -103,7 +101,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -115,7 +112,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -136,7 +132,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -167,7 +162,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -179,7 +173,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
   });
@@ -194,7 +187,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -206,7 +198,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -218,7 +209,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -230,7 +220,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -242,7 +231,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -254,7 +242,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -266,7 +253,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
 
@@ -278,7 +264,6 @@ describe('Form tests', () => {
         })
         .catch((error) => {
           console.error(error);
-          throw new Error(error);
         });
     });
   });
@@ -315,7 +300,6 @@ describe('Form tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 });

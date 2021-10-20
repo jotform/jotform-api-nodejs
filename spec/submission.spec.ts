@@ -1,12 +1,12 @@
-import { JotForm } from '../src/index';
+import { Jotform } from '../src/index';
 import 'dotenv/config';
 
-const JF = new JotForm();
+const JF = new Jotform();
 let submissionId: string;
 let formId: string;
 
 beforeAll(() => {
-  JF.setApiKey(process.env.JF_APIKEY as string);
+  JF.initializeSDK(process.env.JF_APIKEY as string);
 });
 
 describe('Submission tests', () => {
@@ -52,10 +52,36 @@ describe('Submission tests', () => {
       .createForms(data)
       .then((response: any) => {
         formId = response.content.id; // To create a submission.
+        expect(response.responseCode).toEqual(200);
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
+      });
+
+    const questions = {
+      questions: {
+        '1': {
+          type: 'control_head',
+          text: 'Text 1',
+          order: '1',
+          name: 'Header1',
+        },
+        '2': {
+          type: 'control_head',
+          text: 'Text 2',
+          order: '2',
+          name: 'Header2',
+        },
+      },
+    };
+
+    await JF.form
+      .addNewQuestionToForm(formId, questions) // Create questions.
+      .then((response: any) => {
+        expect(response.responseCode).toEqual(200);
+      })
+      .catch((error) => {
+        console.error(error);
       });
 
     const submission = [
@@ -85,7 +111,6 @@ describe('Submission tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 
@@ -102,7 +127,6 @@ describe('Submission tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 
@@ -118,7 +142,6 @@ describe('Submission tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 
@@ -130,7 +153,6 @@ describe('Submission tests', () => {
       })
       .catch((error) => {
         console.error(error);
-        throw new Error(error);
       });
   });
 });

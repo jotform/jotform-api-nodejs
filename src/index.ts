@@ -6,7 +6,7 @@ import { Report } from './core/classes/report';
 import { Folder } from './core/classes/folder';
 import { System } from './core/classes/system';
 
-export class JotForm {
+export class Jotform {
   private client: Client;
   public user: User;
   public form: Form;
@@ -27,8 +27,15 @@ export class JotForm {
 
   /**
    * @param apiKey Your personal API key.
+   * @param instance Which Jotform API instance are you going to use, if it's not specified defaults to **US**. Must be one of the following: | **US** | **EU** | **HIPAA** |
    */
-  setApiKey = (apiKey: string): void => {
-    this.client.setApiKey(apiKey);
+  initializeSDK = (apiKey: string, instanceType = 'US'): void => {
+    if (!(instanceType in this.client.instanceTypes)) {
+      throw new Error(
+        'instanceType must be one of the following: US, EU, HIPAA.'
+      );
+    }
+
+    this.client.initializeSDK(apiKey, instanceType);
   };
 }
