@@ -20,6 +20,7 @@ interface IForm {
   createFormSubmissions(formId: string, data: object): Promise<object>;
   createFormWebhook(formId: string, webhookURL: string): Promise<object>;
   createForms(data: object): Promise<object>;
+  cloneForm(formId: string): Promise<object>;
   addNewQuestionToForm(formId: string, data: object): Promise<object>;
   addOrEditQuestionProperty(
     formId: string,
@@ -47,7 +48,7 @@ export class Form implements IForm {
 
   /**
    * Get basic information about a form.
-   * @param formId Forms ID.
+   * @param formId Form ID.
    */
   getForm = (formId: string): Promise<object> => {
     return this.client.Request('GET', `/form/${formId}`);
@@ -55,7 +56,7 @@ export class Form implements IForm {
 
   /**
    * Get a list of all questions on a form. Type describes question field type. Order is the question order in the form. Text field is the question label.
-   * @param formId Forms ID.
+   * @param formId Form ID.
    */
   getFormQuestions = (formId: string): Promise<object> => {
     return this.client.Request('GET', `/form/${formId}/questions`);
@@ -63,7 +64,7 @@ export class Form implements IForm {
 
   /**
    * List of form reponses. Fields array has the submitted data. Created_at is the date of the submission.
-   * @param formId Forms ID.
+   * @param formId Form ID.
    * @param offset Start of each result set for submission data. Useful for pagination. Default: 0.
    * @param limit Number of results in each result set for submission data. Default is 20.
    * @param filter Filters the query results to fetch a specific submissions range. Example: {"created_at:gt":"2013-01-01 00:00:00"} Example: {"formIDs":["your-form-id","your-form-id#2"]} Example: {"fullText":"John Brown"}
@@ -133,7 +134,7 @@ export class Form implements IForm {
 
   /**
    * Submit data to this form using the API. You should get a list of question IDs from '**getFormQuestions**' and send the submission data with question id. Detailed information: https://api.jotform.com/docs/#post-form-id-submissions
-   * @param formId Forms ID.
+   * @param formId Form ID.
    * @param data Object of submissions.
    * @example
    * [
@@ -214,6 +215,14 @@ export class Form implements IForm {
    */
   createForms = (data: object): Promise<object> => {
     return this.client.Request('PUT', '/form', data);
+  };
+
+  /**
+   * Clone a single form specified by the Form ID.
+   * @param formId Form ID
+   */
+  cloneForm = (formId: string): Promise<object> => {
+    return this.client.Request('POST', `/form/${formId}/clone`);
   };
 
   /**

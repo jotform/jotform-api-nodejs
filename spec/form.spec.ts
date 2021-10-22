@@ -175,6 +175,17 @@ describe('Form tests', () => {
           console.error(error);
         });
     });
+
+    it('Clone a single form', async () => {
+      await JF.form
+        .cloneForm(formId)
+        .then((response: any) => {
+          expect(response.responseCode).toEqual(200);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
   });
 
   describe('Get form tests', () => {
