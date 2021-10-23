@@ -1,6 +1,18 @@
-jotform-api-nodejs 
-===============
-[JotForm API](http://api.jotform.com/docs/) - NodeJS Client
+<p align="center">
+	<img src="https://www.jotform.com/resources/assets/logo-nb/jotform-logo-transparent-400x100.png" alt="logo" height="70">
+  <br />
+  <a href='https://berkcan.semaphoreci.com/badges/jotform-nodejs-sdk/branches/master.svg'> <img src='https://berkcan.semaphoreci.com/badges/jotform-nodejs-sdk/branches/master.svg' alt='Build Status'></a>
+</p>
+<br />
+
+# Jotform Node.js SDK
+
+> Jotform's Node.js SDK.
+
+- [x] First class TypeScript support.
+- [x] Promise based.
+
+#
 
 ### Installation
 
@@ -8,32 +20,73 @@ jotform-api-nodejs
 $ npm install jotform
 ```
 
-### Documentation
+#
 
-You can find the docs for the API of this client at [http://api.jotform.com/docs/](http://api.jotform.com/docs)
+### Usage
 
-### Authentication
+- Initialize the SDK.
 
-JotForm API requires API key for all user related calls. You can create your API Keys at  [API section](http://www.jotform.com/myaccount/api) of My Account page.
+```ts
+import { Jotform } from 'jotform';
 
-### Examples
-
-```javascript
-var jotform = require("jotform")
-
-jotform.options({
-	debug: true,
-	apiKey: "YOUR_API_KEY"
-});
-
-jotform.getUser()
-.then(function(r){
-	/* successful response after request */
-})
-.fail(function(e){
-	/* handle error */
-}
+const JF = new Jotform();
 ```
 
-See [Documentation](http://api.jotform.com) for full list of methods available.
+- Authenticate with Jotform.
 
+```ts
+JF.initializeSDK(
+  'your-api-key',
+  'Jotform Instance (US, EU or HIPAA - defaults to US)'
+);
+```
+
+- Simple examples.
+
+```ts
+JF.user
+  .getUser()
+  .then((response: object) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+```ts
+const data = {
+  questions: {
+    '1': {
+      type: 'control_head',
+      text: 'Text 1',
+      order: '1',
+      name: 'Header1',
+    },
+    '2': {
+      type: 'control_head',
+      text: 'Text 2',
+      order: '2',
+      name: 'Header2',
+    },
+  },
+};
+
+JF.form
+  .addNewQuestionToForm(formId, data)
+  .then((response: object) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+- Detailed information of API: [https://api.jotform.com/docs](https://api.jotform.com/docs).
+- Properties reference: [https://api.jotform.com/docs/properties/index.php](https://api.jotform.com/docs/properties/index.php)
+
+#
+
+### License
+
+- This project is under the [GPLv3 license](LICENSE.md). Copyright (c) 2021 Jotform and it's contributors.

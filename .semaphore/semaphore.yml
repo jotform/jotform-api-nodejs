@@ -1,0 +1,38 @@
+version: v1.0
+name: '@Jotform/SDK'
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Build & Test
+    task:
+      jobs:
+        - name: Build & Unit Tests
+          commands:
+            - checkout
+            - sem-version node 12
+            - cache restore
+            - npm install
+            - cache store
+            - npm run build --if-present
+            - echo JF_APIKEY=$JF_APIKEY >> .env
+            - npm test
+      secrets:
+        - name: JF_APIKEY
+    dependencies: []
+  - name: NPM Deploy
+    run:
+      when: tag =~ '.*'
+    dependencies:
+      - Build & Test
+    task:
+      secrets:
+        - name: NPM
+      jobs:
+        - name: Deploy
+          commands:
+            - echo //registry.npmjs.org/:_authToken=$NPM_SECRET >> .npmrc
+            - echo email=berkcan@vivaldi.net >> .npmrc
+            - echo always-auth=true >> .npmrc
+            - npm publish
