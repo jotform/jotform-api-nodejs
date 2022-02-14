@@ -31,12 +31,10 @@ function sendRequest(deferred, url, verb, postData){
             json:true,
             timeout: _timeout,
         }
-        if(verb==='post'){
+        if(verb === 'post'){
             options.form = typeof postData!=="undefined" ? postData : {};
-            // console.log(require('querystring').stringify(postData));
-        }
-        if(verb==='put') {
-            options.body = typeof postData!=="undefined" ? JSON.stringify(postData) : "{}";
+        } else if(verb==='put') {
+            options.body = typeof postData!=="undefined" ? postData : {};
         }
         request(options, function(err, response, body){
             if(err){
@@ -410,6 +408,66 @@ exports.getFolder = function(folderID){
     return deferred.promise; 
 }
 
+exports.deleteFolder = function(folderID) {
+    var deferred = Q.defer();
+    if (folderID === undefined) {
+        return;
+    }
+
+    var endPoint = "/folder/" + folderID
+    , requestUrl = _url + (_version === "latest" ? "" : "/v" + _version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb = "delete";
+
+    sendRequest(deferred, requestUrl, requestVerb);
+    return deferred.promise;
+}
+
+exports.updateFolder = function(folderID, folderProperties) {
+    var deferred = Q.defer();
+    if (folderID === undefined || typeof folderProperties != 'object' || folderProperties == null) {
+        return;
+    }
+
+    var endPoint = "/folder/" + folderID
+    , requestUrl = _url + (_version === "latest" ? "" : "/v" + _version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb = "put"
+    , postData = folderProperties;
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;
+}
+
+exports.createFolder = function(folderProperties) {
+    var deferred = Q.defer();
+    if (typeof folderProperties != 'object' || folderProperties == null) {
+        return;
+    }
+
+    var endPoint = "/folder"
+    , requestUrl = _url + (_version === "latest" ? "" : "/v" + _version) + endPoint + "?apiKey=" + _apiKey
+    , requestVerb = "post"
+    , postData = folderProperties;
+
+    sendRequest(deferred, requestUrl, requestVerb, postData);
+    return deferred.promise;
+}
+
+exports.addFormsToFolder = function(folderID, formIDs) {
+    folderProperties = {
+        "forms": formIDs
+    }
+
+    return this.updateFolder(folderID, folderProperties);
+}
+
+exports.addFormToFolder = function(folderID, formID) {
+    folderProperties = {
+        "forms": [formID]
+    }
+
+    return this.updateFolder(folderID, addFormProperties);
+}
+
 exports.createForm = function(formData) {
     var deferred = Q.defer();
     if(typeof formData != 'object' || formData == null) {
@@ -552,11 +610,3 @@ exports.getFormPropertyByKey = function(formID, key) {
     sendRequest(deferred, requestUrl, requestVerb);
     return deferred.promise;     
 }
-
-
-
-
-
-
-
-
