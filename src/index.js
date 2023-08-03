@@ -135,8 +135,8 @@ function getForms(query) {
       (filter !== undefined ? '&filter=' + JSON.stringify(filter) : '') +
       (offset !== undefined ? '&offset=' + offset : '') +
       (limit !== undefined ? '&limit=' + limit : '') +
-      (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
       (fullText !== undefined ? '&fullText=' + fullText : '') +
+      (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
       (direction !== undefined ? ',' + direction : '');
   const promise = get(requestUrl);
   return promise;
@@ -168,9 +168,9 @@ function getSubmissions(query) {
       (filter !== undefined ? '&filter=' + JSON.stringify(filter) : '') +
       (offset !== undefined ? '&offset=' + offset : '') +
       (limit !== undefined ? '&limit=' + limit : '') +
-      (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
       (fullText !== undefined ? '&fullText=' + fullText : '') +
       (nocache !== undefined ? '&nocache=' + nocache : '') +
+      (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
       (direction !== undefined ? ',' + direction : '');
   const promise = get(requestUrl);
   return promise;
