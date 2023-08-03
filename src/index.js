@@ -1,4 +1,4 @@
-var defaults = {
+const defaults = {
   url: 'https://api.jotform.com',
   apiKey: undefined,
   version: 'latest',
@@ -6,7 +6,7 @@ var defaults = {
   timeout: 10000, // 10 seconds
 };
 
-var _url = defaults.url,
+let _url = defaults.url,
   _apiKey = defaults.apiKey,
   _version = defaults.version,
   _debug = defaults.debug,
@@ -83,7 +83,7 @@ function options(options) {
 }
 
 function getUser() {
-  var endPoint = '/user',
+  const endPoint = '/user',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -92,7 +92,7 @@ function getUser() {
 }
 
 function getUsage() {
-  var endPoint = '/user/usage',
+  const endPoint = '/user/usage',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -101,7 +101,7 @@ function getUsage() {
 }
 
 function getForms(query) {
-  var filter, offset, limit, orderby, direction, fullText;
+  let filter, offset, limit, orderby, direction, fullText;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
       filter = query.filter || filter;
@@ -114,7 +114,7 @@ function getForms(query) {
     }
   }
 
-  var endPoint = '/user/forms',
+  const endPoint = '/user/forms',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -133,7 +133,7 @@ function getForms(query) {
 }
 
 function getSubmissions(query) {
-  var filter, offset, limit, orderby, direction, fullText, nocache;
+  let filter, offset, limit, orderby, direction, fullText, nocache;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
       filter = query.filter || filter;
@@ -148,7 +148,7 @@ function getSubmissions(query) {
     nocache = query.nocache || nocache;
   }
 
-  var endPoint = '/user/submissions',
+  const endPoint = '/user/submissions',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -168,7 +168,7 @@ function getSubmissions(query) {
 }
 
 function getSubusers() {
-  var endPoint = '/user/subusers',
+  const endPoint = '/user/subusers',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -177,7 +177,7 @@ function getSubusers() {
 }
 
 function getFolders() {
-  var endPoint = '/user/folders',
+  const endPoint = '/user/folders',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -186,7 +186,7 @@ function getFolders() {
 }
 
 function getReports() {
-  var endPoint = '/user/reports',
+  const endPoint = '/user/reports',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -195,7 +195,7 @@ function getReports() {
 }
 
 function getSettings() {
-  var endPoint = '/user/settings',
+  const endPoint = '/user/settings',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -204,7 +204,7 @@ function getSettings() {
 }
 
 function getHistory(query) {
-  var action, date, sortBy, startDate, endDate;
+  let action, date, sortBy, startDate, endDate;
   if (query && typeof query === 'object') {
     action = query.action || action;
     date = query.date || date;
@@ -213,7 +213,7 @@ function getHistory(query) {
     endDate = query.endDate || endDate;
   }
 
-  var endPoint = '/user/history',
+  const endPoint = '/user/history',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -234,7 +234,7 @@ function getForm(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -252,7 +252,7 @@ function getFormQuestions(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -274,7 +274,7 @@ function getFormQuestion(formID, qid) {
   if (qid === undefined) {
     throw new Error('Question ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -291,7 +291,7 @@ function getFormQuestion(formID, qid) {
 }
 
 function getFormSubmissions(formID, query) {
-  var filter, offset, limit, orderby, direction;
+  let filter, offset, limit, orderby, direction;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
       filter = query.filter || filter;
@@ -307,7 +307,7 @@ function getFormSubmissions(formID, query) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -332,7 +332,7 @@ function createFormSubmission(formID, submissions) {
     throw new Error('Form ID is undefined');
   }
 
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -354,7 +354,7 @@ function createFormSubmissions(formID, submissionData) {
     return;
   }
 
-  var endPoint = '/form/' + formID + '/submissions',
+  const endPoint = '/form/' + formID + '/submissions',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'put',
@@ -368,7 +368,7 @@ function getFormFiles(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -387,7 +387,7 @@ function getFormWebhooks(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -411,7 +411,7 @@ function createFormWebhook(formID, webhookURL) {
     throw new Error('webhookURL is undefined');
   }
 
-  var endPoint = '/form',
+  const endPoint = '/form',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -431,7 +431,7 @@ function createFormWebhook(formID, webhookURL) {
 }
 
 function deleteFormWebhook(formID, webhookID) {
-  var endPoint = '/form/' + formID + '/webhooks/' + webhookID,
+  const endPoint = '/form/' + formID + '/webhooks/' + webhookID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'delete';
@@ -444,7 +444,7 @@ function getSubmission(sid) {
   if (sid === undefined) {
     throw new Error('Submission ID is undefined');
   }
-  var endPoint = '/submission',
+  const endPoint = '/submission',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -462,7 +462,7 @@ function editSubmission(sid, submissionData) {
   if (typeof submissionData != 'object' || submissionData == null) {
     return;
   }
-  var endPoint = '/submission/' + sid,
+  const endPoint = '/submission/' + sid,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post',
@@ -473,7 +473,7 @@ function editSubmission(sid, submissionData) {
 }
 
 function deleteSubmission(sid) {
-  var endPoint = '/submission/' + sid,
+  const endPoint = '/submission/' + sid,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'delete';
@@ -486,7 +486,7 @@ function getReport(reportID) {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
   }
-  var endPoint = '/report',
+  const endPoint = '/report',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -504,7 +504,7 @@ function getFolder(folderID) {
   if (folderID === undefined) {
     throw new Error('Folder ID is undefined');
   }
-  var endPoint = '/folder',
+  const endPoint = '/folder',
     requestUrl =
       _url +
       (_version === 'latest' ? '' : '/v' + _version) +
@@ -523,7 +523,7 @@ function deleteFolder(folderID) {
     return;
   }
 
-  var endPoint = '/folder/' + folderID,
+  const endPoint = '/folder/' + folderID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'delete';
@@ -537,7 +537,7 @@ function updateFolder(folderID, folderProperties) {
     return;
   }
 
-  var endPoint = '/folder/' + folderID,
+  const endPoint = '/folder/' + folderID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'put',
@@ -552,7 +552,7 @@ function createFolder(folderProperties) {
     return;
   }
 
-  var endPoint = '/folder',
+  const endPoint = '/folder',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post',
@@ -583,7 +583,7 @@ function createForm(formData) {
     return;
   }
 
-  var endPoint = '/user/forms',
+  const endPoint = '/user/forms',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post',
@@ -598,7 +598,7 @@ function createForms(formsData) {
     return;
   }
 
-  var endPoint = '/user/forms',
+  const endPoint = '/user/forms',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'put',
@@ -609,7 +609,7 @@ function createForms(formsData) {
 }
 
 function deleteForm(formID) {
-  var endPoint = '/form/' + formID,
+  const endPoint = '/form/' + formID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'delete';
@@ -619,7 +619,7 @@ function deleteForm(formID) {
 }
 
 function cloneForm(formID) {
-  var endPoint = '/form/' + formID + '/clone',
+  const endPoint = '/form/' + formID + '/clone',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post';
@@ -632,7 +632,7 @@ function addFormQuestion(formID, questionData) {
   if (typeof questionData != 'object' || questionData == null) {
     return;
   }
-  var endPoint = '/form/' + formID + '/questions',
+  const endPoint = '/form/' + formID + '/questions',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post',
@@ -647,7 +647,7 @@ function addFormQuestions(formID, questionData) {
     return;
   }
 
-  var endPoint = '/form/' + formID + '/questions',
+  const endPoint = '/form/' + formID + '/questions',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'put',
@@ -658,7 +658,7 @@ function addFormQuestions(formID, questionData) {
 }
 
 function deleteFormQuestion(formID, questionID) {
-  var endPoint = '/form/' + formID + '/question/' + questionID,
+  const endPoint = '/form/' + formID + '/question/' + questionID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'delete';
@@ -668,7 +668,7 @@ function deleteFormQuestion(formID, questionID) {
 }
 
 function getFormProperties(formID) {
-  var endPoint = '/form/' + formID + '/properties',
+  const endPoint = '/form/' + formID + '/properties',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
@@ -681,7 +681,7 @@ function addFormProperty(formID, propertyData) {
   if (typeof propertyData != 'object' || propertyData == null) {
     return;
   }
-  var endPoint = '/form/' + formID + '/properties',
+  const endPoint = '/form/' + formID + '/properties',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'post',
@@ -696,7 +696,7 @@ function addFormProperties(formID, propertyData) {
     return;
   }
 
-  var endPoint = '/form/' + formID + '/properties',
+  const endPoint = '/form/' + formID + '/properties',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'put',
@@ -707,7 +707,7 @@ function addFormProperties(formID, propertyData) {
 }
 
 function getFormPropertyByKey(formID, key) {
-  var endPoint = '/form/' + formID + '/properties/' + key,
+  const endPoint = '/form/' + formID + '/properties/' + key,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
