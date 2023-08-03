@@ -177,7 +177,11 @@ describe.todo('getFormPropertyByKey()');
 
 describe('getSubmissions()', () => {
   it('returns submissions data properly', async () => {
-    const response = await jotform.getSubmissions();
+    const response = await jotform.getSubmissions({
+      filter: {
+        status: 'ACTIVE',
+      },
+    });
 
     expect(response).toMatchObject(expect.any(Array));
 
@@ -191,7 +195,11 @@ describe('getSubmissions()', () => {
 
 describe('getFormSubmissions()', () => {
   it('returns submissions data properly', async () => {
-    const response = await jotform.getFormSubmissions(TEST_FORM_ID);
+    const response = await jotform.getFormSubmissions(TEST_FORM_ID, {
+      filter: {
+        status: 'ACTIVE',
+      },
+    });
 
     expect(response).toMatchObject(expect.any(Array));
 
