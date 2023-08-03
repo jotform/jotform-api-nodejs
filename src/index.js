@@ -10,7 +10,7 @@ let { url: _url, apiKey: _apiKey, version: _version, debug: _debug, timeout: _ti
 
 async function sendRequest(url, method, body) {
   if (_debug) {
-    console.log(`${method.toUpperCase()} to URL:`, url);
+    console.log(`Jotform: ${method.toUpperCase()} ${url}`);
   }
 
   const controller = new AbortController();
@@ -88,7 +88,7 @@ function options(options = {}) {
   _timeout = optionsWithDefaults.timeout;
 
   if (_debug) {
-    console.log('jotform API client options\n', {
+    console.log('Jotform: Updated options', {
       url: _url,
       apiKey: _apiKey,
       version: _version,
