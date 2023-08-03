@@ -97,10 +97,36 @@ function options(options = {}) {
   }
 }
 
+function getRequestUrl(endPoint, params = {}) {
+  if (typeof _apiKey === 'undefined') {
+    throw new Error('API Key is undefined');
+  }
+
+  const { orderby, direction, ...otherParams } = params;
+
+  const baseUrl = _url + (_version === 'latest' ? '' : `/v${_version}`);
+
+  const urlSearchParams = new URLSearchParams();
+
+  for (const key in otherParams) {
+    if (otherParams[key] !== undefined) {
+      urlSearchParams.append(key, otherParams[key]);
+    }
+  }
+
+  if (orderby) {
+    const orderbyWithDirection = direction ? `${orderby},${direction}` : orderby;
+    urlSearchParams.append('orderby', orderbyWithDirection);
+  }
+
+  urlSearchParams.append('apiKey', _apiKey);
+
+  return `${baseUrl + endPoint}?${urlSearchParams.toString()}`;
+}
+
 function getUser() {
   const endPoint = '/user';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = get(requestUrl);
   return promise;
@@ -108,146 +134,107 @@ function getUser() {
 
 function getUsage() {
   const endPoint = '/user/usage';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
-function getForms(query) {
-  let filter;
-  let offset;
-  let limit;
-  let orderby;
-  let direction;
-  let fullText;
-  if (query && typeof query === 'object') {
-    if (typeof query.filter === 'object' || query.filter) {
-      filter = query.filter || filter;
-    }
-    offset = query.offset || offset;
-    limit = query.limit || limit;
-    orderby = query.orderby || orderby;
-    if (query.direction === 'ASC' || query.direction === 'DESC') {
-      direction = query.direction || direction;
-    }
+function getForms(query = {}) {
+  const { filter, offset, limit, orderby, direction, fullText } = query;
+
+  if (filter && typeof filter !== 'object') {
+    throw new Error('Filter must be an object');
+  }
+
+  if (direction && direction !== 'ASC' && direction !== 'DESC') {
+    throw new Error('Direction must be ASC or DESC');
   }
 
   const endPoint = '/user/forms';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '?apiKey=' +
-    _apiKey +
-    (filter !== undefined ? '&filter=' + JSON.stringify(filter) : '') +
-    (offset !== undefined ? '&offset=' + offset : '') +
-    (limit !== undefined ? '&limit=' + limit : '') +
-    (fullText !== undefined ? '&fullText=' + fullText : '') +
-    (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
-    (direction !== undefined ? ',' + direction : '');
+  const requestUrl = getRequestUrl(endPoint, {
+    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
+    offset,
+    limit,
+    orderby: orderby !== undefined ? orderby : 'created_at',
+    fullText,
+    direction,
+  });
+
   const promise = get(requestUrl);
   return promise;
 }
 
-function getSubmissions(query) {
-  let filter;
-  let offset;
-  let limit;
-  let orderby;
-  let direction;
-  let fullText;
-  let nocache;
-  if (query && typeof query === 'object') {
-    if (typeof query.filter === 'object' || query.filter) {
-      filter = query.filter || filter;
-    }
-    offset = query.offset || offset;
-    limit = query.limit || limit;
-    orderby = query.orderby || orderby;
-    if (query.direction === 'ASC' || query.direction === 'DESC') {
-      direction = query.direction || direction;
-    }
-    fullText = query.fullText || fullText;
-    nocache = query.nocache || nocache;
+function getSubmissions(query = {}) {
+  const { filter, offset, limit, orderby, direction, fullText, nocache } = query;
+
+  if (filter && typeof filter !== 'object') {
+    throw new Error('Filter must be an object');
+  }
+
+  if (direction && direction !== 'ASC' && direction !== 'DESC') {
+    throw new Error('Direction must be ASC or DESC');
   }
 
   const endPoint = '/user/submissions';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '?apiKey=' +
-    _apiKey +
-    (filter !== undefined ? '&filter=' + JSON.stringify(filter) : '') +
-    (offset !== undefined ? '&offset=' + offset : '') +
-    (limit !== undefined ? '&limit=' + limit : '') +
-    (fullText !== undefined ? '&fullText=' + fullText : '') +
-    (nocache !== undefined ? '&nocache=' + nocache : '') +
-    (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
-    (direction !== undefined ? ',' + direction : '');
+  const requestUrl = getRequestUrl(endPoint, {
+    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
+    offset,
+    limit,
+    orderby: orderby !== undefined ? orderby : 'created_at',
+    fullText,
+    direction,
+    nocache,
+  });
+
   const promise = get(requestUrl);
   return promise;
 }
 
 function getSubusers() {
   const endPoint = '/user/subusers';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
 function getFolders() {
   const endPoint = '/user/folders';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
 function getReports() {
   const endPoint = '/user/reports';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
 function getSettings() {
   const endPoint = '/user/settings';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
-function getHistory(query) {
-  let action;
-  let date;
-  let sortBy;
-  let startDate;
-  let endDate;
-  if (query && typeof query === 'object') {
-    action = query.action || action;
-    date = query.date || date;
-    sortBy = query.sortBy || sortBy;
-    startDate = query.startDate || startDate;
-    endDate = query.endDate || endDate;
-  }
+function getHistory(query = {}) {
+  const { action, date, sortBy, startDate, endDate } = query;
 
   const endPoint = '/user/history';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '?apiKey=' +
-    _apiKey +
-    (action !== undefined ? '&action=' + action : '&action=all') +
-    (date !== undefined ? '&date=' + date : '') +
-    (sortBy !== undefined ? '&sortBy=' + sortBy : '&sortBy=ASC') +
-    (startDate !== undefined ? '&startDate=' + startDate : '') +
-    (endDate !== undefined ? '&endDate=' + endDate : '');
+  const requestUrl = getRequestUrl(endPoint, {
+    action: action !== undefined ? action : 'all',
+    date,
+    sortBy: sortBy !== undefined ? sortBy : 'ASC',
+    startDate,
+    endDate,
+  });
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -256,15 +243,10 @@ function getForm(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/form/${formID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -273,16 +255,10 @@ function getFormQuestions(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/questions' +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/form/${formID}/questions`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -291,60 +267,42 @@ function getFormQuestion(formID, questionID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
+
   if (questionID === undefined) {
     throw new Error('Question ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/question/' +
-    questionID +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/form/${formID}/question/${questionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
 
-function getFormSubmissions(formID, query) {
-  let filter;
-  let offset;
-  let limit;
-  let orderby;
-  let direction;
-  if (query && typeof query === 'object') {
-    if (typeof query.filter === 'object' || query.filter) {
-      filter = query.filter || filter;
-    }
-    offset = query.offset || offset;
-    limit = query.limit || limit;
-    orderby = query.orderby || orderby;
-    if (query.direction === 'ASC' || query.direction === 'DESC') {
-      direction = query.direction || direction;
-    }
-  }
-
+function getFormSubmissions(formID, query = {}) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/submissions' +
-    '?apiKey=' +
-    _apiKey +
-    (filter !== undefined ? '&filter=' + JSON.stringify(filter) : '') +
-    (offset !== undefined ? '&offset=' + offset : '') +
-    (limit !== undefined ? '&limit=' + limit : '') +
-    (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
-    (direction !== undefined ? ',' + direction : '');
+
+  const { filter, offset, limit, orderby, direction } = query;
+
+  if (filter && typeof filter !== 'object') {
+    throw new Error('Filter must be an object');
+  }
+
+  if (direction && direction !== 'ASC' && direction !== 'DESC') {
+    throw new Error('Direction must be ASC or DESC');
+  }
+
+  const endPoint = `/form/${formID}/submissions`;
+  const requestUrl = getRequestUrl(endPoint, {
+    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
+    offset,
+    limit,
+    orderby: orderby !== undefined ? orderby : 'created_at',
+    direction,
+  });
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -354,16 +312,8 @@ function createFormSubmission(formID, submissions) {
     throw new Error('Form ID is undefined');
   }
 
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/submissions' +
-    '?apiKey=' +
-    _apiKey;
+  const endPoint = `/form/${formID}/submissions`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = submissions;
 
   const promise = post(requestUrl, postData);
@@ -375,9 +325,8 @@ function createFormSubmissions(formID, submissionData) {
     return;
   }
 
-  const endPoint = '/form/' + formID + '/submissions';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/submissions`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = submissionData;
 
   const promise = put(requestUrl, postData);
@@ -388,16 +337,10 @@ function getFormFiles(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/files' +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/form/${formID}/files`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -406,16 +349,10 @@ function getFormWebhooks(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/webhooks' +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/form/${formID}/webhooks`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -429,16 +366,8 @@ function createFormWebhook(formID, webhookURL) {
     throw new Error('webhookURL is undefined');
   }
 
-  const endPoint = '/form';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    formID +
-    '/webhooks' +
-    '?apiKey=' +
-    _apiKey;
+  const endPoint = `/form/${formID}/webhooks`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = {
     webhookURL: webhookURL,
   };
@@ -448,9 +377,8 @@ function createFormWebhook(formID, webhookURL) {
 }
 
 function deleteFormWebhook(formID, webhookID) {
-  const endPoint = '/form/' + formID + '/webhooks/' + webhookID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/webhooks/${webhookID}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = del(requestUrl);
   return promise;
@@ -460,15 +388,10 @@ function getSubmission(submissionID) {
   if (submissionID === undefined) {
     throw new Error('Submission ID is undefined');
   }
-  const endPoint = '/submission';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    submissionID +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -477,9 +400,9 @@ function editSubmission(submissionID, submissionData) {
   if (typeof submissionData !== 'object' || submissionData === null) {
     return;
   }
-  const endPoint = '/submission/' + submissionID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = submissionData;
 
   const promise = post(requestUrl, postData);
@@ -487,9 +410,8 @@ function editSubmission(submissionID, submissionData) {
 }
 
 function deleteSubmission(submissionID) {
-  const endPoint = '/submission/' + submissionID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = del(requestUrl);
   return promise;
@@ -499,15 +421,10 @@ function getReport(reportID) {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
   }
-  const endPoint = '/report';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    reportID +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/report/${reportID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -516,15 +433,10 @@ function getFolder(folderID) {
   if (folderID === undefined) {
     throw new Error('Folder ID is undefined');
   }
-  const endPoint = '/folder';
-  const requestUrl =
-    _url +
-    (_version === 'latest' ? '' : '/v' + _version) +
-    endPoint +
-    '/' +
-    folderID +
-    '?apiKey=' +
-    _apiKey;
+
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
   const promise = get(requestUrl);
   return promise;
 }
@@ -534,9 +446,8 @@ function deleteFolder(folderID) {
     return;
   }
 
-  const endPoint = '/folder/' + folderID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = del(requestUrl);
   return promise;
@@ -547,9 +458,8 @@ function updateFolder(folderID, folderProperties) {
     return;
   }
 
-  const endPoint = '/folder/' + folderID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = folderProperties;
 
   const promise = put(requestUrl, postData);
@@ -562,8 +472,7 @@ function createFolder(folderProperties) {
   }
 
   const endPoint = '/folder';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = folderProperties;
 
   const promise = post(requestUrl, postData);
@@ -574,16 +483,14 @@ function addFormsToFolder(folderID, formIDs) {
   const folderProperties = {
     forms: formIDs,
   };
-
-  return this.updateFolder(folderID, folderProperties);
+  return updateFolder(folderID, folderProperties);
 }
 
 function addFormToFolder(folderID, formID) {
   const addFormProperties = {
     forms: [formID],
   };
-
-  return this.updateFolder(folderID, addFormProperties);
+  return updateFolder(folderID, addFormProperties);
 }
 
 function createForm(formData) {
@@ -592,8 +499,7 @@ function createForm(formData) {
   }
 
   const endPoint = '/user/forms';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = formData;
 
   const promise = post(requestUrl, postData);
@@ -606,8 +512,7 @@ function createForms(formsData) {
   }
 
   const endPoint = '/user/forms';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = formsData;
 
   const promise = put(requestUrl, postData);
@@ -615,18 +520,16 @@ function createForms(formsData) {
 }
 
 function deleteForm(formID) {
-  const endPoint = '/form/' + formID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = del(requestUrl);
   return promise;
 }
 
 function cloneForm(formID) {
-  const endPoint = '/form/' + formID + '/clone';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/clone`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = post(requestUrl);
   return promise;
@@ -636,9 +539,9 @@ function addFormQuestion(formID, questionData) {
   if (typeof questionData !== 'object' || questionData === null) {
     return;
   }
-  const endPoint = '/form/' + formID + '/questions';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+
+  const endPoint = `/form/${formID}/questions`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = questionData;
 
   const promise = post(requestUrl, postData);
@@ -650,9 +553,8 @@ function addFormQuestions(formID, questionData) {
     return;
   }
 
-  const endPoint = '/form/' + formID + '/questions';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/questions`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = questionData;
 
   const promise = put(requestUrl, postData);
@@ -660,18 +562,16 @@ function addFormQuestions(formID, questionData) {
 }
 
 function deleteFormQuestion(formID, questionID) {
-  const endPoint = '/form/' + formID + '/question/' + questionID;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/question/${questionID}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = del(requestUrl);
   return promise;
 }
 
 function getFormProperties(formID) {
-  const endPoint = '/form/' + formID + '/properties';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = get(requestUrl);
   return promise;
@@ -681,9 +581,9 @@ function addFormProperty(formID, propertyData) {
   if (typeof propertyData !== 'object' || propertyData === null) {
     return;
   }
-  const endPoint = '/form/' + formID + '/properties';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = propertyData;
 
   const promise = post(requestUrl, postData);
@@ -695,9 +595,8 @@ function addFormProperties(formID, propertyData) {
     return;
   }
 
-  const endPoint = '/form/' + formID + '/properties';
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
   const postData = propertyData;
 
   const promise = put(requestUrl, postData);
@@ -705,9 +604,8 @@ function addFormProperties(formID, propertyData) {
 }
 
 function getFormPropertyByKey(formID, key) {
-  const endPoint = '/form/' + formID + '/properties/' + key;
-  const requestUrl =
-    _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
+  const endPoint = `/form/${formID}/properties/${key}`;
+  const requestUrl = getRequestUrl(endPoint);
 
   const promise = get(requestUrl);
   return promise;
