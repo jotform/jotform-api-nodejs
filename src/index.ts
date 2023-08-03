@@ -10,18 +10,30 @@ const defaults = {
 
 let { url: _url, apiKey: _apiKey, version: _version, debug: _debug, timeout: _timeout } = defaults;
 
-async function sendRequest<T>(url: string, method: string, body?: unknown): Promise<T> {
+async function sendRequest<T>(
+  url: string,
+  method: string,
+  body?: unknown,
+  customHeaders?: HeadersInit,
+): Promise<T> {
   if (_debug) {
     console.log(`Jotform: ${method.toUpperCase()} ${url}`);
   }
 
   const controller = new AbortController();
 
+  const baseHeaders = {
+    accept: 'application/json',
+  };
+
   const options: RequestInit = {
     method,
-    headers: {
-      accept: 'application/json',
-    },
+    headers: customHeaders
+      ? {
+          ...baseHeaders,
+          ...customHeaders,
+        }
+      : baseHeaders,
     signal: controller.signal,
   };
 
@@ -73,20 +85,20 @@ async function sendRequest<T>(url: string, method: string, body?: unknown): Prom
   return responseBody.content;
 }
 
-function get<T = unknown>(url: string): Promise<T> {
-  return sendRequest<T>(url, 'get', undefined);
+function get<T = unknown>(url: string, customHeaders?: HeadersInit): Promise<T> {
+  return sendRequest<T>(url, 'get', undefined, customHeaders);
 }
 
-function post<T = unknown>(url: string, body?: unknown): Promise<T> {
-  return sendRequest<T>(url, 'post', body);
+function post<T = unknown>(url: string, body?: unknown, customHeaders?: HeadersInit): Promise<T> {
+  return sendRequest<T>(url, 'post', body, customHeaders);
 }
 
-function put<T = unknown>(url: string, body?: unknown): Promise<T> {
-  return sendRequest(url, 'put', body);
+function put<T = unknown>(url: string, body?: unknown, customHeaders?: HeadersInit): Promise<T> {
+  return sendRequest(url, 'put', body, customHeaders);
 }
 
-function del<T = unknown>(url: string): Promise<T> {
-  return sendRequest(url, 'delete', undefined);
+function del<T = unknown>(url: string, customHeaders?: HeadersInit): Promise<T> {
+  return sendRequest(url, 'delete', undefined, customHeaders);
 }
 
 function options(options = {}) {
@@ -140,19 +152,19 @@ function getRequestUrl(endPoint: string, params: Record<string, string | undefin
   return `${baseUrl + endPoint}?${urlSearchParams.toString()}`;
 }
 
-function getUser(): Promise<unknown> {
+function getUser(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getUsage(): Promise<unknown> {
+function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
@@ -165,6 +177,7 @@ function getForms(
     direction?: 'ASC' | 'DESC';
     fullText?: string;
   } = {},
+  customHeaders?: HeadersInit,
 ): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
@@ -186,7 +199,7 @@ function getForms(
     direction,
   });
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
@@ -200,6 +213,7 @@ function getSubmissions(
     fullText?: string;
     nocache?: string;
   } = {},
+  customHeaders?: HeadersInit,
 ): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText, nocache } = query;
 
@@ -222,39 +236,39 @@ function getSubmissions(
     nocache,
   });
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getSubusers(): Promise<unknown> {
+function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getFolders(): Promise<unknown> {
+function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/folders';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getReports(): Promise<unknown> {
+function getReports(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/reports';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getSettings(): Promise<unknown> {
+function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
@@ -266,6 +280,7 @@ function getHistory(
     startDate?: string;
     endDate?: string;
   } = {},
+  customHeaders?: HeadersInit,
 ): Promise<unknown> {
   const { action, date, sortBy, startDate, endDate } = query;
 
@@ -278,11 +293,11 @@ function getHistory(
     endDate,
   });
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getForm(formID: string): Promise<unknown> {
+function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -290,11 +305,11 @@ function getForm(formID: string): Promise<unknown> {
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getFormQuestions(formID: string): Promise<unknown> {
+function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -302,11 +317,15 @@ function getFormQuestions(formID: string): Promise<unknown> {
   const endPoint = `/form/${formID}/questions`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getFormQuestion(formID: string, questionID: string): Promise<unknown> {
+function getFormQuestion(
+  formID: string,
+  questionID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -318,7 +337,7 @@ function getFormQuestion(formID: string, questionID: string): Promise<unknown> {
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
@@ -331,6 +350,7 @@ function getFormSubmissions(
     orderby?: string;
     direction?: 'ASC' | 'DESC';
   } = {},
+  customHeaders?: HeadersInit,
 ): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -355,11 +375,15 @@ function getFormSubmissions(
     direction,
   });
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function createFormSubmission(formID: string, submissionData: unknown): Promise<unknown> {
+function createFormSubmission(
+  formID: string,
+  submissionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -368,11 +392,15 @@ function createFormSubmission(formID: string, submissionData: unknown): Promise<
   const requestUrl = getRequestUrl(endPoint);
   const postData = submissionData;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function createFormSubmissions(formID: string, submissionsData: unknown): Promise<unknown> {
+function createFormSubmissions(
+  formID: string,
+  submissionsData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof submissionsData !== 'object' || submissionsData === null) {
     return Promise.resolve();
   }
@@ -381,11 +409,11 @@ function createFormSubmissions(formID: string, submissionsData: unknown): Promis
   const requestUrl = getRequestUrl(endPoint);
   const postData = submissionsData;
 
-  const promise = put(requestUrl, postData);
+  const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function getFormFiles(formID: string): Promise<unknown> {
+function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -393,11 +421,11 @@ function getFormFiles(formID: string): Promise<unknown> {
   const endPoint = `/form/${formID}/files`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getFormWebhooks(formID: string): Promise<unknown> {
+function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -405,11 +433,15 @@ function getFormWebhooks(formID: string): Promise<unknown> {
   const endPoint = `/form/${formID}/webhooks`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function createFormWebhook(formID: string, webhookURL: string): Promise<unknown> {
+function createFormWebhook(
+  formID: string,
+  webhookURL: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -424,19 +456,23 @@ function createFormWebhook(formID: string, webhookURL: string): Promise<unknown>
     webhookURL: webhookURL,
   };
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function deleteFormWebhook(formID: string, webhookID: string): Promise<unknown> {
+function deleteFormWebhook(
+  formID: string,
+  webhookID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const endPoint = `/form/${formID}/webhooks/${webhookID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl);
+  const promise = del(requestUrl, customHeaders);
   return promise;
 }
 
-function getSubmission(submissionID: string): Promise<unknown> {
+function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (submissionID === undefined) {
     throw new Error('Submission ID is undefined');
   }
@@ -444,11 +480,15 @@ function getSubmission(submissionID: string): Promise<unknown> {
   const endPoint = `/submission/${submissionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function editSubmission(submissionID: string, submissionData: unknown): Promise<unknown> {
+function editSubmission(
+  submissionID: string,
+  submissionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof submissionData !== 'object' || submissionData === null) {
     return Promise.resolve();
   }
@@ -457,19 +497,19 @@ function editSubmission(submissionID: string, submissionData: unknown): Promise<
   const requestUrl = getRequestUrl(endPoint);
   const postData = submissionData;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function deleteSubmission(submissionID: string): Promise<unknown> {
+function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/submission/${submissionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl);
+  const promise = del(requestUrl, customHeaders);
   return promise;
 }
 
-function getReport(reportID: string): Promise<unknown> {
+function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
   }
@@ -477,11 +517,11 @@ function getReport(reportID: string): Promise<unknown> {
   const endPoint = `/report/${reportID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function getFolder(folderID: string): Promise<unknown> {
+function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (folderID === undefined) {
     throw new Error('Folder ID is undefined');
   }
@@ -489,11 +529,11 @@ function getFolder(folderID: string): Promise<unknown> {
   const endPoint = `/folder/${folderID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function deleteFolder(folderID: string): Promise<unknown> {
+function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (folderID === undefined) {
     return Promise.resolve();
   }
@@ -501,11 +541,15 @@ function deleteFolder(folderID: string): Promise<unknown> {
   const endPoint = `/folder/${folderID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl);
+  const promise = del(requestUrl, customHeaders);
   return promise;
 }
 
-function updateFolder(folderID: string, folderProperties: unknown): Promise<unknown> {
+function updateFolder(
+  folderID: string,
+  folderProperties: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
     return Promise.resolve();
   }
@@ -514,11 +558,11 @@ function updateFolder(folderID: string, folderProperties: unknown): Promise<unkn
   const requestUrl = getRequestUrl(endPoint);
   const postData = folderProperties;
 
-  const promise = put(requestUrl, postData);
+  const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function createFolder(folderProperties: unknown): Promise<unknown> {
+function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof folderProperties !== 'object' || folderProperties === null) {
     return Promise.resolve();
   }
@@ -527,27 +571,35 @@ function createFolder(folderProperties: unknown): Promise<unknown> {
   const requestUrl = getRequestUrl(endPoint);
   const postData = folderProperties;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function addFormsToFolder(folderID: string, formIDs: string[]): Promise<unknown> {
+function addFormsToFolder(
+  folderID: string,
+  formIDs: string[],
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const folderProperties = {
     forms: formIDs,
   };
 
-  return updateFolder(folderID, folderProperties);
+  return updateFolder(folderID, folderProperties, customHeaders);
 }
 
-function addFormToFolder(folderID: string, formID: string): Promise<unknown> {
+function addFormToFolder(
+  folderID: string,
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const addFormProperties = {
     forms: [formID],
   };
 
-  return updateFolder(folderID, addFormProperties);
+  return updateFolder(folderID, addFormProperties, customHeaders);
 }
 
-function createForm(formData: unknown): Promise<unknown> {
+function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formData !== 'object' || formData === null) {
     return Promise.resolve();
   }
@@ -556,11 +608,11 @@ function createForm(formData: unknown): Promise<unknown> {
   const requestUrl = getRequestUrl(endPoint);
   const postData = formData;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function createForms(formsData: unknown): Promise<unknown> {
+function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formsData !== 'object' || formsData === null) {
     return Promise.resolve();
   }
@@ -569,27 +621,31 @@ function createForms(formsData: unknown): Promise<unknown> {
   const requestUrl = getRequestUrl(endPoint);
   const postData = formsData;
 
-  const promise = put(requestUrl, postData);
+  const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function deleteForm(formID: string): Promise<unknown> {
+function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl);
+  const promise = del(requestUrl, customHeaders);
   return promise;
 }
 
-function cloneForm(formID: string): Promise<unknown> {
+function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}/clone`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = post(requestUrl);
+  const promise = post(requestUrl, customHeaders);
   return promise;
 }
 
-function addFormQuestion(formID: string, questionData: unknown): Promise<unknown> {
+function addFormQuestion(
+  formID: string,
+  questionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof questionData !== 'object' || questionData === null) {
     return Promise.resolve();
   }
@@ -598,11 +654,15 @@ function addFormQuestion(formID: string, questionData: unknown): Promise<unknown
   const requestUrl = getRequestUrl(endPoint);
   const postData = questionData;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function addFormQuestions(formID: string, questionData: unknown): Promise<unknown> {
+function addFormQuestions(
+  formID: string,
+  questionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof questionData !== 'object' || questionData === null) {
     return Promise.resolve();
   }
@@ -611,27 +671,35 @@ function addFormQuestions(formID: string, questionData: unknown): Promise<unknow
   const requestUrl = getRequestUrl(endPoint);
   const postData = questionData;
 
-  const promise = put(requestUrl, postData);
+  const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function deleteFormQuestion(formID: string, questionID: string): Promise<unknown> {
+function deleteFormQuestion(
+  formID: string,
+  questionID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = del(requestUrl);
+  const promise = del(requestUrl, customHeaders);
   return promise;
 }
 
-function getFormProperties(formID: string): Promise<unknown> {
+function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}/properties`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function addFormProperty(formID: string, propertyData: unknown): Promise<unknown> {
+function addFormProperty(
+  formID: string,
+  propertyData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof propertyData !== 'object' || propertyData === null) {
     return Promise.resolve();
   }
@@ -640,11 +708,15 @@ function addFormProperty(formID: string, propertyData: unknown): Promise<unknown
   const requestUrl = getRequestUrl(endPoint);
   const postData = propertyData;
 
-  const promise = post(requestUrl, postData);
+  const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function addFormProperties(formID: string, propertyData: unknown): Promise<unknown> {
+function addFormProperties(
+  formID: string,
+  propertyData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   if (typeof propertyData !== 'object' || propertyData === null) {
     return Promise.resolve();
   }
@@ -653,15 +725,19 @@ function addFormProperties(formID: string, propertyData: unknown): Promise<unkno
   const requestUrl = getRequestUrl(endPoint);
   const postData = propertyData;
 
-  const promise = put(requestUrl, postData);
+  const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function getFormPropertyByKey(formID: string, key: string): Promise<unknown> {
+function getFormPropertyByKey(
+  formID: string,
+  key: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
   const endPoint = `/form/${formID}/properties/${key}`;
   const requestUrl = getRequestUrl(endPoint);
 
-  const promise = get(requestUrl);
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
