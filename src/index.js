@@ -322,7 +322,7 @@ function createFormSubmission(formID, submissions) {
 
 function createFormSubmissions(formID, submissionData) {
   if (typeof submissionData !== 'object' || submissionData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/form/${formID}/submissions`;
@@ -398,7 +398,7 @@ function getSubmission(submissionID) {
 
 function editSubmission(submissionID, submissionData) {
   if (typeof submissionData !== 'object' || submissionData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/submission/${submissionID}`;
@@ -443,7 +443,7 @@ function getFolder(folderID) {
 
 function deleteFolder(folderID) {
   if (folderID === undefined) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/folder/${folderID}`;
@@ -455,7 +455,7 @@ function deleteFolder(folderID) {
 
 function updateFolder(folderID, folderProperties) {
   if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/folder/${folderID}`;
@@ -468,7 +468,7 @@ function updateFolder(folderID, folderProperties) {
 
 function createFolder(folderProperties) {
   if (typeof folderProperties !== 'object' || folderProperties === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = '/folder';
@@ -495,7 +495,7 @@ function addFormToFolder(folderID, formID) {
 
 function createForm(formData) {
   if (typeof formData !== 'object' || formData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = '/user/forms';
@@ -508,7 +508,7 @@ function createForm(formData) {
 
 function createForms(formsData) {
   if (typeof formsData !== 'object' || formsData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = '/user/forms';
@@ -537,7 +537,7 @@ function cloneForm(formID) {
 
 function addFormQuestion(formID, questionData) {
   if (typeof questionData !== 'object' || questionData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/form/${formID}/questions`;
@@ -550,7 +550,7 @@ function addFormQuestion(formID, questionData) {
 
 function addFormQuestions(formID, questionData) {
   if (typeof questionData !== 'object' || questionData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/form/${formID}/questions`;
@@ -579,7 +579,7 @@ function getFormProperties(formID) {
 
 function addFormProperty(formID, propertyData) {
   if (typeof propertyData !== 'object' || propertyData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/form/${formID}/properties`;
@@ -592,7 +592,7 @@ function addFormProperty(formID, propertyData) {
 
 function addFormProperties(formID, propertyData) {
   if (typeof propertyData !== 'object' || propertyData === null) {
-    return;
+    return Promise.resolve();
   }
 
   const endPoint = `/form/${formID}/properties`;
