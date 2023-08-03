@@ -148,6 +148,7 @@ exports.getSubmissions = function (query) {
       (offset !== undefined ? '&offset=' + offset : '') +
       (limit !== undefined ? '&limit=' + limit : '') +
       (orderby !== undefined ? '&orderby=' + orderby : '&orderby=created_at') +
+      (fullText !== undefined ? '&fullText=' + fullText : '') +
       (nocache !== undefined ? '&nocache=' + nocache : '') +
       (direction !== undefined ? ',' + direction : ''),
     requestVerb = 'get';
@@ -576,7 +577,7 @@ exports.createFolder = function (folderProperties) {
 };
 
 exports.addFormsToFolder = function (folderID, formIDs) {
-  folderProperties = {
+  const folderProperties = {
     forms: formIDs,
   };
 
@@ -584,7 +585,7 @@ exports.addFormsToFolder = function (folderID, formIDs) {
 };
 
 exports.addFormToFolder = function (folderID, formID) {
-  folderProperties = {
+  const addFormProperties = {
     forms: [formID],
   };
 
