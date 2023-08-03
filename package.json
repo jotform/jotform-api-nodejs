@@ -38,7 +38,6 @@
   },
   "license": "GPL-2.0",
   "dependencies": {
-    "q": "0.9.4",
     "request": "2.88.0"
   },
   "devDependencies": {

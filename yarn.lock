@@ -571,7 +571,6 @@ __metadata:
     husky: ^8.0.0
     prettier: ^2.7.0
     pretty-quick: ^3.1.0
-    q: 0.9.4
     request: 2.88.0
     rimraf: ^3.0.0
     typescript: ^5.0.0
@@ -3785,13 +3784,6 @@ __metadata:
   version: 2.3.0
   resolution: "punycode@npm:2.3.0"
   checksum: 39f760e09a2a3bbfe8f5287cf733ecdad69d6af2fe6f97ca95f24b8921858b91e9ea3c9eeec6e08cede96181b3bb33f95c6ffd8c77e63986508aa2e8159fa200
-  languageName: node
-  linkType: hard
-
-"q@npm:0.9.4":
-  version: 0.9.4
-  resolution: "q@npm:0.9.4"
-  checksum: ab9b6b6d2d44d7d83dec09ac0cfd35943a028e4c60fc437bb56e5a00e0e5ff2e2b0c98e6f4a3f0d4db9de505206ce08272d0e042386b8ba50cd55a51d42a0719
   languageName: node
   linkType: hard
 

@@ -31,7 +31,7 @@ jotform
   .then(function (r) {
     /* successful response after request */
   })
-  .fail(function (e) {
+  .catch(function (e) {
     /* handle error */
   });
 ```
