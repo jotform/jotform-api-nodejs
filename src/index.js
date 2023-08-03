@@ -272,11 +272,11 @@ function getFormQuestions(formID) {
   return promise;
 }
 
-function getFormQuestion(formID, qid) {
+function getFormQuestion(formID, questionID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
-  if (qid === undefined) {
+  if (questionID === undefined) {
     throw new Error('Question ID is undefined');
   }
   const endPoint = '/form',
@@ -287,7 +287,7 @@ function getFormQuestion(formID, qid) {
       '/' +
       formID +
       '/question/' +
-      qid +
+      questionID +
       '?apiKey=' +
       _apiKey;
   const promise = get(requestUrl);
@@ -437,8 +437,8 @@ function deleteFormWebhook(formID, webhookID) {
   return promise;
 }
 
-function getSubmission(sid) {
-  if (sid === undefined) {
+function getSubmission(submissionID) {
+  if (submissionID === undefined) {
     throw new Error('Submission ID is undefined');
   }
   const endPoint = '/submission',
@@ -447,18 +447,18 @@ function getSubmission(sid) {
       (_version === 'latest' ? '' : '/v' + _version) +
       endPoint +
       '/' +
-      sid +
+      submissionID +
       '?apiKey=' +
       _apiKey;
   const promise = get(requestUrl);
   return promise;
 }
 
-function editSubmission(sid, submissionData) {
+function editSubmission(submissionID, submissionData) {
   if (typeof submissionData !== 'object' || submissionData === null) {
     return;
   }
-  const endPoint = '/submission/' + sid,
+  const endPoint = '/submission/' + submissionID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     postData = submissionData;
@@ -467,8 +467,8 @@ function editSubmission(sid, submissionData) {
   return promise;
 }
 
-function deleteSubmission(sid) {
-  const endPoint = '/submission/' + sid,
+function deleteSubmission(submissionID) {
+  const endPoint = '/submission/' + submissionID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey;
 
