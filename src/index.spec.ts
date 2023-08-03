@@ -196,19 +196,73 @@ describe('cloneForm()', () => {
  * Form files
  */
 
-describe.todo('getFormFiles()');
+describe('getFormFiles()', () => {
+  it('returns form files data properly', async () => {
+    const response = await jotform.getFormFiles(TEST_FORM_ID);
+
+    expect(response).toMatchObject(expect.any(Array));
+  });
+});
 
 /**
  * Form properties
  */
 
-describe.todo('getFormProperties()');
+describe('getFormProperties()', () => {
+  it('returns form properties data properly', async () => {
+    const response = await jotform.getFormProperties(TEST_FORM_ID);
 
-describe.todo('getFormProperty()');
+    expect(response).toMatchObject(expect.any(Object));
+  });
+});
 
-describe.todo('addFormProperty()');
+describe('getFormProperty()', () => {
+  it('returns form property data properly', async () => {
+    const response = await jotform.getFormProperty(TEST_FORM_ID, 'pagetitle');
 
-describe.todo('addFormProperties()');
+    expect(response).toMatchObject({
+      pagetitle: expect.any(String),
+    });
+  });
+});
+
+describe('addFormProperty()', () => {
+  afterAll(async () => {
+    await jotform.addFormProperty(TEST_FORM_ID, { properties: { pagetitle: 'Test form' } });
+  });
+
+  it('adds form property properly', async () => {
+    const randomString = Math.random().toString(36).substring(7);
+
+    const response = await jotform.addFormProperty(TEST_FORM_ID, {
+      properties: { pagetitle: randomString },
+    });
+
+    expect(response).toMatchObject({
+      pagetitle: randomString,
+      formID: TEST_FORM_ID,
+    });
+  });
+});
+
+describe('addFormProperties()', () => {
+  afterAll(async () => {
+    await jotform.addFormProperties(TEST_FORM_ID, { properties: { pagetitle: 'Test form' } });
+  });
+
+  it('adds form property properly', async () => {
+    const randomString = Math.random().toString(36).substring(7);
+
+    const response = await jotform.addFormProperties(TEST_FORM_ID, {
+      properties: { pagetitle: randomString },
+    });
+
+    expect(response).toMatchObject({
+      pagetitle: randomString,
+      formID: TEST_FORM_ID,
+    });
+  });
+});
 
 /**
  * Form questions
@@ -260,7 +314,15 @@ describe('getFormSubmissions()', () => {
   });
 });
 
-describe.todo('getFormSubmission()');
+describe('getFormSubmission()', () => {
+  it('returns submission data properly', async () => {
+    const response = await jotform.getFormSubmission(TEST_FORM_ID, TEST_FORM_SUBMISSION_ID);
+
+    expect(response).toMatchObject({
+      id: TEST_FORM_SUBMISSION_ID,
+    });
+  });
+});
 
 describe('createFormSubmission()', () => {
   const createdSubmissionIds: string[] = [];
