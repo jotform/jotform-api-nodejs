@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
+import { z } from 'zod';
 import jotform from './index';
 
 const TEST_FORM_ID = '232143945675058';
@@ -47,7 +48,9 @@ describe('getForms()', () => {
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const testForm = response.find((form) => form.id === TEST_FORM_ID);
+    const anyResponse = z.any().parse(response);
+
+    const testForm = anyResponse.find((form: { id: string }) => form.id === TEST_FORM_ID);
 
     expect(testForm).toBeDefined();
   });
@@ -64,7 +67,7 @@ describe('getForm()', () => {
 });
 
 describe('createForm()', () => {
-  const createdFormIds = [];
+  const createdFormIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdFormIds, async (formId) => {
@@ -79,13 +82,15 @@ describe('createForm()', () => {
       id: expect.any(String),
     });
 
+    const anyResponse = z.any().parse(response);
+
     // Store form ID for later use
-    createdFormIds.push(response.id);
+    createdFormIds.push(anyResponse.id);
   });
 });
 
 describe('createForms()', () => {
-  const createdFormIds = [];
+  const createdFormIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdFormIds, async (formId) => {
@@ -101,18 +106,22 @@ describe('createForms()', () => {
       id: expect.any(String),
     });
 
+    const anyResponse = z.any().parse(response);
+
     // Store form ID for later use
-    createdFormIds.push(response.id);
+    createdFormIds.push(anyResponse.id);
   });
 });
 
 describe('deleteForm()', () => {
-  let createdFormId;
+  let createdFormId: string;
 
   beforeAll(async () => {
     const response = await jotform.createForm({ questions: [] });
 
-    createdFormId = response.id;
+    const anyResponse = z.any().parse(response);
+
+    createdFormId = anyResponse.id;
   });
 
   it('deletes form properly', async () => {
@@ -125,7 +134,7 @@ describe('deleteForm()', () => {
 });
 
 describe('cloneForm()', () => {
-  const createdFormIds = [];
+  const createdFormIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdFormIds, async (formId) => {
@@ -140,8 +149,10 @@ describe('cloneForm()', () => {
       id: expect.any(String),
     });
 
+    const anyResponse = z.any().parse(response);
+
     // Store form ID for later use
-    createdFormIds.push(response.id);
+    createdFormIds.push(anyResponse.id);
   });
 });
 
@@ -185,8 +196,10 @@ describe('getSubmissions()', () => {
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const testFormSubmission = response.find(
-      (submission) => submission.id === TEST_FORM_SUBMISSION_ID,
+    const anyResponse = z.any().parse(response);
+
+    const testFormSubmission = anyResponse.find(
+      (submission: { id: string }) => submission.id === TEST_FORM_SUBMISSION_ID,
     );
 
     expect(testFormSubmission).toBeDefined();
@@ -203,8 +216,10 @@ describe('getFormSubmissions()', () => {
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const testFormSubmission = response.find(
-      (submission) => submission.id === TEST_FORM_SUBMISSION_ID,
+    const anyResponse = z.any().parse(response);
+
+    const testFormSubmission = anyResponse.find(
+      (submission: { id: string }) => submission.id === TEST_FORM_SUBMISSION_ID,
     );
 
     expect(testFormSubmission).toBeDefined();
@@ -212,7 +227,7 @@ describe('getFormSubmissions()', () => {
 });
 
 describe('createFormSubmission()', () => {
-  const createdSubmissionIds = [];
+  const createdSubmissionIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdSubmissionIds, async (submissionId) => {
@@ -231,13 +246,19 @@ describe('createFormSubmission()', () => {
       submissionID: expect.any(String),
     });
 
+    const safeResponse = z
+      .object({
+        submissionID: z.string(),
+      })
+      .parse(response);
+
     // Store submission ID for later use
-    createdSubmissionIds.push(response.submissionID);
+    createdSubmissionIds.push(safeResponse.submissionID);
   });
 });
 
 describe('createFormSubmissions()', () => {
-  const createdSubmissionIds = [];
+  const createdSubmissionIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdSubmissionIds, async (submissionId) => {
@@ -256,7 +277,9 @@ describe('createFormSubmissions()', () => {
 
     expect(response).toMatchObject(expect.any(Array));
 
-    const item = response[0];
+    const anyResponse = z.any().parse(response);
+
+    const item = anyResponse[0];
 
     expect(item).toMatchObject({
       submissionID: expect.any(String),
@@ -287,7 +310,11 @@ describe('getFolders()', () => {
       subfolders: expect.any(Array),
     });
 
-    const testFolder = response.subfolders.find((folder) => folder.id === TEST_FOLDER_ID);
+    const anyResponse = z.any().parse(response);
+
+    const testFolder = anyResponse.subfolders.find(
+      (folder: { id: string }) => folder.id === TEST_FOLDER_ID,
+    );
 
     expect(testFolder).toBeDefined();
 
@@ -300,7 +327,7 @@ describe('getFolders()', () => {
     );
 
     const testSubfolder = testFolder.subfolders.find(
-      (subfolder) => subfolder.id === TEST_SUBFOLDER_ID,
+      (subfolder: { id: string }) => subfolder.id === TEST_SUBFOLDER_ID,
     );
 
     expect(testSubfolder).toBeDefined();
@@ -327,7 +354,7 @@ describe('getFolder()', () => {
 });
 
 describe('createFolder()', () => {
-  const createdFolderIds = [];
+  const createdFolderIds: string[] = [];
 
   afterAll(async () => {
     await asyncForEach(createdFolderIds, async (folderId) => {
@@ -343,18 +370,22 @@ describe('createFolder()', () => {
       id: expect.any(String),
     });
 
+    const anyResponse = z.any().parse(response);
+
     // Store folder ID for later use
-    createdFolderIds.push(response.id);
+    createdFolderIds.push(anyResponse.id);
   });
 });
 
 describe('updateFolder()', () => {
-  let createdFolderId;
+  let createdFolderId: string;
 
   beforeAll(async () => {
     const response = await jotform.createFolder({ name: 'Test folder' });
 
-    createdFolderId = response.id;
+    const anyResponse = z.any().parse(response);
+
+    createdFolderId = anyResponse.id;
   });
 
   afterAll(async () => {
@@ -377,12 +408,14 @@ describe.todo('addFormToFolder()');
 
 // This method returns a Promise that never resolves
 describe.skip('deleteFolder()', () => {
-  let createdFolderId;
+  let createdFolderId: string;
 
   beforeAll(async () => {
     const response = await jotform.createFolder({ name: 'Test folder' });
 
-    createdFolderId = response.id;
+    const anyResponse = z.any().parse(response);
+
+    createdFolderId = anyResponse.id;
   });
 
   it('deletes folder properly', async () => {
