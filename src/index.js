@@ -44,19 +44,34 @@ async function sendRequest(url, method, body) {
   const id = setTimeout(() => controller.abort(), _timeout);
 
   const response = await fetch(url, options);
-  const responseJson = await response.json();
 
   clearTimeout(id);
 
-  if (response.status !== 200) {
-    throw new Error(responseJson.message);
+  const responseBody = await (async () => {
+    const contentTypeHeader = response.headers.get('content-type');
+    const contentType = contentTypeHeader ? contentTypeHeader.split(';')[0] : null;
+
+    switch (contentType) {
+      case 'application/json':
+        return response.json();
+      default:
+        return response.text();
+    }
+  })();
+
+  if (!response.ok) {
+    const errorMessage =
+      (typeof responseBody === 'object' ? responseBody.message : responseBody) ||
+      response.statusText;
+
+    throw new Error(errorMessage);
   }
 
-  if (responseJson.responseCode !== 200) {
-    throw new Error(responseJson.message);
+  if (responseBody.responseCode !== 200) {
+    throw new Error(responseBody.message);
   }
 
-  return responseJson.content;
+  return responseBody.content;
 }
 
 function get(url) {
