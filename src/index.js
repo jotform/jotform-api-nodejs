@@ -6,11 +6,7 @@ const defaults = {
   timeout: 10000, // 10 seconds
 };
 
-let _url = defaults.url,
-  _apiKey = defaults.apiKey,
-  _version = defaults.version,
-  _debug = defaults.debug,
-  _timeout = defaults.timeout;
+let { url: _url, apiKey: _apiKey, version: _version, debug: _debug, timeout: _timeout } = defaults;
 
 async function sendRequest(url, method, body) {
   if (_debug) {
