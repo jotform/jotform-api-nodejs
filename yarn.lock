@@ -554,10 +554,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@wojtekmaj/async-array-utils@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@wojtekmaj/async-array-utils@npm:1.8.0"
+  checksum: 71a5438a242318fc524bb547440786f705e3caace2cead0684599e9d5455c679d7f80fd1a56e611e8d4f3d869e83c5c368d610f7d041cc1b16ed39275a024014
+  languageName: node
+  linkType: hard
+
 "@wojtekmaj/jotform@workspace:.":
   version: 0.0.0-use.local
   resolution: "@wojtekmaj/jotform@workspace:."
   dependencies:
+    "@wojtekmaj/async-array-utils": ^1.8.0
     eslint: ^8.26.0
     eslint-config-wojtekmaj: ^0.9.0
     husky: ^8.0.0
