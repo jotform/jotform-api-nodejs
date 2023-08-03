@@ -22,13 +22,35 @@ describe('index', () => {
   });
 });
 
-describe('getUser()', () => {
-  it('returns user data properly', async () => {
-    const response = await jotform.getUser();
+/**
+ * General
+ */
+
+// API call takes ~12 seconds to complete, we can't wait this long
+describe.skip('getHistory()', () => {
+  it('returns history data properly', async () => {
+    const response = await jotform.getHistory();
+
+    expect(response).toMatchObject(expect.any(Array));
+  });
+});
+
+describe('getSettings()', () => {
+  it('returns settings data properly', async () => {
+    const response = await jotform.getSettings();
 
     expect(response).toMatchObject({
       email: expect.any(String),
     });
+  });
+});
+
+// Getting "User is not Allowed" error
+describe.skip('getSubusers()', () => {
+  it('returns subusers data properly', async () => {
+    const response = await jotform.getSubusers();
+
+    expect(response).toMatchObject(expect.any(Array));
   });
 });
 
@@ -41,6 +63,20 @@ describe('getUsage()', () => {
     });
   });
 });
+
+describe('getUser()', () => {
+  it('returns user data properly', async () => {
+    const response = await jotform.getUser();
+
+    expect(response).toMatchObject({
+      email: expect.any(String),
+    });
+  });
+});
+
+/**
+ * Forms
+ */
 
 describe('getForms()', () => {
   it('returns forms data properly', async () => {
@@ -156,6 +192,28 @@ describe('cloneForm()', () => {
   });
 });
 
+/**
+ * Form files
+ */
+
+describe.todo('getFormFiles()');
+
+/**
+ * Form properties
+ */
+
+describe.todo('getFormProperties()');
+
+describe.todo('getFormProperty()');
+
+describe.todo('addFormProperty()');
+
+describe.todo('addFormProperties()');
+
+/**
+ * Form questions
+ */
+
 describe('getFormQuestions()', () => {
   it('returns form questions data properly', async () => {
     const response = await jotform.getFormQuestions(TEST_FORM_ID);
@@ -172,39 +230,15 @@ describe('getFormQuestion()', () => {
   });
 });
 
-describe.todo('addFormQuestions()');
-
 describe.todo('addFormQuestion()');
+
+describe.todo('addFormQuestions()');
 
 describe.todo('deleteFormQuestion()');
 
-describe.todo('getFormProperties()');
-
-describe.todo('addFormProperties()');
-
-describe.todo('addFormProperty()');
-
-describe.todo('getFormPropertyByKey()');
-
-describe('getSubmissions()', () => {
-  it('returns submissions data properly', async () => {
-    const response = await jotform.getSubmissions({
-      filter: {
-        status: 'ACTIVE',
-      },
-    });
-
-    expect(response).toMatchObject(expect.any(Array));
-
-    const anyResponse = z.any().parse(response);
-
-    const testFormSubmission = anyResponse.find(
-      (submission: { id: string }) => submission.id === TEST_FORM_SUBMISSION_ID,
-    );
-
-    expect(testFormSubmission).toBeDefined();
-  });
-});
+/**
+ * Form submissions
+ */
 
 describe('getFormSubmissions()', () => {
   it('returns submissions data properly', async () => {
@@ -225,6 +259,8 @@ describe('getFormSubmissions()', () => {
     expect(testFormSubmission).toBeDefined();
   });
 });
+
+describe.todo('getFormSubmission()');
 
 describe('createFormSubmission()', () => {
   const createdSubmissionIds: string[] = [];
@@ -290,14 +326,19 @@ describe('createFormSubmissions()', () => {
   });
 });
 
-// Getting "User is not Allowed" error
-describe.skip('getSubusers()', () => {
-  it('returns subusers data properly', async () => {
-    const response = await jotform.getSubusers();
+/**
+ * Form webhooks
+ */
 
-    expect(response).toMatchObject(expect.any(Array));
-  });
-});
+describe.todo('getFormWebhooks()');
+
+describe.todo('createFormWebhook()');
+
+describe.todo('deleteFormWebhook()');
+
+/**
+ * Folders
+ */
 
 describe('getFolders()', () => {
   it('returns folders data properly', async () => {
@@ -402,9 +443,9 @@ describe('updateFolder()', () => {
   });
 });
 
-describe.todo('addFormsToFolder()');
-
 describe.todo('addFormToFolder()');
+
+describe.todo('addFormsToFolder()');
 
 // This method returns a Promise that never resolves
 describe.skip('deleteFolder()', () => {
@@ -427,6 +468,10 @@ describe.skip('deleteFolder()', () => {
   });
 });
 
+/**
+ * Reports
+ */
+
 describe('getReports()', () => {
   it('returns reports data properly', async () => {
     const response = await jotform.getReports();
@@ -445,21 +490,32 @@ describe.skip('getReport()', () => {
   });
 });
 
-describe('getSettings()', () => {
-  it('returns settings data properly', async () => {
-    const response = await jotform.getSettings();
+/**
+ * Submissions
+ */
 
-    expect(response).toMatchObject({
-      email: expect.any(String),
+describe('getSubmissions()', () => {
+  it('returns submissions data properly', async () => {
+    const response = await jotform.getSubmissions({
+      filter: {
+        status: 'ACTIVE',
+      },
     });
-  });
-});
-
-// API call takes ~12 seconds to complete, we can't wait this long
-describe.skip('getHistory()', () => {
-  it('returns history data properly', async () => {
-    const response = await jotform.getHistory();
 
     expect(response).toMatchObject(expect.any(Array));
+
+    const anyResponse = z.any().parse(response);
+
+    const testFormSubmission = anyResponse.find(
+      (submission: { id: string }) => submission.id === TEST_FORM_SUBMISSION_ID,
+    );
+
+    expect(testFormSubmission).toBeDefined();
   });
 });
+
+describe.todo('getSubmission()');
+
+describe.todo('editSubmission()');
+
+describe.todo('deleteSubmission()');

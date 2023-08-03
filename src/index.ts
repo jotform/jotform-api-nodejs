@@ -101,28 +101,6 @@ function del<T = unknown>(url: string, customHeaders?: HeadersInit): Promise<T> 
   return sendRequest(url, 'delete', undefined, customHeaders);
 }
 
-function options(options = {}) {
-  const optionsWithDefaults = {
-    ...defaults,
-    ...options,
-  };
-
-  _url = optionsWithDefaults.url;
-  _apiKey = optionsWithDefaults.apiKey;
-  _version = optionsWithDefaults.version;
-  _debug = optionsWithDefaults.debug;
-  _timeout = optionsWithDefaults.timeout;
-
-  if (_debug) {
-    console.log('Jotform: Updated options', {
-      url: _url,
-      apiKey: _apiKey,
-      version: _version,
-      debug: _debug,
-    });
-  }
-}
-
 function getRequestUrl(endPoint: string, params: Record<string, string | undefined> = {}) {
   if (typeof _apiKey === 'undefined') {
     throw new Error('API Key is undefined');
@@ -152,8 +130,67 @@ function getRequestUrl(endPoint: string, params: Record<string, string | undefin
   return `${baseUrl + endPoint}?${urlSearchParams.toString()}`;
 }
 
-function getUser(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user';
+function options(options = {}) {
+  const optionsWithDefaults = {
+    ...defaults,
+    ...options,
+  };
+
+  _url = optionsWithDefaults.url;
+  _apiKey = optionsWithDefaults.apiKey;
+  _version = optionsWithDefaults.version;
+  _debug = optionsWithDefaults.debug;
+  _timeout = optionsWithDefaults.timeout;
+
+  if (_debug) {
+    console.log('Jotform: Updated options', {
+      url: _url,
+      apiKey: _apiKey,
+      version: _version,
+      debug: _debug,
+    });
+  }
+}
+
+/**
+ * General
+ */
+
+function getHistory(
+  query: {
+    action?: string;
+    date?: string;
+    sortBy?: string;
+    startDate?: string;
+    endDate?: string;
+  } = {},
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const { action, date, sortBy, startDate, endDate } = query;
+
+  const endPoint = '/user/history';
+  const requestUrl = getRequestUrl(endPoint, {
+    action: action !== undefined ? action : 'all',
+    date,
+    sortBy: sortBy !== undefined ? sortBy : 'ASC',
+    startDate,
+    endDate,
+  });
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user/settings';
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
 
   const promise = get(requestUrl, customHeaders);
@@ -167,6 +204,18 @@ function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   const promise = get(requestUrl, customHeaders);
   return promise;
 }
+
+function getUser(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user';
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Forms
+ */
 
 function getForms(
   query: {
@@ -203,100 +252,6 @@ function getForms(
   return promise;
 }
 
-function getSubmissions(
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-    fullText?: string;
-    nocache?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const { filter, offset, limit, orderby, direction, fullText, nocache } = query;
-
-  if (filter && typeof filter !== 'object') {
-    throw new Error('Filter must be an object');
-  }
-
-  if (direction && direction !== 'ASC' && direction !== 'DESC') {
-    throw new Error('Direction must be ASC or DESC');
-  }
-
-  const endPoint = '/user/submissions';
-  const requestUrl = getRequestUrl(endPoint, {
-    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
-    offset,
-    limit,
-    orderby: orderby !== undefined ? orderby : 'created_at',
-    fullText,
-    direction,
-    nocache,
-  });
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user/subusers';
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user/folders';
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getReports(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user/reports';
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = '/user/settings';
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getHistory(
-  query: {
-    action?: string;
-    date?: string;
-    sortBy?: string;
-    startDate?: string;
-    endDate?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const { action, date, sortBy, startDate, endDate } = query;
-
-  const endPoint = '/user/history';
-  const requestUrl = getRequestUrl(endPoint, {
-    action: action !== undefined ? action : 'all',
-    date,
-    sortBy: sortBy !== undefined ? sortBy : 'ASC',
-    startDate,
-    endDate,
-  });
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
 function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -307,296 +262,6 @@ function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> 
 
   const promise = get(requestUrl, customHeaders);
   return promise;
-}
-
-function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  const endPoint = `/form/${formID}/questions`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getFormQuestion(
-  formID: string,
-  questionID: string,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  if (questionID === undefined) {
-    throw new Error('Question ID is undefined');
-  }
-
-  const endPoint = `/form/${formID}/question/${questionID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getFormSubmissions(
-  formID: string,
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  const { filter, offset, limit, orderby, direction } = query;
-
-  if (filter && typeof filter !== 'object') {
-    throw new Error('Filter must be an object');
-  }
-
-  if (direction && direction !== 'ASC' && direction !== 'DESC') {
-    throw new Error('Direction must be ASC or DESC');
-  }
-
-  const endPoint = `/form/${formID}/submissions`;
-  const requestUrl = getRequestUrl(endPoint, {
-    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
-    offset,
-    limit,
-    orderby: orderby !== undefined ? orderby : 'created_at',
-    direction,
-  });
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function createFormSubmission(
-  formID: string,
-  submissionData: unknown,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  const endPoint = `/form/${formID}/submissions`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = submissionData;
-
-  const promise = post(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function createFormSubmissions(
-  formID: string,
-  submissionsData: unknown,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (typeof submissionsData !== 'object' || submissionsData === null) {
-    return Promise.resolve();
-  }
-
-  const endPoint = `/form/${formID}/submissions`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = submissionsData;
-
-  const promise = put(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  const endPoint = `/form/${formID}/files`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  const endPoint = `/form/${formID}/webhooks`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function createFormWebhook(
-  formID: string,
-  webhookURL: string,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
-  }
-
-  if (webhookURL === undefined) {
-    throw new Error('webhookURL is undefined');
-  }
-
-  const endPoint = `/form/${formID}/webhooks`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = {
-    webhookURL: webhookURL,
-  };
-
-  const promise = post(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function deleteFormWebhook(
-  formID: string,
-  webhookID: string,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const endPoint = `/form/${formID}/webhooks/${webhookID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = del(requestUrl, customHeaders);
-  return promise;
-}
-
-function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (submissionID === undefined) {
-    throw new Error('Submission ID is undefined');
-  }
-
-  const endPoint = `/submission/${submissionID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function editSubmission(
-  submissionID: string,
-  submissionData: unknown,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (typeof submissionData !== 'object' || submissionData === null) {
-    return Promise.resolve();
-  }
-
-  const endPoint = `/submission/${submissionID}`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = submissionData;
-
-  const promise = post(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = `/submission/${submissionID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = del(requestUrl, customHeaders);
-  return promise;
-}
-
-function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (reportID === undefined) {
-    throw new Error('Report ID is undefined');
-  }
-
-  const endPoint = `/report/${reportID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (folderID === undefined) {
-    throw new Error('Folder ID is undefined');
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = get(requestUrl, customHeaders);
-  return promise;
-}
-
-function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (folderID === undefined) {
-    return Promise.resolve();
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-
-  const promise = del(requestUrl, customHeaders);
-  return promise;
-}
-
-function updateFolder(
-  folderID: string,
-  folderProperties: unknown,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
-    return Promise.resolve();
-  }
-
-  const endPoint = `/folder/${folderID}`;
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = folderProperties;
-
-  const promise = put(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
-  if (typeof folderProperties !== 'object' || folderProperties === null) {
-    return Promise.resolve();
-  }
-
-  const endPoint = '/folder';
-  const requestUrl = getRequestUrl(endPoint);
-  const postData = folderProperties;
-
-  const promise = post(requestUrl, postData, customHeaders);
-  return promise;
-}
-
-function addFormsToFolder(
-  folderID: string,
-  formIDs: string[],
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const folderProperties = {
-    forms: formIDs,
-  };
-
-  return updateFolder(folderID, folderProperties, customHeaders);
-}
-
-function addFormToFolder(
-  folderID: string,
-  formID: string,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const addFormProperties = {
-    forms: [formID],
-  };
-
-  return updateFolder(folderID, addFormProperties, customHeaders);
 }
 
 function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
@@ -638,6 +303,116 @@ function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown
   const requestUrl = getRequestUrl(endPoint);
 
   const promise = post(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Form files
+ */
+
+function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/files`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Form properties
+ */
+
+function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getFormProperty(
+  formID: string,
+  key: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const endPoint = `/form/${formID}/properties/${key}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function addFormProperty(
+  formID: string,
+  propertyData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof propertyData !== 'object' || propertyData === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = propertyData;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function addFormProperties(
+  formID: string,
+  propertyData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof propertyData !== 'object' || propertyData === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = `/form/${formID}/properties`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = propertyData;
+
+  const promise = put(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+/**
+ * Form questions
+ */
+
+function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/questions`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getFormQuestion(
+  formID: string,
+  questionID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  if (questionID === undefined) {
+    throw new Error('Question ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/question/${questionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
@@ -687,100 +462,397 @@ function deleteFormQuestion(
   return promise;
 }
 
-function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  const endPoint = `/form/${formID}/properties`;
-  const requestUrl = getRequestUrl(endPoint);
+/**
+ * Form submissions
+ */
+
+function getFormSubmissions(
+  formID: string,
+  query: {
+    filter?: Record<string, string>;
+    offset?: string;
+    limit?: string;
+    orderby?: string;
+    direction?: 'ASC' | 'DESC';
+  } = {},
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const { filter, offset, limit, orderby, direction } = query;
+
+  if (filter && typeof filter !== 'object') {
+    throw new Error('Filter must be an object');
+  }
+
+  if (direction && direction !== 'ASC' && direction !== 'DESC') {
+    throw new Error('Direction must be ASC or DESC');
+  }
+
+  const endPoint = `/form/${formID}/submissions`;
+  const requestUrl = getRequestUrl(endPoint, {
+    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
+    offset,
+    limit,
+    orderby: orderby !== undefined ? orderby : 'created_at',
+    direction,
+  });
 
   const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
-function addFormProperty(
+function getFormSubmission(
   formID: string,
-  propertyData: unknown,
+  submissionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof propertyData !== 'object' || propertyData === null) {
-    return Promise.resolve();
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return getSubmission(submissionID, customHeaders);
+}
+
+function createFormSubmission(
+  formID: string,
+  submissionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
   }
 
-  const endPoint = `/form/${formID}/properties`;
+  const endPoint = `/form/${formID}/submissions`;
   const requestUrl = getRequestUrl(endPoint);
-  const postData = propertyData;
+  const postData = submissionData;
 
   const promise = post(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function addFormProperties(
+function createFormSubmissions(
   formID: string,
-  propertyData: unknown,
+  submissionsData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (typeof propertyData !== 'object' || propertyData === null) {
+  if (typeof submissionsData !== 'object' || submissionsData === null) {
     return Promise.resolve();
   }
 
-  const endPoint = `/form/${formID}/properties`;
+  const endPoint = `/form/${formID}/submissions`;
   const requestUrl = getRequestUrl(endPoint);
-  const postData = propertyData;
+  const postData = submissionsData;
 
   const promise = put(requestUrl, postData, customHeaders);
   return promise;
 }
 
-function getFormPropertyByKey(
-  formID: string,
-  key: string,
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
-  const endPoint = `/form/${formID}/properties/${key}`;
+/**
+ * Form webhooks
+ */
+
+function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/webhooks`;
   const requestUrl = getRequestUrl(endPoint);
 
   const promise = get(requestUrl, customHeaders);
   return promise;
 }
 
+function createFormWebhook(
+  formID: string,
+  webhookURL: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  if (webhookURL === undefined) {
+    throw new Error('webhookURL is undefined');
+  }
+
+  const endPoint = `/form/${formID}/webhooks`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = {
+    webhookURL: webhookURL,
+  };
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function deleteFormWebhook(
+  formID: string,
+  webhookID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const endPoint = `/form/${formID}/webhooks/${webhookID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = del(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Folders
+ */
+
+function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user/folders';
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (folderID === undefined) {
+    throw new Error('Folder ID is undefined');
+  }
+
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof folderProperties !== 'object' || folderProperties === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = '/folder';
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = folderProperties;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function updateFolder(
+  folderID: string,
+  folderProperties: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = folderProperties;
+
+  const promise = put(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function addFormToFolder(
+  folderID: string,
+  formID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const addFormProperties = {
+    forms: [formID],
+  };
+
+  return updateFolder(folderID, addFormProperties, customHeaders);
+}
+
+function addFormsToFolder(
+  folderID: string,
+  formIDs: string[],
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const folderProperties = {
+    forms: formIDs,
+  };
+
+  return updateFolder(folderID, folderProperties, customHeaders);
+}
+
+function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (folderID === undefined) {
+    return Promise.resolve();
+  }
+
+  const endPoint = `/folder/${folderID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = del(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Reports
+ */
+
+function getReports(customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = '/user/reports';
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (reportID === undefined) {
+    throw new Error('Report ID is undefined');
+  }
+
+  const endPoint = `/report/${reportID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
+ * Submissions
+ */
+
+function getSubmissions(
+  query: {
+    filter?: Record<string, string>;
+    offset?: string;
+    limit?: string;
+    orderby?: string;
+    direction?: 'ASC' | 'DESC';
+    fullText?: string;
+    nocache?: string;
+  } = {},
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  const { filter, offset, limit, orderby, direction, fullText, nocache } = query;
+
+  if (filter && typeof filter !== 'object') {
+    throw new Error('Filter must be an object');
+  }
+
+  if (direction && direction !== 'ASC' && direction !== 'DESC') {
+    throw new Error('Direction must be ASC or DESC');
+  }
+
+  const endPoint = '/user/submissions';
+  const requestUrl = getRequestUrl(endPoint, {
+    filter: filter !== undefined ? JSON.stringify(filter) : undefined,
+    offset,
+    limit,
+    orderby: orderby !== undefined ? orderby : 'created_at',
+    fullText,
+    direction,
+    nocache,
+  });
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (submissionID === undefined) {
+    throw new Error('Submission ID is undefined');
+  }
+
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function updateSubmission(
+  submissionID: string,
+  submissionData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (typeof submissionData !== 'object' || submissionData === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = submissionData;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  const endPoint = `/submission/${submissionID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = del(requestUrl, customHeaders);
+  return promise;
+}
+
 export default {
   options,
-  getForm,
-  getFormQuestions,
-  getFormProperties,
-  getUser,
-  getUsage,
-  getForms,
-  getSubmissions,
-  getSubusers,
-  getFolders,
-  getReports,
-  getSettings,
+
+  /* General */
   getHistory,
-  getFormQuestion,
-  getFormSubmissions,
-  createFormSubmission,
-  createFormSubmissions,
-  getFormFiles,
-  getFormWebhooks,
-  createFormWebhook,
-  deleteFormWebhook,
-  getSubmission,
-  editSubmission,
-  deleteSubmission,
-  getReport,
-  getFolder,
-  deleteFolder,
-  updateFolder,
-  createFolder,
-  addFormsToFolder,
-  addFormToFolder,
+  getSettings,
+  getSubusers,
+  getUsage,
+  getUser,
+
+  /* Forms */
+  getForms,
+  getForm,
   createForm,
   createForms,
   deleteForm,
   cloneForm,
+
+  /* Form files */
+  getFormFiles,
+
+  /* Form properties */
+  getFormProperties,
+  getFormProperty,
+  getFormPropertyByKey: getFormProperty, // For backwards compatibility
+  addFormProperty,
+  addFormProperties,
+
+  /* Form questions */
+  getFormQuestions,
+  getFormQuestion,
   addFormQuestion,
   addFormQuestions,
   deleteFormQuestion,
-  addFormProperty,
-  addFormProperties,
-  getFormPropertyByKey,
+
+  /* Form submissions */
+  getFormSubmissions,
+  getFormSubmission,
+  createFormSubmission,
+  createFormSubmissions,
+
+  /* Form webhooks */
+  getFormWebhooks,
+  createFormWebhook,
+  deleteFormWebhook,
+
+  /* Folders */
+  getFolders,
+  getFolder,
+  createFolder,
+  updateFolder,
+  addFormToFolder,
+  addFormsToFolder,
+  deleteFolder,
+
+  /* Reports */
+  getReports,
+  getReport,
+
+  /* Submissions */
+  getSubmissions,
+  getSubmission,
+  updateSubmission,
+  editSubmission: updateSubmission, // For backwards compatibility
+  deleteSubmission,
 };
