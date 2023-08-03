@@ -352,7 +352,7 @@ function createFormSubmission(formID, submissions) {
 }
 
 function createFormSubmissions(formID, submissionData) {
-  if (typeof submissionData != 'object' || submissionData == null) {
+  if (typeof submissionData !== 'object' || submissionData === null) {
     return;
   }
 
@@ -455,7 +455,7 @@ function getSubmission(sid) {
 }
 
 function editSubmission(sid, submissionData) {
-  if (typeof submissionData != 'object' || submissionData == null) {
+  if (typeof submissionData !== 'object' || submissionData === null) {
     return;
   }
   const endPoint = '/submission/' + sid,
@@ -524,7 +524,7 @@ function deleteFolder(folderID) {
 }
 
 function updateFolder(folderID, folderProperties) {
-  if (folderID === undefined || typeof folderProperties != 'object' || folderProperties == null) {
+  if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
     return;
   }
 
@@ -538,7 +538,7 @@ function updateFolder(folderID, folderProperties) {
 }
 
 function createFolder(folderProperties) {
-  if (typeof folderProperties != 'object' || folderProperties == null) {
+  if (typeof folderProperties !== 'object' || folderProperties === null) {
     return;
   }
 
@@ -568,7 +568,7 @@ function addFormToFolder(folderID, formID) {
 }
 
 function createForm(formData) {
-  if (typeof formData != 'object' || formData == null) {
+  if (typeof formData !== 'object' || formData === null) {
     return;
   }
 
@@ -582,7 +582,7 @@ function createForm(formData) {
 }
 
 function createForms(formsData) {
-  if (typeof formsData != 'object' || formsData == null) {
+  if (typeof formsData !== 'object' || formsData === null) {
     return;
   }
 
@@ -614,7 +614,7 @@ function cloneForm(formID) {
 }
 
 function addFormQuestion(formID, questionData) {
-  if (typeof questionData != 'object' || questionData == null) {
+  if (typeof questionData !== 'object' || questionData === null) {
     return;
   }
   const endPoint = '/form/' + formID + '/questions',
@@ -627,7 +627,7 @@ function addFormQuestion(formID, questionData) {
 }
 
 function addFormQuestions(formID, questionData) {
-  if (typeof questionData != 'object' || questionData == null) {
+  if (typeof questionData !== 'object' || questionData === null) {
     return;
   }
 
@@ -659,7 +659,7 @@ function getFormProperties(formID) {
 }
 
 function addFormProperty(formID, propertyData) {
-  if (typeof propertyData != 'object' || propertyData == null) {
+  if (typeof propertyData !== 'object' || propertyData === null) {
     return;
   }
   const endPoint = '/form/' + formID + '/properties',
@@ -672,7 +672,7 @@ function addFormProperty(formID, propertyData) {
 }
 
 function addFormProperties(formID, propertyData) {
-  if (typeof propertyData != 'object' || propertyData == null) {
+  if (typeof propertyData !== 'object' || propertyData === null) {
     return;
   }
 
