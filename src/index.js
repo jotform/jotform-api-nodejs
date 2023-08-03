@@ -63,7 +63,7 @@ async function sendRequest(url, method, body) {
   return responseJson.content;
 }
 
-exports.options = function (options) {
+function options(options) {
   if (!options) options = {};
 
   (_url = options.url || defaults.url),
@@ -80,27 +80,27 @@ exports.options = function (options) {
       debug: _debug,
     });
   }
-};
+}
 
-exports.getUser = function () {
+function getUser() {
   var endPoint = '/user',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getUsage = function () {
+function getUsage() {
   var endPoint = '/user/usage',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getForms = function (query) {
+function getForms(query) {
   var filter, offset, limit, orderby, direction, fullText;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
@@ -130,9 +130,9 @@ exports.getForms = function (query) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getSubmissions = function (query) {
+function getSubmissions(query) {
   var filter, offset, limit, orderby, direction, fullText, nocache;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
@@ -165,45 +165,45 @@ exports.getSubmissions = function (query) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getSubusers = function () {
+function getSubusers() {
   var endPoint = '/user/subusers',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFolders = function () {
+function getFolders() {
   var endPoint = '/user/folders',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getReports = function () {
+function getReports() {
   var endPoint = '/user/reports',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getSettings = function () {
+function getSettings() {
   var endPoint = '/user/settings',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getHistory = function (query) {
+function getHistory(query) {
   var action, date, sortBy, startDate, endDate;
   if (query && typeof query === 'object') {
     action = query.action || action;
@@ -228,9 +228,9 @@ exports.getHistory = function (query) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getForm = function (formID) {
+function getForm(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -246,9 +246,9 @@ exports.getForm = function (formID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFormQuestions = function (formID) {
+function getFormQuestions(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -265,9 +265,9 @@ exports.getFormQuestions = function (formID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFormQuestion = function (formID, qid) {
+function getFormQuestion(formID, qid) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -288,9 +288,9 @@ exports.getFormQuestion = function (formID, qid) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFormSubmissions = function (formID, query) {
+function getFormSubmissions(formID, query) {
   var filter, offset, limit, orderby, direction;
   if (query && typeof query === 'object') {
     if (typeof query.filter === 'object' || query.filter) {
@@ -325,9 +325,9 @@ exports.getFormSubmissions = function (formID, query) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.createFormSubmission = function (formID, submissions) {
+function createFormSubmission(formID, submissions) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -347,9 +347,9 @@ exports.createFormSubmission = function (formID, submissions) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.createFormSubmissions = function (formID, submissionData) {
+function createFormSubmissions(formID, submissionData) {
   if (typeof submissionData != 'object' || submissionData == null) {
     return;
   }
@@ -362,9 +362,9 @@ exports.createFormSubmissions = function (formID, submissionData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.getFormFiles = function (formID) {
+function getFormFiles(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -381,9 +381,9 @@ exports.getFormFiles = function (formID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFormWebhooks = function (formID) {
+function getFormWebhooks(formID) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -400,9 +400,9 @@ exports.getFormWebhooks = function (formID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.createFormWebhook = function (formID, webhookURL) {
+function createFormWebhook(formID, webhookURL) {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
   }
@@ -428,9 +428,9 @@ exports.createFormWebhook = function (formID, webhookURL) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.deleteFormWebhook = function (formID, webhookID) {
+function deleteFormWebhook(formID, webhookID) {
   var endPoint = '/form/' + formID + '/webhooks/' + webhookID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -438,9 +438,9 @@ exports.deleteFormWebhook = function (formID, webhookID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getSubmission = function (sid) {
+function getSubmission(sid) {
   if (sid === undefined) {
     throw new Error('Submission ID is undefined');
   }
@@ -456,9 +456,9 @@ exports.getSubmission = function (sid) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.editSubmission = function (sid, submissionData) {
+function editSubmission(sid, submissionData) {
   if (typeof submissionData != 'object' || submissionData == null) {
     return;
   }
@@ -470,9 +470,9 @@ exports.editSubmission = function (sid, submissionData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.deleteSubmission = function (sid) {
+function deleteSubmission(sid) {
   var endPoint = '/submission/' + sid,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -480,9 +480,9 @@ exports.deleteSubmission = function (sid) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getReport = function (reportID) {
+function getReport(reportID) {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
   }
@@ -498,9 +498,9 @@ exports.getReport = function (reportID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFolder = function (folderID) {
+function getFolder(folderID) {
   if (folderID === undefined) {
     throw new Error('Folder ID is undefined');
   }
@@ -516,9 +516,9 @@ exports.getFolder = function (folderID) {
     requestVerb = 'get';
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.deleteFolder = function (folderID) {
+function deleteFolder(folderID) {
   if (folderID === undefined) {
     return;
   }
@@ -530,9 +530,9 @@ exports.deleteFolder = function (folderID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.updateFolder = function (folderID, folderProperties) {
+function updateFolder(folderID, folderProperties) {
   if (folderID === undefined || typeof folderProperties != 'object' || folderProperties == null) {
     return;
   }
@@ -545,9 +545,9 @@ exports.updateFolder = function (folderID, folderProperties) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.createFolder = function (folderProperties) {
+function createFolder(folderProperties) {
   if (typeof folderProperties != 'object' || folderProperties == null) {
     return;
   }
@@ -560,25 +560,25 @@ exports.createFolder = function (folderProperties) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.addFormsToFolder = function (folderID, formIDs) {
+function addFormsToFolder(folderID, formIDs) {
   const folderProperties = {
     forms: formIDs,
   };
 
   return this.updateFolder(folderID, folderProperties);
-};
+}
 
-exports.addFormToFolder = function (folderID, formID) {
+function addFormToFolder(folderID, formID) {
   const addFormProperties = {
     forms: [formID],
   };
 
   return this.updateFolder(folderID, addFormProperties);
-};
+}
 
-exports.createForm = function (formData) {
+function createForm(formData) {
   if (typeof formData != 'object' || formData == null) {
     return;
   }
@@ -591,9 +591,9 @@ exports.createForm = function (formData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.createForms = function (formsData) {
+function createForms(formsData) {
   if (typeof formsData != 'object' || formsData == null) {
     return;
   }
@@ -606,9 +606,9 @@ exports.createForms = function (formsData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.deleteForm = function (formID) {
+function deleteForm(formID) {
   var endPoint = '/form/' + formID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -616,9 +616,9 @@ exports.deleteForm = function (formID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.cloneForm = function (formID) {
+function cloneForm(formID) {
   var endPoint = '/form/' + formID + '/clone',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -626,9 +626,9 @@ exports.cloneForm = function (formID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.addFormQuestion = function (formID, questionData) {
+function addFormQuestion(formID, questionData) {
   if (typeof questionData != 'object' || questionData == null) {
     return;
   }
@@ -640,9 +640,9 @@ exports.addFormQuestion = function (formID, questionData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.addFormQuestions = function (formID, questionData) {
+function addFormQuestions(formID, questionData) {
   if (typeof questionData != 'object' || questionData == null) {
     return;
   }
@@ -655,9 +655,9 @@ exports.addFormQuestions = function (formID, questionData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.deleteFormQuestion = function (formID, questionID) {
+function deleteFormQuestion(formID, questionID) {
   var endPoint = '/form/' + formID + '/question/' + questionID,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -665,9 +665,9 @@ exports.deleteFormQuestion = function (formID, questionID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.getFormProperties = function (formID) {
+function getFormProperties(formID) {
   var endPoint = '/form/' + formID + '/properties',
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -675,9 +675,9 @@ exports.getFormProperties = function (formID) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
-};
+}
 
-exports.addFormProperty = function (formID, propertyData) {
+function addFormProperty(formID, propertyData) {
   if (typeof propertyData != 'object' || propertyData == null) {
     return;
   }
@@ -689,9 +689,9 @@ exports.addFormProperty = function (formID, propertyData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.addFormProperties = function (formID, propertyData) {
+function addFormProperties(formID, propertyData) {
   if (typeof propertyData != 'object' || propertyData == null) {
     return;
   }
@@ -704,9 +704,9 @@ exports.addFormProperties = function (formID, propertyData) {
 
   const promise = sendRequest(requestUrl, requestVerb, postData);
   return promise;
-};
+}
 
-exports.getFormPropertyByKey = function (formID, key) {
+function getFormPropertyByKey(formID, key) {
   var endPoint = '/form/' + formID + '/properties/' + key,
     requestUrl =
       _url + (_version === 'latest' ? '' : '/v' + _version) + endPoint + '?apiKey=' + _apiKey,
@@ -714,4 +714,48 @@ exports.getFormPropertyByKey = function (formID, key) {
 
   const promise = sendRequest(requestUrl, requestVerb);
   return promise;
+}
+
+export default {
+  options,
+  getForm,
+  getFormQuestions,
+  getFormProperties,
+  getUser,
+  getUsage,
+  getForms,
+  getSubmissions,
+  getSubusers,
+  getFolders,
+  getReports,
+  getSettings,
+  getHistory,
+  getFormQuestion,
+  getFormSubmissions,
+  createFormSubmission,
+  createFormSubmissions,
+  getFormFiles,
+  getFormWebhooks,
+  createFormWebhook,
+  deleteFormWebhook,
+  getSubmission,
+  editSubmission,
+  deleteSubmission,
+  getReport,
+  getFolder,
+  deleteFolder,
+  updateFolder,
+  createFolder,
+  addFormsToFolder,
+  addFormToFolder,
+  createForm,
+  createForms,
+  deleteForm,
+  cloneForm,
+  addFormQuestion,
+  addFormQuestions,
+  deleteFormQuestion,
+  addFormProperty,
+  addFormProperties,
+  getFormPropertyByKey,
 };
