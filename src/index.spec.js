@@ -43,7 +43,7 @@ describe('getUsage()', () => {
 
 describe('getForms()', () => {
   it('returns forms data properly', async () => {
-    const response = await jotform.getForms();
+    const response = await jotform.getForms({ filter: { status: 'ENABLED' } });
 
     expect(response).toMatchObject(expect.any(Array));
 
