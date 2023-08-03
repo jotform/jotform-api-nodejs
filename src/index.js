@@ -38,12 +38,17 @@ function sendRequest(url, verb, postData) {
           reject(err);
           return;
         }
-        if (response.statusCode == 200 && body.responseCode == 200) {
-          resolve(body.content);
-        }
         if (response.statusCode != 200) {
           reject(new Error(body.message));
+          return;
         }
+
+        if (body.responseCode != 200) {
+          reject(new Error(body.message));
+          return;
+        }
+
+        resolve(body.content);
       });
     }
   });
