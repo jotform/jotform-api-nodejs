@@ -10,48 +10,57 @@ var _url = defaults.url,
   _apiKey = defaults.apiKey,
   _version = defaults.version,
   _debug = defaults.debug,
-  _timeout = defaults.timeout,
-  request = require('request');
+  _timeout = defaults.timeout;
 
-function sendRequest(url, verb, postData) {
-  return new Promise((resolve, reject) => {
-    if (_debug) {
-      console.log(verb.toUpperCase() + ' to URL:', url);
-    }
+async function sendRequest(url, method, body) {
+  if (_debug) {
+    console.log(`${method.toUpperCase()} to URL:`, url);
+  }
 
-    if (typeof _apiKey === 'undefined') {
-      reject(new Error('API Key is undefined'));
-    } else {
-      var options = {
-        url: url,
-        method: verb,
-        json: true,
-        timeout: _timeout,
-      };
-      if (verb === 'post') {
-        options.form = typeof postData !== 'undefined' ? postData : {};
-      } else if (verb === 'put') {
-        options.body = typeof postData !== 'undefined' ? postData : {};
+  const controller = new AbortController();
+
+  const options = {
+    method,
+    headers: {
+      accept: 'application/json',
+    },
+    signal: controller.signal,
+  };
+
+  if (body) {
+    switch (method) {
+      case 'post': {
+        const formData = new FormData();
+        for (const key in body) {
+          formData.append(key, body[key]);
+        }
+        options.body = formData;
+        break;
       }
-      request(options, function (err, response, body) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        if (response.statusCode != 200) {
-          reject(new Error(body.message));
-          return;
-        }
-
-        if (body.responseCode != 200) {
-          reject(new Error(body.message));
-          return;
-        }
-
-        resolve(body.content);
-      });
+      case 'put': {
+        options.body = JSON.stringify(body);
+        options.headers['content-type'] = 'application/json';
+        break;
+      }
     }
-  });
+  }
+
+  const id = setTimeout(() => controller.abort(), _timeout);
+
+  const response = await fetch(url, options);
+  const responseJson = await response.json();
+
+  clearTimeout(id);
+
+  if (response.status !== 200) {
+    throw new Error(responseJson.message);
+  }
+
+  if (responseJson.responseCode !== 200) {
+    throw new Error(responseJson.message);
+  }
+
+  return responseJson.content;
 }
 
 exports.options = function (options) {

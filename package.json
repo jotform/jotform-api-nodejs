@@ -37,9 +37,6 @@
     "email": "kontakt@wojtekmaj.pl"
   },
   "license": "GPL-2.0",
-  "dependencies": {
-    "request": "2.88.0"
-  },
   "devDependencies": {
     "@wojtekmaj/async-array-utils": "^1.8.0",
     "eslint": "^8.26.0",
