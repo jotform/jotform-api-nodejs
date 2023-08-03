@@ -1,5 +1,5 @@
-jotform-api-nodejs 
-===============
+# jotform-api-nodejs
+
 [JotForm API](https://api.jotform.com/docs/) - NodeJS Client
 
 ### Installation
@@ -14,25 +14,26 @@ You can find the docs for the API of this client at [https://api.jotform.com/doc
 
 ### Authentication
 
-JotForm API requires API key for all user related calls. You can create your API Keys at  [API section](https://www.jotform.com/myaccount/api) of My Account page.
+JotForm API requires API key for all user related calls. You can create your API Keys at [API section](https://www.jotform.com/myaccount/api) of My Account page.
 
 ### Examples
 
-```javascript
-var jotform = require("jotform")
+```js
+var jotform = require('jotform');
 
 jotform.options({
-	debug: true,
-	apiKey: "YOUR_API_KEY"
+  debug: true,
+  apiKey: 'YOUR_API_KEY',
 });
 
-jotform.getUser()
-.then(function(r){
-	/* successful response after request */
-})
-.fail(function(e){
-	/* handle error */
-})
+jotform
+  .getUser()
+  .then(function (r) {
+    /* successful response after request */
+  })
+  .fail(function (e) {
+    /* handle error */
+  });
 ```
 
 See [Documentation](https://api.jotform.com) for full list of methods available.
