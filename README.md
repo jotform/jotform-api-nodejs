@@ -1,39 +1,71 @@
-# jotform-api-nodejs
+[![npm](https://img.shields.io/npm/v/@wojtekmaj/jotform.svg)](https://www.npmjs.com/package/@wojtekmaj/jotform) ![downloads](https://img.shields.io/npm/dt/@wojtekmaj/jotform.svg) [![CI](https://github.com/wojtekmaj/jotform/workflows/CI/badge.svg)](https://github.com/wojtekmaj/jotform/actions)
 
-[JotForm API](https://api.jotform.com/docs/) - NodeJS Client
+# @wojtekmaj/jotform
+
+Unofficial [JotForm API](https://api.jotform.com/docs/) Node.js Client with TypeScript support.
+
+## tl;dr
+
+- Install by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
+- Import by adding `import jotform from '@wojtekmaj/jotform'`.
+- Authenticate:
+  ```ts
+  jotform.options({
+    apiKey: 'YOUR_API_KEY',
+  });
+  ```
+- Do stuff with it!
+  ```ts
+  const user = await jotform.getUser();
+  ```
+
+## Getting started
+
+### Compatibility
+
+Your project needs to use Node.js 18 or later.
 
 ### Installation
 
-```sh
-$ npm install jotform
-```
+Add @wojtekmaj/jotform to your project by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
 
-### Documentation
+### Obtaining API key
 
-You can find the docs for the API of this client at [https://api.jotform.com/docs/](https://api.jotform.com/docs)
+To obtain Jotform API key, go to [API section](https://www.jotform.com/myaccount/api) on My Account page.
 
-### Authentication
+### Usage
 
-JotForm API requires API key for all user related calls. You can create your API Keys at [API section](https://www.jotform.com/myaccount/api) of My Account page.
+Here's an example of basic usage:
 
-### Examples
-
-```js
-var jotform = require('jotform');
+```ts
+import jotform from '@wojtekmaj/jotform';
 
 jotform.options({
-  debug: true,
   apiKey: 'YOUR_API_KEY',
 });
 
-jotform
-  .getUser()
-  .then(function (r) {
-    /* successful response after request */
-  })
-  .catch(function (e) {
-    /* handle error */
-  });
+const user = await jotform.getUser();
 ```
 
-See [Documentation](https://api.jotform.com) for full list of methods available.
+## API Documentation
+
+Jotform API documentation is available at https://api.jotform.com/docs/.
+
+## License
+
+GNU General Public License v2.0.
+
+## Author
+
+<table>
+  <tr>
+    <td>
+      <img src="https://github.com/wojtekmaj.png?s=100" width="100">
+    </td>
+    <td>
+      Wojciech Maj<br />
+      <a href="mailto:kontakt@wojtekmaj.pl">kontakt@wojtekmaj.pl</a><br />
+      <a href="https://wojtekmaj.pl">https://wojtekmaj.pl</a>
+    </td>
+  </tr>
+</table>
