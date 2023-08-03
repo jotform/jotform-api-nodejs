@@ -75,14 +75,17 @@ function del(url) {
   return sendRequest(url, 'delete', undefined);
 }
 
-function options(options) {
-  if (!options) options = {};
+function options(options = {}) {
+  const optionsWithDefaults = {
+    ...defaults,
+    ...options,
+  };
 
-  (_url = options.url || defaults.url),
-    (_apiKey = options.apiKey || defaults.apiKey),
-    (_version = options.version || defaults.version),
-    (_debug = options.debug || defaults.debug),
-    (_timeout = options.timeout || defaults.timeout);
+  _url = optionsWithDefaults.url;
+  _apiKey = optionsWithDefaults.apiKey;
+  _version = optionsWithDefaults.version;
+  _debug = optionsWithDefaults.debug;
+  _timeout = optionsWithDefaults.timeout;
 
   if (_debug) {
     console.log('jotform API client options\n', {
