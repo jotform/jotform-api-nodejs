@@ -569,6 +569,7 @@ __metadata:
     eslint: ^8.26.0
     eslint-config-wojtekmaj: ^0.9.0
     husky: ^8.0.0
+    object-to-formdata: ^4.5.1
     prettier: ^2.7.0
     pretty-quick: ^3.1.0
     rimraf: ^3.0.0
@@ -3161,6 +3162,13 @@ __metadata:
   version: 1.1.1
   resolution: "object-keys@npm:1.1.1"
   checksum: b363c5e7644b1e1b04aa507e88dcb8e3a2f52b6ffd0ea801e4c7a62d5aa559affe21c55a07fd4b1fd55fc03a33c610d73426664b20032405d7b92a1414c34d6a
+  languageName: node
+  linkType: hard
+
+"object-to-formdata@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "object-to-formdata@npm:4.5.1"
+  checksum: 506b228bf48e38212989785db5f18885123455f1b75c6469d5ae2757ae3cfcce65e422cfecd5a386c9a2707607cb0124542e593b2190d541a59165bd55824853
   languageName: node
   linkType: hard
 

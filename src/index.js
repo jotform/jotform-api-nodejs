@@ -1,3 +1,5 @@
+import { serialize } from 'object-to-formdata';
+
 const defaults = {
   url: 'https://api.jotform.com',
   apiKey: undefined,
@@ -26,10 +28,7 @@ async function sendRequest(url, method, body) {
   if (body) {
     switch (method) {
       case 'post': {
-        const formData = new FormData();
-        for (const key in body) {
-          formData.append(key, body[key]);
-        }
+        const formData = serialize(body);
         options.body = formData;
         break;
       }
