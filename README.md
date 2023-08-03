@@ -47,9 +47,37 @@ jotform.options({
 const user = await jotform.getUser();
 ```
 
+### Usage with Jotform Teams
+
+To access resources located in a Jotform Team, a custom `jf-team-id` header needs to be added to each request. It can be done by passing `customHeaders` object to desired method:
+
+```ts
+const teamForm = await jotform.getForm('FORM_ID', { 'jf-team-id': 'YOUR_TEAM_ID' });
+```
+
 ## API Documentation
 
 Jotform API documentation is available at https://api.jotform.com/docs/.
+
+## `jotform` vs `@wojtekmaj/jotform`
+
+`@wojtekmaj/jotform` is a fork of `jotform` package. It was created to add TypeScript support, ship some long-awaited
+features, add new features and fix bugs. It was rebuilt from the ground up to benefit from the latest JavaScript
+features and to be more maintainable.
+
+`@wojtekmaj/jotform` meant to be a drop-in replacement for `jotform` package, so you can use it without any changes to your code.
+
+Here's how the two packages compare:
+
+| Feature                | `jotform`          | `@wojtekmaj/jotform` |
+| ---------------------- | ------------------ | -------------------- |
+| TypeScript support     | ❌                 | ✅                   |
+| Jotform Teams support  | ❌                 | ✅                   |
+| Tests                  | ❌                 | ✅                   |
+| Methods available      | 36                 | 42                   |
+| Number of dependencies | 2                  | 1                    |
+| Bundle size            | 38.3 kB (min+gzip) | 3.2 kB (min+gzip)    |
+| Install size           | 2.35 MB            | 134 kB               |
 
 ## License
 
