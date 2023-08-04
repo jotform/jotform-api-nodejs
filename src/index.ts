@@ -189,6 +189,19 @@ function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+function updateSettings(settingsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof settingsData !== 'object' || settingsData === null) {
+    return Promise.resolve();
+  }
+
+  const endPoint = '/user/settings';
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = settingsData;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
 function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
@@ -868,6 +881,7 @@ export default {
   /* General */
   getHistory,
   getSettings,
+  updateSettings,
   getSubusers,
   getUsage,
   getUser,

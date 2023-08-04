@@ -44,6 +44,18 @@ describe('getSettings()', () => {
   });
 });
 
+describe('updateSettings()', () => {
+  it('updates settings properly', async () => {
+    const response = await jotform.updateSettings({
+      website: 'https://example.com',
+    });
+
+    expect(response).toMatchObject({
+      website: 'https://example.com',
+    });
+  });
+});
+
 // Getting "User is not Allowed" error
 describe.skip('getSubusers()', () => {
   it('returns subusers data properly', async () => {
