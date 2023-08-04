@@ -85,6 +85,16 @@ describe('getUser()', () => {
   });
 });
 
+describe('getPlan()', () => {
+  it('returns plan data properly', async () => {
+    const response = await jotform.getPlan('FREE');
+
+    expect(response).toMatchObject({
+      name: 'FREE',
+    });
+  });
+});
+
 /**
  * Forms
  */

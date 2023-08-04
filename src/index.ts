@@ -320,6 +320,24 @@ function getUser(customHeaders?: HeadersInit): Promise<unknown> {
 }
 
 /**
+ * Get details of a plan
+ *
+ * @description Get limit and prices of a plan.
+ * @param {string} planName
+ */
+function getPlan(planName: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (planName === undefined) {
+    throw new Error('Plan name is undefined');
+  }
+
+  const endPoint = `/system/plan/${planName}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+/**
  * Forms
  */
 
@@ -1430,6 +1448,7 @@ export default {
   getSubusers,
   getUsage,
   getUser,
+  getPlan,
 
   /* Forms */
   getForms,

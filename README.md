@@ -74,7 +74,7 @@ Here's how the two packages compare:
 | TypeScript support     | ❌                 | ✅                   |
 | Jotform Teams support  | ❌                 | ✅                   |
 | Tests                  | ❌                 | ✅                   |
-| Methods available      | 36                 | 49                   |
+| Methods available      | 36                 | 50                   |
 | Number of dependencies | 2                  | 1                    |
 | Bundle size            | 38.3 kB (min+gzip) | 3.2 kB (min+gzip)    |
 | Install size           | 2.35 MB            | 134 kB               |
