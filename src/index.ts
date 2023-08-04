@@ -1,5 +1,7 @@
 import { serialize } from 'object-to-formdata';
 
+type Filter = Record<string, string | number | string[] | undefined>;
+
 const defaults = {
   url: 'https://api.jotform.com',
   apiKey: undefined,
@@ -168,16 +170,54 @@ function options(options = {}) {
  * General
  */
 
-function getHistory(
-  query: {
-    action?: string;
-    date?: string;
-    sortBy?: string;
-    startDate?: string;
-    endDate?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
+type GetHistoryQuery = {
+  /**
+   * Filter results by activity performed.
+   *
+   * @default 'all'
+   */
+  action?:
+    | 'all'
+    | 'userCreation'
+    | 'userLogin'
+    | 'formCreation'
+    | 'formUpdate'
+    | 'formDelete'
+    | 'formPurge';
+  /**
+   * Limit results by a date range. If you'd like to limit results by specific dates you can use startDate and endDate fields instead.
+   */
+  date?: 'lastWeek' | 'lastMonth' | 'last3Months' | 'last6Months' | 'lastYear' | 'all';
+  /**
+   * Lists results by ascending and descending order.
+   *
+   * @example 'ASC'
+   */
+  sortBy?: 'ASC' | 'DESC';
+  /**
+   * Limit results to only after a specific date. Format: MM/DD/YYYY.
+   *
+   * @example '01/31/2013'
+   */
+  startDate?: string;
+  /**
+   * Limit results to only before a specific date. Format: MM/DD/YYYY.
+   *
+   * @example '12/31/2013'
+   */
+  endDate?: string;
+};
+
+/**
+ * Get History
+ *
+ * @description User activity log about things like forms created/modified/deleted, account logins and other operations.
+ * @link https://api.jotform.com/docs/#user-history
+ * @param {GetHistoryQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+function getHistory(query: GetHistoryQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
   const { action, date, sortBy, startDate, endDate } = query;
 
   const endPoint = '/user/history';
@@ -193,6 +233,14 @@ function getHistory(
   return promise;
 }
 
+/**
+ * Get User Settings
+ *
+ * @description Get user's time zone and language.
+ * @link https://api.jotform.com/docs/#user-settings
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/settings';
   const requestUrl = getRequestUrl(endPoint);
@@ -201,6 +249,15 @@ function getSettings(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Update User Settings
+ *
+ * @description Update user's settings like time zone and language.
+ * @link https://api.jotform.com/docs/#post-user-settings
+ * @param {unknown} settingsData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function updateSettings(settingsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof settingsData !== 'object' || settingsData === null) {
     return Promise.resolve();
@@ -214,6 +271,14 @@ function updateSettings(settingsData: unknown, customHeaders?: HeadersInit): Pro
   return promise;
 }
 
+/**
+ * Get Sub-User Account List
+ *
+ * @description Get a list of sub users for this accounts and list of forms and form folders with access privileges.
+ * @link https://api.jotform.com/docs/#user-subusers
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/subusers';
   const requestUrl = getRequestUrl(endPoint);
@@ -222,6 +287,14 @@ function getSubusers(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get Monthly User Usage
+ *
+ * @description Get number of form submissions received this month. Also, get number of SSL form submissions, payment form submissions and upload space used by user.
+ * @link https://api.jotform.com/docs/#user-usage
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/usage';
   const requestUrl = getRequestUrl(endPoint);
@@ -230,6 +303,14 @@ function getUsage(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get User Information
+ *
+ * @description Get user account details for this Jotform user. Including user account type, avatar URL, name, email, website URL.
+ * @link https://api.jotform.com/docs/#user
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getUser(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user';
   const requestUrl = getRequestUrl(endPoint);
@@ -242,17 +323,48 @@ function getUser(customHeaders?: HeadersInit): Promise<unknown> {
  * Forms
  */
 
-function getForms(
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-    fullText?: string;
-  } = {},
-  customHeaders?: HeadersInit,
-): Promise<unknown> {
+type GetFormsQuery = {
+  /**
+   * Filters the query results to fetch a specific form range.
+   *
+   * @example {"new":"1"}
+   * @example {"created_at:gt":"2013-01-01 00:00:00"}
+   */
+  filter?: Filter;
+  /**
+   * Start of each result set for form list. Useful for pagination.
+   *
+   * @default 0
+   * @example 20
+   */
+  offset?: number;
+  /**
+   * Number of results in each result set for form list. Maximum is 1000.
+   *
+   * @default 20
+   * @example 30
+   */
+  limit?: number;
+  /**
+   * Order results by a form field name: id, username, title, status(ENABLED, DISABLED, DELETED), created_at, updated_at, new (unread submissions count), count (all submissions count), slug (used in form URL).
+   *
+   * @example 'created_at'
+   */
+  orderby?: string;
+  direction?: 'ASC' | 'DESC';
+  fullText?: string;
+};
+
+/**
+ * Get User Forms
+ *
+ * @description Get a list of forms for this account. Includes basic details such as title of the form, when it was created, number of new and total submissions.
+ * @link https://api.jotform.com/docs/#user-forms
+ * @param {GetFormsQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
+function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
@@ -277,6 +389,15 @@ function getForms(
   return promise;
 }
 
+/**
+ * Get Form Details
+ *
+ * @description Get basic information about a form. Use /form/{id}/questions to get the list of questions.
+ * @link https://api.jotform.com/docs/#form-id
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -289,6 +410,15 @@ function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> 
   return promise;
 }
 
+/**
+ * Create a new form
+ *
+ * @description Create new form with questions, properties and email settings.
+ * @link https://api.jotform.com/docs/#post-forms
+ * @param {unknown} formData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formData !== 'object' || formData === null) {
     return Promise.resolve();
@@ -302,6 +432,15 @@ function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unk
   return promise;
 }
 
+/**
+ * Create new forms
+ *
+ * @description Create new forms with questions, properties and email settings.
+ * @link https://api.jotform.com/docs/#put-forms
+ * @param {unknown} formsData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formsData !== 'object' || formsData === null) {
     return Promise.resolve();
@@ -315,6 +454,15 @@ function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<u
   return promise;
 }
 
+/**
+ * Delete a form
+ *
+ * @description Delete an existing form.
+ * @link https://api.jotform.com/docs/#delete-form-id
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
@@ -323,6 +471,15 @@ function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknow
   return promise;
 }
 
+/**
+ * Clone Form
+ *
+ * @description Clone a single form.
+ * @link https://api.jotform.com/docs/#post-form-id-clone
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}/clone`;
   const requestUrl = getRequestUrl(endPoint);
@@ -335,6 +492,15 @@ function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown
  * Form files
  */
 
+/**
+ * Get Form Uploads
+ *
+ * @description List of files uploaded on a form. Size and file type is also included.
+ * @link https://api.jotform.com/docs/#form-id-files
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -351,6 +517,15 @@ function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unkn
  * Form properties
  */
 
+/**
+ * Get Form Properties
+ *
+ * @description Get a list of all properties on a form.
+ * @link https://api.jotform.com/docs/#form-id-properties
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/form/${formID}/properties`;
   const requestUrl = getRequestUrl(endPoint);
@@ -359,6 +534,16 @@ function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise
   return promise;
 }
 
+/**
+ * Get a Form Property
+ *
+ * @description Get a specific property of the form.
+ * @link https://api.jotform.com/docs/#form-id-properties-key
+ * @param {string} formID
+ * @param {string} key
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormProperty(
   formID: string,
   key: string,
@@ -371,6 +556,16 @@ function getFormProperty(
   return promise;
 }
 
+/**
+ * Add or edit properties of a specific form
+ *
+ * @description Edit a form property or add a new one.
+ * @link https://api.jotform.com/docs/#post-form-id-properties
+ * @param {string} formID
+ * @param {unknown} propertyData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function addFormProperty(
   formID: string,
   propertyData: unknown,
@@ -388,6 +583,16 @@ function addFormProperty(
   return promise;
 }
 
+/**
+ * Add or edit properties of a specific form
+ *
+ * @description Edit a form property or add a new one.
+ * @link https://api.jotform.com/docs/#put-form-id-properties
+ * @param {string} formID
+ * @param {unknown} propertyData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function addFormProperties(
   formID: string,
   propertyData: unknown,
@@ -409,6 +614,15 @@ function addFormProperties(
  * Form questions
  */
 
+/**
+ * Get Form Questions
+ *
+ * @description Get a list of all questions on a form. Type describes question field type. Order is the question order in the form. Text field is the question label.
+ * @link https://api.jotform.com/docs/#form-id-questions
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -421,6 +635,16 @@ function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<
   return promise;
 }
 
+/**
+ * Get Details About a Question
+ *
+ * @description Form questions might have various properties. Examples: Is it required? Are there any validations such as 'numeric only'?
+ * @link https://api.jotform.com/docs/#form-id-question-id
+ * @param {string} formID
+ * @param {string} questionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormQuestion(
   formID: string,
   questionID: string,
@@ -441,6 +665,16 @@ function getFormQuestion(
   return promise;
 }
 
+/**
+ * Add new question to specified form
+ *
+ * @description Add new question to specified form. Form questions might have various properties. Examples: Is it required? Are there any validations such as 'numeric only'?
+ * @link https://api.jotform.com/docs/#post-form-id-questions
+ * @param {string} formID
+ * @param {unknown} questionData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function addFormQuestion(
   formID: string,
   questionData: unknown,
@@ -458,6 +692,16 @@ function addFormQuestion(
   return promise;
 }
 
+/**
+ * Add new questions to specified form
+ *
+ * @description Add new questions to specified form. Form questions might have various properties. Examples: Is it required? Are there any validations such as 'numeric only'?
+ * @link https://api.jotform.com/docs/#put-form-id-questions
+ * @param {string} formID
+ * @param {unknown} questionData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function addFormQuestions(
   formID: string,
   questionData: unknown,
@@ -475,6 +719,16 @@ function addFormQuestions(
   return promise;
 }
 
+/**
+ * Delete Form Question
+ *
+ * @description Delete a single form question.
+ * @link https://api.jotform.com/docs/#delete-form-id-question-id
+ * @param {string} formID
+ * @param {string} questionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteFormQuestion(
   formID: string,
   questionID: string,
@@ -491,6 +745,15 @@ function deleteFormQuestion(
  * Form reports
  */
 
+/**
+ * Get form reports
+ *
+ * @description Get all the reports of a specific form.
+ * @link https://api.jotform.com/docs/#form-id-reports
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -503,6 +766,16 @@ function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<un
   return promise;
 }
 
+/**
+ * Get Report Details
+ *
+ * @description Get more information about a data report.
+ * @link https://api.jotform.com/docs/#report-id
+ * @param {string} formID
+ * @param {string} reportID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormReport(
   formID: string,
   reportID: string,
@@ -512,6 +785,16 @@ function getFormReport(
   return getReport(reportID, customHeaders);
 }
 
+/**
+ * Create report
+ *
+ * @description Create new report of a form with intended fields, type and title.
+ * @link https://api.jotform.com/docs/#post-form-id-reports
+ * @param {string} formID
+ * @param {unknown} reportData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createFormReport(
   formID: string,
   reportData: unknown,
@@ -529,6 +812,16 @@ function createFormReport(
   return promise;
 }
 
+/**
+ * Delete Report
+ *
+ * @description Delete an existing report.
+ * @link https://api.jotform.com/docs/#delete-report-id
+ * @param {string} formID
+ * @param {string} reportID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteFormReport(
   formID: string,
   reportID: string,
@@ -542,15 +835,51 @@ function deleteFormReport(
  * Form submissions
  */
 
+type GetFormSubmissionsQuery = {
+  /**
+   * Filters the query results to fetch a specific submissions range.
+   *
+   * @example {"id:gt":"31974353596870"}
+   * @example {"created_at:gt":"2013-01-01 00:00:00"}
+   * @example {"workflowStatus:ne":"Approve"}
+   */
+  filter?: Filter;
+  /**
+   * Start of each result set for form list. Useful for pagination.
+   *
+   * @default 0
+   * @example 20
+   */
+  offset?: number;
+  /**
+   * Number of results in each result set for form list. Maximum is 1000.
+   *
+   * @default 20
+   * @example 30
+   */
+  limit?: number;
+  /**
+   * Order results by a form field name: id, username, title, status(ENABLED, DISABLED, DELETED), created_at, updated_at, new (unread submissions count), count (all submissions count), slug (used in form URL).
+   *
+   * @example 'created_at'
+   */
+  orderby?: string;
+  direction?: 'ASC' | 'DESC';
+};
+
+/**
+ * Get Form Submissions
+ *
+ * @description List of form responses. answers array has the submitted data. Created_at is the date of the submission.
+ * @link https://api.jotform.com/docs/#form-id-submissions
+ * @param {string} formID
+ * @param {GetFormSubmissionsQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormSubmissions(
   formID: string,
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-  } = {},
+  query: GetFormSubmissionsQuery = {},
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
   if (formID === undefined) {
@@ -580,6 +909,16 @@ function getFormSubmissions(
   return promise;
 }
 
+/**
+ * Get Submission Data
+ *
+ * @description Similar to /form/{form-id}/submissions. But only get a single submission.
+ * @link https://api.jotform.com/docs/#submission-id
+ * @param {string} formID
+ * @param {string} submissionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormSubmission(
   formID: string,
   submissionID: string,
@@ -589,6 +928,16 @@ function getFormSubmission(
   return getSubmission(submissionID, customHeaders);
 }
 
+/**
+ * Add a Submission to the Form
+ *
+ * @description Submit data to this form using the API. You should get a list of question IDs from form/{id}/questions and send the submission data with qid.
+ * @link https://api.jotform.com/docs/#post-form-id-submissions
+ * @param {string} formID
+ * @param {unknown} submissionData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createFormSubmission(
   formID: string,
   submissionData: unknown,
@@ -606,6 +955,16 @@ function createFormSubmission(
   return promise;
 }
 
+/**
+ * Add Submissions to the Form
+ *
+ * @description Submit data to this form using the API. You should get a list of question IDs from form/{id}/questions and send the submission data with qid.
+ * @link https://api.jotform.com/docs/#put-form-id-submissions
+ * @param {string} formID
+ * @param {unknown} submissionsData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createFormSubmissions(
   formID: string,
   submissionsData: unknown,
@@ -623,6 +982,16 @@ function createFormSubmissions(
   return promise;
 }
 
+/**
+ * Delete Submission Data
+ *
+ * @description Delete a single submission.
+ * @link https://api.jotform.com/docs/#delete-submission-id
+ * @param {string} formID
+ * @param {string} submissionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteFormSubmission(
   formID: string,
   submissionID: string,
@@ -636,6 +1005,15 @@ function deleteFormSubmission(
  * Form webhooks
  */
 
+/**
+ * List of Webhooks for a Form
+ *
+ * @description Webhooks can be used to send form submission data as an instant notification. Returns list of webhooks for this form.
+ * @link https://api.jotform.com/docs/#form-id-webhooks
+ * @param {string} formID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (formID === undefined) {
     throw new Error('Form ID is undefined');
@@ -648,6 +1026,16 @@ function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<u
   return promise;
 }
 
+/**
+ * Add a New Webhook
+ *
+ * @description Webhooks can be used to send form submission data as an instant notification.
+ * @link https://api.jotform.com/docs/#post-form-id-webhooks
+ * @param {string} formID
+ * @param {string} webhookURL
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createFormWebhook(
   formID: string,
   webhookURL: string,
@@ -671,6 +1059,16 @@ function createFormWebhook(
   return promise;
 }
 
+/**
+ * Delete a webhook of a specific form
+ *
+ * @description Delete a webhook of a specific form
+ * @link https://api.jotform.com/docs/#delete-form-id-webhooks
+ * @param {string} formID
+ * @param {string} webhookID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteFormWebhook(
   formID: string,
   webhookID: string,
@@ -687,6 +1085,14 @@ function deleteFormWebhook(
  * Folders
  */
 
+/**
+ * Get User Folders
+ *
+ * @description Get a list of form folders for this account. Returns name of the folder and owner of the folder for shared folders.
+ * @link https://api.jotform.com/docs/#user-folders
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/folders';
   const requestUrl = getRequestUrl(endPoint);
@@ -695,6 +1101,15 @@ function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get Folder Details
+ *
+ * @description Get a list of forms in a folder, and other details about the form such as folder color.
+ * @link https://api.jotform.com/docs/#folder-id
+ * @param {string} folderID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>
+ */
 function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (folderID === undefined) {
     throw new Error('Folder ID is undefined');
@@ -707,6 +1122,15 @@ function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unkno
   return promise;
 }
 
+/**
+ * Create Folder
+ *
+ * @description Create a folder with specified parameters
+ * @link https://api.jotform.com/docs/#post-folder
+ * @param {unknown} folderProperties
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof folderProperties !== 'object' || folderProperties === null) {
     return Promise.resolve();
@@ -720,6 +1144,16 @@ function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): P
   return promise;
 }
 
+/**
+ * Update Folder
+ *
+ * @description Update a folder with specified parameters. Also you can add forms to the folder.
+ * @link https://api.jotform.com/docs/#put-folder-id
+ * @param {string} folderID
+ * @param {unknown} folderProperties
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function updateFolder(
   folderID: string,
   folderProperties: unknown,
@@ -761,6 +1195,15 @@ function addFormsToFolder(
   return updateFolder(folderID, folderProperties, customHeaders);
 }
 
+/**
+ * Delete Folder
+ *
+ * @description Delete a folder and its subfolders
+ * @link https://api.jotform.com/docs/#delete-folder-id
+ * @param {string} folderID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (folderID === undefined) {
     return Promise.resolve();
@@ -777,6 +1220,14 @@ function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<un
  * Reports
  */
 
+/**
+ * Get User Reports
+ *
+ * @description List of URLs for reports in this account. Includes reports for all of the forms. ie. Excel, CSV, printable charts, embeddable HTML tables.
+ * @link https://api.jotform.com/docs/#user-reports
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getReports(customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = '/user/reports';
   const requestUrl = getRequestUrl(endPoint);
@@ -785,6 +1236,15 @@ function getReports(customHeaders?: HeadersInit): Promise<unknown> {
   return promise;
 }
 
+/**
+ * Get Report Details
+ *
+ * @description Get more information about a data report.
+ * @link https://api.jotform.com/docs/#report-id
+ * @param {string} reportID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
@@ -797,6 +1257,15 @@ function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unkno
   return promise;
 }
 
+/**
+ * Delete a Report
+ *
+ * @description Delete an existing report.
+ * @link https://api.jotform.com/docs/#delete-report-id
+ * @param {string} reportID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (reportID === undefined) {
     throw new Error('Report ID is undefined');
@@ -813,16 +1282,52 @@ function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<un
  * Submissions
  */
 
+type GetSubmissionsQuery = {
+  /**
+   * Filters the query results to fetch a specific submissions range.
+   *
+   * @example {"new":"1"}
+   * @example {"created_at:gt":"2013-01-01 00:00:00"}
+   * @example {"formIDs":["your-form-id","your-form-id#2"]}
+   * @example {"fullText":"John Brown"}
+   */
+  filter?: Filter;
+  /**
+   * Start of each result set for submission data. Useful for pagination.
+   *
+   * @default 0
+   * @example 20
+   */
+  offset?: number;
+  /**
+   * Number of results in each result set for submission data. Maximum is 1000.
+   *
+   * @default 20
+   * @example 30
+   */
+  limit?: number;
+  /**
+   * Order results by a submission field name.
+   *
+   * @example 'created_at'
+   */
+  orderby?: 'id' | 'form_id' | 'IP' | 'created_at' | 'status' | 'new' | 'flag' | 'updated_at';
+  direction?: 'ASC' | 'DESC';
+  fullText?: string;
+  nocache?: string;
+};
+
+/**
+ * Get User Submissions
+ *
+ * @description Get a list of all submissions for all forms on this account. The answers array has the submission data. Created_at is the date of the submission.
+ * @link https://api.jotform.com/docs/#user-submissions
+ * @param {GetSubmissionsQuery} [query]
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSubmissions(
-  query: {
-    filter?: Record<string, string>;
-    offset?: string;
-    limit?: string;
-    orderby?: string;
-    direction?: 'ASC' | 'DESC';
-    fullText?: string;
-    nocache?: string;
-  } = {},
+  query: GetSubmissionsQuery = {},
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
   const { filter, offset, limit, orderby, direction, fullText, nocache } = query;
@@ -850,6 +1355,15 @@ function getSubmissions(
   return promise;
 }
 
+/**
+ * Get Submission Data
+ *
+ * @description Similar to /form/{form-id}/submissions. But only get a single submission.
+ * @link https://api.jotform.com/docs/#submission-id
+ * @param {string} submissionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
   if (submissionID === undefined) {
     throw new Error('Submission ID is undefined');
@@ -862,6 +1376,16 @@ function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promi
   return promise;
 }
 
+/**
+ * Edit Submission Data
+ *
+ * @description Edit a single submission.
+ * @link https://api.jotform.com/docs/#post-submission-id
+ * @param {string} submissionID
+ * @param {unknown} submissionData
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function updateSubmission(
   submissionID: string,
   submissionData: unknown,
@@ -879,6 +1403,15 @@ function updateSubmission(
   return promise;
 }
 
+/**
+ * Delete Submission Data
+ *
+ * @description Delete a single submission.
+ * @link https://api.jotform.com/docs/#delete-submission-id
+ * @param {string} submissionID
+ * @param {HeadersInit} [customHeaders]
+ * @returns {Promise<unknown>}
+ */
 function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
   const endPoint = `/submission/${submissionID}`;
   const requestUrl = getRequestUrl(endPoint);
