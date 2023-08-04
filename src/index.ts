@@ -101,7 +101,10 @@ function del<T = unknown>(url: string, customHeaders?: HeadersInit): Promise<T> 
   return sendRequest(url, 'delete', undefined, customHeaders);
 }
 
-function getRequestUrl(endPoint: string, params: Record<string, string | undefined> = {}) {
+function getRequestUrl(
+  endPoint: string,
+  params: Record<string, string | number | string[] | undefined> = {},
+) {
   if (typeof _apiKey === 'undefined') {
     throw new Error('API Key is undefined');
   }
@@ -116,12 +119,21 @@ function getRequestUrl(endPoint: string, params: Record<string, string | undefin
     const value = otherParams[key];
 
     if (value !== undefined) {
-      urlSearchParams.append(key, value);
+      urlSearchParams.append(key, typeof value === 'object' ? JSON.stringify(value) : `${value}`);
     }
   }
 
   if (orderby) {
+    if (typeof orderby !== 'string') {
+      throw new Error('Orderby must be a string');
+    }
+
+    if (direction && typeof direction !== 'string') {
+      throw new Error('Orderby must be a string');
+    }
+
     const orderbyWithDirection = direction ? `${orderby},${direction}` : orderby;
+
     urlSearchParams.append('orderby', orderbyWithDirection);
   }
 
