@@ -13,8 +13,7 @@ const TEST_ROOT_FOLDER_ID = '64cba4746334320c7cd86aa0';
 const TEST_FOLDER_ID = '64cba4746334320c7c37f6b1';
 const TEST_SUBFOLDER_ID = '64cba47f366166d6c6b373a8';
 
-// TODO: Find a way to get a test report ID
-const TEST_REPORT_ID = '';
+const TEST_REPORT_ID = '232152641243042';
 
 describe('index', () => {
   it('has options exported properly', () => {
@@ -291,6 +290,77 @@ describe.todo('addFormQuestions()');
 describe.todo('deleteFormQuestion()');
 
 /**
+ * Form reports
+ */
+
+describe('getFormReports()', () => {
+  it('returns form reports data properly', async () => {
+    const response = await jotform.getFormReports(TEST_FORM_ID);
+
+    expect(response).toMatchObject(expect.any(Array));
+  });
+});
+
+describe('getFormReport()', () => {
+  it('returns submission data properly', async () => {
+    const response = await jotform.getFormReport(TEST_FORM_ID, TEST_REPORT_ID);
+
+    expect(response).toMatchObject({
+      id: TEST_REPORT_ID,
+    });
+  });
+});
+
+describe('createFormReport()', () => {
+  const createdReportIds: string[] = [];
+
+  afterAll(async () => {
+    await asyncForEach(createdReportIds, async (reportId) => {
+      await jotform.deleteReport(reportId);
+    });
+  });
+
+  it('creates form report properly', async () => {
+    const response = await jotform.createFormReport(TEST_FORM_ID, {
+      title: 'Test report',
+      list_type: 'grid',
+      fields: 'ip,dt,1',
+    });
+
+    expect(response).toMatchObject({
+      id: expect.any(String),
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    // Store report ID for later use
+    createdReportIds.push(anyResponse.id);
+  });
+});
+
+describe('deleteFormReport()', () => {
+  let createdReportId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createFormReport(TEST_FORM_ID, {
+      title: 'Test report',
+      list_type: 'grid',
+      fields: 'ip,dt,1',
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdReportId = anyResponse.id;
+  });
+
+  it('deletes form report properly', async () => {
+    const response = await jotform.deleteFormReport(TEST_FORM_ID, createdReportId);
+
+    expect(response).toBe(true);
+  });
+});
+
+/**
  * Form submissions
  */
 
@@ -344,14 +414,10 @@ describe('createFormSubmission()', () => {
       submissionID: expect.any(String),
     });
 
-    const safeResponse = z
-      .object({
-        submissionID: z.string(),
-      })
-      .parse(response);
+    const anyResponse = z.any().parse(response);
 
     // Store submission ID for later use
-    createdSubmissionIds.push(safeResponse.submissionID);
+    createdSubmissionIds.push(anyResponse.submissionID);
   });
 });
 
@@ -385,6 +451,28 @@ describe('createFormSubmissions()', () => {
 
     // Store submission ID for later use
     createdSubmissionIds.push(item.submissionID);
+  });
+});
+
+describe('deleteFormSubmission()', () => {
+  let createdSubmissionId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createFormSubmission(TEST_FORM_ID, {
+      submission: {
+        1: 'Test value',
+      },
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdSubmissionId = anyResponse.submissionID;
+  });
+
+  it('deletes form submission properly', async () => {
+    const response = await jotform.deleteFormSubmission(TEST_FORM_ID, createdSubmissionId);
+
+    expect(response).toBe(`Submission #${createdSubmissionId} deleted successfully.`);
   });
 });
 
@@ -542,13 +630,35 @@ describe('getReports()', () => {
   });
 });
 
-describe.skip('getReport()', () => {
+describe('getReport()', () => {
   it('returns report data properly', async () => {
     const response = await jotform.getReport(TEST_REPORT_ID);
 
     expect(response).toMatchObject({
       id: TEST_REPORT_ID,
     });
+  });
+});
+
+describe('deleteReport()', () => {
+  let createdReportId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createFormReport(TEST_FORM_ID, {
+      title: 'Test report',
+      list_type: 'grid',
+      fields: 'ip,dt,1',
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdReportId = anyResponse.id;
+  });
+
+  it('deletes report properly', async () => {
+    const response = await jotform.deleteReport(createdReportId);
+
+    expect(response).toBe(true);
   });
 });
 
@@ -580,4 +690,24 @@ describe.todo('getSubmission()');
 
 describe.todo('editSubmission()');
 
-describe.todo('deleteSubmission()');
+describe('deleteSubmission()', () => {
+  let createdSubmissionId: string;
+
+  beforeAll(async () => {
+    const response = await jotform.createFormSubmission(TEST_FORM_ID, {
+      submission: {
+        1: 'Test value',
+      },
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    createdSubmissionId = anyResponse.submissionID;
+  });
+
+  it('deletes form submission properly', async () => {
+    const response = await jotform.deleteSubmission(createdSubmissionId);
+
+    expect(response).toBe(`Submission #${createdSubmissionId} deleted successfully.`);
+  });
+});

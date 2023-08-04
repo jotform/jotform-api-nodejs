@@ -463,6 +463,57 @@ function deleteFormQuestion(
 }
 
 /**
+ * Form reports
+ */
+
+function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/reports`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = get(requestUrl, customHeaders);
+  return promise;
+}
+
+function getFormReport(
+  formID: string,
+  reportID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return getReport(reportID, customHeaders);
+}
+
+function createFormReport(
+  formID: string,
+  reportData: unknown,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  if (formID === undefined) {
+    throw new Error('Form ID is undefined');
+  }
+
+  const endPoint = `/form/${formID}/reports`;
+  const requestUrl = getRequestUrl(endPoint);
+  const postData = reportData;
+
+  const promise = post(requestUrl, postData, customHeaders);
+  return promise;
+}
+
+function deleteFormReport(
+  formID: string,
+  reportID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return deleteReport(reportID, customHeaders);
+}
+
+/**
  * Form submissions
  */
 
@@ -545,6 +596,15 @@ function createFormSubmissions(
 
   const promise = put(requestUrl, postData, customHeaders);
   return promise;
+}
+
+function deleteFormSubmission(
+  formID: string,
+  submissionID: string,
+  customHeaders?: HeadersInit,
+): Promise<unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  return deleteSubmission(submissionID, customHeaders);
 }
 
 /**
@@ -712,6 +772,18 @@ function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unkno
   return promise;
 }
 
+function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (reportID === undefined) {
+    throw new Error('Report ID is undefined');
+  }
+
+  const endPoint = `/report/${reportID}`;
+  const requestUrl = getRequestUrl(endPoint);
+
+  const promise = del(requestUrl, customHeaders);
+  return promise;
+}
+
 /**
  * Submissions
  */
@@ -825,11 +897,18 @@ export default {
   addFormQuestions,
   deleteFormQuestion,
 
+  /* Form reports */
+  getFormReports,
+  getFormReport,
+  createFormReport,
+  deleteFormReport,
+
   /* Form submissions */
   getFormSubmissions,
   getFormSubmission,
   createFormSubmission,
   createFormSubmissions,
+  deleteFormSubmission,
 
   /* Form webhooks */
   getFormWebhooks,
@@ -848,6 +927,7 @@ export default {
   /* Reports */
   getReports,
   getReport,
+  deleteReport,
 
   /* Submissions */
   getSubmissions,
