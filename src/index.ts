@@ -386,11 +386,11 @@ function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promi
   const { filter, offset, limit, orderby, direction, fullText } = query;
 
   if (filter && typeof filter !== 'object') {
-    throw new Error('Filter must be an object');
+    throw new Error('filter must be an object');
   }
 
   if (direction && direction !== 'ASC' && direction !== 'DESC') {
-    throw new Error('Direction must be ASC or DESC');
+    throw new Error("direction must be 'ASC' or 'DESC'");
   }
 
   const endPoint = '/user/forms';
@@ -417,8 +417,8 @@ function getForms(query: GetFormsQuery = {}, customHeaders?: HeadersInit): Promi
  * @returns {Promise<unknown>}
  */
 function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const endPoint = `/form/${formID}`;
@@ -439,7 +439,7 @@ function getForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> 
  */
 function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof formData !== 'object' || formData === null) {
-    return Promise.resolve();
+    throw new Error('formData must be an object');
   }
 
   const endPoint = '/user/forms';
@@ -460,8 +460,8 @@ function createForm(formData: unknown, customHeaders?: HeadersInit): Promise<unk
  * @returns {Promise<unknown>}
  */
 function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<unknown> {
-  if (typeof formsData !== 'object' || formsData === null) {
-    return Promise.resolve();
+  if (typeof formsData === 'undefined' || formsData === null) {
+    throw new Error('formsData is required');
   }
 
   const endPoint = '/user/forms';
@@ -482,6 +482,10 @@ function createForms(formsData: unknown, customHeaders?: HeadersInit): Promise<u
  * @returns {Promise<unknown>}
  */
 function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   const endPoint = `/form/${formID}`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -499,6 +503,10 @@ function deleteForm(formID: string, customHeaders?: HeadersInit): Promise<unknow
  * @returns {Promise<unknown>}
  */
 function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   const endPoint = `/form/${formID}/clone`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -520,8 +528,8 @@ function cloneForm(formID: string, customHeaders?: HeadersInit): Promise<unknown
  * @returns {Promise<unknown>}
  */
 function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const endPoint = `/form/${formID}/files`;
@@ -545,6 +553,10 @@ function getFormFiles(formID: string, customHeaders?: HeadersInit): Promise<unkn
  * @returns {Promise<unknown>}
  */
 function getFormProperties(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   const endPoint = `/form/${formID}/properties`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -567,6 +579,10 @@ function getFormProperty(
   key: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   const endPoint = `/form/${formID}/properties/${key}`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -589,8 +605,12 @@ function addFormProperty(
   propertyData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   if (typeof propertyData !== 'object' || propertyData === null) {
-    return Promise.resolve();
+    throw new Error('propertyData must be an object');
   }
 
   const endPoint = `/form/${formID}/properties`;
@@ -616,8 +636,12 @@ function addFormProperties(
   propertyData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   if (typeof propertyData !== 'object' || propertyData === null) {
-    return Promise.resolve();
+    throw new Error('propertyData must be an object');
   }
 
   const endPoint = `/form/${formID}/properties`;
@@ -642,8 +666,8 @@ function addFormProperties(
  * @returns {Promise<unknown>}
  */
 function getFormQuestions(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const endPoint = `/form/${formID}/questions`;
@@ -668,12 +692,12 @@ function getFormQuestion(
   questionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
-  if (questionID === undefined) {
-    throw new Error('Question ID is undefined');
+  if (typeof questionID === 'undefined' || questionID === null) {
+    throw new Error('questionID is required');
   }
 
   const endPoint = `/form/${formID}/question/${questionID}`;
@@ -698,8 +722,12 @@ function addFormQuestion(
   questionData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   if (typeof questionData !== 'object' || questionData === null) {
-    return Promise.resolve();
+    throw new Error('questionData must be an object');
   }
 
   const endPoint = `/form/${formID}/questions`;
@@ -725,8 +753,12 @@ function addFormQuestions(
   questionData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   if (typeof questionData !== 'object' || questionData === null) {
-    return Promise.resolve();
+    throw new Error('questionData must be an object');
   }
 
   const endPoint = `/form/${formID}/questions`;
@@ -752,6 +784,14 @@ function deleteFormQuestion(
   questionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
+  if (typeof questionID === 'undefined' || questionID === null) {
+    throw new Error('questionID is required');
+  }
+
   const endPoint = `/form/${formID}/question/${questionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -773,8 +813,8 @@ function deleteFormQuestion(
  * @returns {Promise<unknown>}
  */
 function getFormReports(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const endPoint = `/form/${formID}/reports`;
@@ -818,8 +858,12 @@ function createFormReport(
   reportData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
+  if (typeof reportData !== 'object' || reportData === null) {
+    throw new Error('reportData must be an object');
   }
 
   const endPoint = `/form/${formID}/reports`;
@@ -900,8 +944,8 @@ function getFormSubmissions(
   query: GetFormSubmissionsQuery = {},
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const { filter, offset, limit, orderby, direction } = query;
@@ -961,8 +1005,12 @@ function createFormSubmission(
   submissionData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
+  if (typeof submissionData !== 'object' || submissionData === null) {
+    throw new Error('submissionData must be an object');
   }
 
   const endPoint = `/form/${formID}/submissions`;
@@ -988,8 +1036,12 @@ function createFormSubmissions(
   submissionsData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   if (typeof submissionsData !== 'object' || submissionsData === null) {
-    return Promise.resolve();
+    throw new Error('submissionsData must be an object');
   }
 
   const endPoint = `/form/${formID}/submissions`;
@@ -1033,8 +1085,8 @@ function deleteFormSubmission(
  * @returns {Promise<unknown>}
  */
 function getFormWebhooks(formID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
   const endPoint = `/form/${formID}/webhooks`;
@@ -1059,12 +1111,12 @@ function createFormWebhook(
   webhookURL: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (formID === undefined) {
-    throw new Error('Form ID is undefined');
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
   }
 
-  if (webhookURL === undefined) {
-    throw new Error('webhookURL is undefined');
+  if (typeof webhookURL === 'undefined' || webhookURL === null) {
+    throw new Error('webhookURL is required');
   }
 
   const endPoint = `/form/${formID}/webhooks`;
@@ -1092,6 +1144,14 @@ function deleteFormWebhook(
   webhookID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
+  if (typeof webhookID === 'undefined' || webhookID === null) {
+    throw new Error('webhookID is required');
+  }
+
   const endPoint = `/form/${formID}/webhooks/${webhookID}`;
   const requestUrl = getRequestUrl(endPoint);
 
@@ -1129,8 +1189,8 @@ function getFolders(customHeaders?: HeadersInit): Promise<unknown> {
  * @returns {Promise<unknown>
  */
 function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (folderID === undefined) {
-    throw new Error('Folder ID is undefined');
+  if (typeof folderID === 'undefined' || folderID === null) {
+    throw new Error('folderID is required');
   }
 
   const endPoint = `/folder/${folderID}`;
@@ -1151,7 +1211,7 @@ function getFolder(folderID: string, customHeaders?: HeadersInit): Promise<unkno
  */
 function createFolder(folderProperties: unknown, customHeaders?: HeadersInit): Promise<unknown> {
   if (typeof folderProperties !== 'object' || folderProperties === null) {
-    return Promise.resolve();
+    throw new Error('folderProperties must be an object');
   }
 
   const endPoint = '/folder';
@@ -1177,8 +1237,12 @@ function updateFolder(
   folderProperties: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  if (folderID === undefined || typeof folderProperties !== 'object' || folderProperties === null) {
-    return Promise.resolve();
+  if (typeof folderID === 'undefined' || folderID === null) {
+    throw new Error('folderID is required');
+  }
+
+  if (typeof folderProperties !== 'object' || folderProperties === null) {
+    throw new Error('folderProperties must be an object');
   }
 
   const endPoint = `/folder/${folderID}`;
@@ -1194,6 +1258,14 @@ function addFormToFolder(
   formID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof folderID === 'undefined' || folderID === null) {
+    throw new Error('folderID is required');
+  }
+
+  if (typeof formID === 'undefined' || formID === null) {
+    throw new Error('formID is required');
+  }
+
   const addFormProperties = {
     forms: [formID],
   };
@@ -1206,6 +1278,14 @@ function addFormsToFolder(
   formIDs: string[],
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof folderID === 'undefined' || folderID === null) {
+    throw new Error('folderID is required');
+  }
+
+  if (typeof formIDs === 'undefined' || formIDs === null) {
+    throw new Error('formID is required');
+  }
+
   const folderProperties = {
     forms: formIDs,
   };
@@ -1223,8 +1303,8 @@ function addFormsToFolder(
  * @returns {Promise<unknown>}
  */
 function deleteFolder(folderID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (folderID === undefined) {
-    return Promise.resolve();
+  if (typeof folderID === 'undefined' || folderID === null) {
+    throw new Error('folderID is required');
   }
 
   const endPoint = `/folder/${folderID}`;
@@ -1264,8 +1344,8 @@ function getReports(customHeaders?: HeadersInit): Promise<unknown> {
  * @returns {Promise<unknown>}
  */
 function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (reportID === undefined) {
-    throw new Error('Report ID is undefined');
+  if (typeof reportID === 'undefined' || reportID === null) {
+    throw new Error('reportID is required');
   }
 
   const endPoint = `/report/${reportID}`;
@@ -1285,8 +1365,8 @@ function getReport(reportID: string, customHeaders?: HeadersInit): Promise<unkno
  * @returns {Promise<unknown>}
  */
 function deleteReport(reportID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (reportID === undefined) {
-    throw new Error('Report ID is undefined');
+  if (typeof reportID === 'undefined' || reportID === null) {
+    throw new Error('reportID is required');
   }
 
   const endPoint = `/report/${reportID}`;
@@ -1383,8 +1463,8 @@ function getSubmissions(
  * @returns {Promise<unknown>}
  */
 function getSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
-  if (submissionID === undefined) {
-    throw new Error('Submission ID is undefined');
+  if (typeof submissionID === 'undefined' || submissionID === null) {
+    throw new Error('submissionID is required');
   }
 
   const endPoint = `/submission/${submissionID}`;
@@ -1409,8 +1489,12 @@ function updateSubmission(
   submissionData: unknown,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
+  if (typeof submissionID === 'undefined' || submissionID === null) {
+    throw new Error('submissionID is required');
+  }
+
   if (typeof submissionData !== 'object' || submissionData === null) {
-    return Promise.resolve();
+    throw new Error('submissionData must be an object');
   }
 
   const endPoint = `/submission/${submissionID}`;
@@ -1431,6 +1515,10 @@ function updateSubmission(
  * @returns {Promise<unknown>}
  */
 function deleteSubmission(submissionID: string, customHeaders?: HeadersInit): Promise<unknown> {
+  if (typeof submissionID === 'undefined' || submissionID === null) {
+    throw new Error('submissionID is required');
+  }
+
   const endPoint = `/submission/${submissionID}`;
   const requestUrl = getRequestUrl(endPoint);
 
