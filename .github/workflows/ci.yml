@@ -142,3 +142,5 @@ jobs:
 
       - name: Run tests
         run: yarn unit
+        env:
+          JOTFORM_API_KEY: ${{ secrets.JOTFORM_API_KEY }}

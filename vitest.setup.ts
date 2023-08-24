@@ -1,6 +1,12 @@
 import jotform from './src/index';
 
+const JOTFORM_API_KEY = process.env.JOTFORM_API_KEY;
+
+if (!JOTFORM_API_KEY) {
+  throw new Error('JOTFORM_API_KEY is undefined');
+}
+
 jotform.options({
-  apiKey: '671a3e727d4d9aacbf012799c658e986',
+  apiKey: JOTFORM_API_KEY,
   debug: true,
 });
