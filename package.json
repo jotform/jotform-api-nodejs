@@ -62,8 +62,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wojtekmaj/jotform-api-nodejs.git"
+    "url": "https://github.com/wojtekmaj/jotform.git"
   },
-  "funding": "https://github.com/wojtekmaj/jotform-api-nodejs?sponsor=1",
+  "funding": "https://github.com/wojtekmaj/jotform?sponsor=1",
   "packageManager": "yarn@3.1.0"
 }
