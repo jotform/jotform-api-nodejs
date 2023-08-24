@@ -47,7 +47,45 @@ jotform.options({
 const user = await jotform.getUser();
 ```
 
-### Usage with Jotform Teams
+#### Usage with EU Safe mode
+
+If you're using Jotform EU Safe mode, you need to specify `url` option:
+
+```ts
+jotform.options({
+  url: 'https://eu-api.jotform.com',
+});
+```
+
+#### Usage with HIPAA Compliance mode
+
+If you're using Jotform HIPAA Compliance mode, you need to specify `url` option:
+
+```ts
+jotform.options({
+  url: 'https://hipaa-api.jotform.com',
+});
+```
+
+#### Usage with Jotform Enterprise
+
+If you're using Jotform Enterprise, you will need to specify `url` option:
+
+```ts
+jotform.options({
+  url: 'https://your-domain.com/API',
+});
+```
+
+or:
+
+```ts
+jotform.options({
+  url: 'https://your-subdomain.jotform.com/API',
+});
+```
+
+#### Usage with Jotform Teams
 
 To access resources located in a Jotform Team, a custom `jf-team-id` header needs to be added to each request. It can be done by passing `customHeaders` object to desired method:
 
