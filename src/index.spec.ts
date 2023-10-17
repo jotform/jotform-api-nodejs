@@ -502,11 +502,72 @@ describe('deleteFormSubmission()', () => {
  * Form webhooks
  */
 
-describe.todo('getFormWebhooks()');
+describe('getFormWebhooks()', () => {
+  it('returns webhooks data properly', async () => {
+    const response = await jotform.getFormWebhooks(TEST_FORM_ID);
 
-describe.todo('createFormWebhook()');
+    expect(response).toMatchObject({
+      0: expect.any(String),
+    });
+  });
+});
 
-describe.todo('deleteFormWebhook()');
+describe('createFormWebhook()', () => {
+  const createdWebhookIds: string[] = [];
+
+  afterAll(async () => {
+    await asyncForEach(createdWebhookIds, async (webhookId) => {
+      await jotform.deleteFormWebhook(TEST_FORM_ID, webhookId);
+    });
+  });
+
+  it('creates webhook properly', async () => {
+    const webhookUrl = `http://example.com/${Math.random().toString(36).substring(7)}`;
+
+    const response = await jotform.createFormWebhook(TEST_FORM_ID, webhookUrl);
+
+    expect(response).toMatchObject({
+      '0': expect.any(String),
+    });
+
+    const anyResponse = z.any().parse(response);
+
+    const [webhookId] = Object.entries(anyResponse).find(([, url]) => url === webhookUrl) as [
+      string,
+      string,
+    ];
+
+    // Store folder ID for later use
+    createdWebhookIds.push(webhookId);
+  });
+});
+
+describe('deleteFormWebhook()', () => {
+  let createdWebhookId: string;
+
+  beforeAll(async () => {
+    const webhookUrl = `http://example.com/${Math.random().toString(36).substring(7)}`;
+
+    const response = await jotform.createFormWebhook(TEST_FORM_ID, webhookUrl);
+
+    const anyResponse = z.any().parse(response);
+
+    const [webhookId] = Object.entries(anyResponse).find(([, url]) => url === webhookUrl) as [
+      string,
+      string,
+    ];
+
+    createdWebhookId = webhookId;
+  });
+
+  it('deletes webhook properly', async () => {
+    const response = await jotform.deleteFormWebhook(TEST_FORM_ID, createdWebhookId);
+
+    expect(response).toMatchObject({
+      '0': expect.any(String),
+    });
+  });
+});
 
 /**
  * Folders
