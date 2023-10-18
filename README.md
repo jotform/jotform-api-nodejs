@@ -2,7 +2,7 @@
 
 # @wojtekmaj/jotform
 
-Unofficial [JotForm API](https://api.jotform.com/docs/) Node.js Client with TypeScript support.
+Unofficial [Jotform API](https://api.jotform.com/docs/) Node.js Client with TypeScript support.
 
 ## tl;dr
 
@@ -103,7 +103,7 @@ Jotform API documentation is available at https://api.jotform.com/docs/.
 features, add new features and fix bugs. It was rebuilt from the ground up to benefit from the latest JavaScript
 features and to be more maintainable.
 
-`@wojtekmaj/jotform` meant to be a drop-in replacement for `jotform` package, so you can use it without any changes to your code.
+`@wojtekmaj/jotform` is meant to be a drop-in replacement for `jotform` package, so you can use it without any changes to your code.
 
 Here's how the two packages compare:
 
