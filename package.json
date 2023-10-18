@@ -3,6 +3,9 @@
   "version": "0.2.0",
   "description": "Jotform API Node.js Client",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "sideEffects": false,
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
