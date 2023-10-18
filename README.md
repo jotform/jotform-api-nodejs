@@ -23,7 +23,9 @@ Unofficial [Jotform API](https://api.jotform.com/docs/) Node.js Client with Type
 
 ### Compatibility
 
-Your project needs to use Node.js 18 or later.
+Your project needs to use Node.js 18.0.0 or later.
+
+You may be able to use it with Node.js 17.5.0, provided that you use `--experimental-global-fetch` flag.
 
 ### Installation
 
