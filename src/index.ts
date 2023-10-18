@@ -1,16 +1,62 @@
 import { serialize } from 'object-to-formdata';
 
+type Options = {
+  /**
+   * API Key
+   *
+   * @description Jotform API Key.
+   * @url https://api.jotform.com/docs/#gettingstarted
+   */
+  apiKey: string;
+  /**
+   * Debug
+   *
+   * @description Whether to log debug messages.
+   * @default false
+   */
+  debug: boolean;
+  /**
+   * Timeout
+   *
+   * @description Timeout for requests in milliseconds.
+   * @default 10000
+   */
+  timeout: number;
+  /**
+   * URL
+   *
+   * @description Jotform API URL. Note that the list is not exhaustive. If you're using Jotform Enterprise, it may be `'https://your-domain.com/API'` or `'https://your-subdomain.jotform.com/API'`.
+   * @default 'https://api.jotform.com'
+   */
+  url:
+    | 'https://api.jotform.com'
+    | 'https://eu-api.jotform.com'
+    | 'https://hipaa-api.jotform.com'
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    | (string & {});
+  /**
+   * Version
+   *
+   * @description Jotform API version.
+   * @default 'latest'
+   */
+  version:
+    | 'latest'
+    | '1'
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    | (string & {});
+};
+
 type Filter = Record<string, string | number | string[] | undefined>;
 
-const defaults = {
+const defaultOptions = {
   url: 'https://api.jotform.com',
-  apiKey: undefined,
   version: 'latest',
   debug: false,
   timeout: 10000, // 10 seconds
-};
+} satisfies Partial<Options>;
 
-let { url: _url, apiKey: _apiKey, version: _version, debug: _debug, timeout: _timeout } = defaults;
+const currentOptions: Partial<Options> = { ...defaultOptions };
 
 async function sendRequest<T>(
   url: string,
@@ -18,7 +64,7 @@ async function sendRequest<T>(
   body?: unknown,
   customHeaders?: HeadersInit,
 ): Promise<T> {
-  if (_debug) {
+  if (currentOptions.debug) {
     console.log(`Jotform: ${method.toUpperCase()} ${url}`);
   }
 
@@ -54,7 +100,7 @@ async function sendRequest<T>(
     }
   }
 
-  const id = setTimeout(() => controller.abort(), _timeout);
+  const id = setTimeout(() => controller.abort(), currentOptions.timeout);
 
   const response = await fetch(url, options);
 
@@ -107,13 +153,14 @@ function getRequestUrl(
   endPoint: string,
   params: Record<string, string | number | string[] | undefined> = {},
 ) {
-  if (typeof _apiKey === 'undefined') {
+  if (typeof currentOptions.apiKey === 'undefined') {
     throw new Error('API Key is undefined');
   }
 
   const { orderby, direction, ...otherParams } = params;
 
-  const baseUrl = _url + (_version === 'latest' ? '' : `/v${_version}`);
+  const baseUrl =
+    currentOptions.url + (currentOptions.version === 'latest' ? '' : `/v${currentOptions.version}`);
 
   const urlSearchParams = new URLSearchParams();
 
@@ -139,30 +186,22 @@ function getRequestUrl(
     urlSearchParams.append('orderby', orderbyWithDirection);
   }
 
-  urlSearchParams.append('apiKey', _apiKey);
+  urlSearchParams.append('apiKey', currentOptions.apiKey);
 
   return `${baseUrl + endPoint}?${urlSearchParams.toString()}`;
 }
 
-function options(options = {}) {
-  const optionsWithDefaults = {
-    ...defaults,
-    ...options,
-  };
+/**
+ * Options
+ *
+ * @description Update client options.
+ * @param {Partial<Options>} [newOptions]
+ */
+function options(newOptions: Partial<Options>) {
+  Object.assign(currentOptions, newOptions);
 
-  _url = optionsWithDefaults.url;
-  _apiKey = optionsWithDefaults.apiKey;
-  _version = optionsWithDefaults.version;
-  _debug = optionsWithDefaults.debug;
-  _timeout = optionsWithDefaults.timeout;
-
-  if (_debug) {
-    console.log('Jotform: Updated options', {
-      url: _url,
-      apiKey: _apiKey,
-      version: _version,
-      debug: _debug,
-    });
+  if (currentOptions.debug) {
+    console.log('Jotform: Updated options', currentOptions);
   }
 }
 
