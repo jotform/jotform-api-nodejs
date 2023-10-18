@@ -1,6 +1,6 @@
 {
   "name": "@wojtekmaj/jotform",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Jotform API Node.js Client",
   "type": "module",
   "engines": {
