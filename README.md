@@ -1,13 +1,13 @@
-[![npm](https://img.shields.io/npm/v/@wojtekmaj/jotform.svg)](https://www.npmjs.com/package/@wojtekmaj/jotform) ![downloads](https://img.shields.io/npm/dt/@wojtekmaj/jotform.svg) [![CI](https://github.com/wojtekmaj/jotform/workflows/CI/badge.svg)](https://github.com/wojtekmaj/jotform/actions)
+[![npm](https://img.shields.io/npm/v/jotform.svg)](https://www.npmjs.com/package/jotform) ![downloads](https://img.shields.io/npm/dt/jotform.svg) [![CI](https://github.com/jotform/jotform-api-nodejs/workflows/CI/badge.svg)](https://github.com/jotform/jotform-api-nodejs/actions)
 
-# @wojtekmaj/jotform
+# jotform
 
-Unofficial [Jotform API](https://api.jotform.com/docs/) Node.js Client with TypeScript support.
+[Jotform API](https://api.jotform.com/docs/) Node.js Client with TypeScript support.
 
 ## tl;dr
 
-- Install by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
-- Import by adding `import jotform from '@wojtekmaj/jotform'`.
+- Install by executing `npm install jotform` or `yarn add jotform`.
+- Import by adding `import jotform from 'jotform'`.
 - Authenticate:
   ```ts
   jotform.options({
@@ -29,7 +29,7 @@ You may be able to use it with Node.js 17.5.0, provided that you use `--experime
 
 ### Installation
 
-Add @wojtekmaj/jotform to your project by executing `npm install @wojtekmaj/jotform` or `yarn add @wojtekmaj/jotform`.
+Add `jotform` to your project by executing `npm install jotform` or `yarn add jotform`.
 
 ### Obtaining API key
 
@@ -40,7 +40,7 @@ To obtain Jotform API key, go to [API section](https://www.jotform.com/myaccount
 Here's an example of basic usage:
 
 ```ts
-import jotform from '@wojtekmaj/jotform';
+import jotform from 'jotform';
 
 jotform.options({
   apiKey: 'YOUR_API_KEY',
@@ -99,39 +99,6 @@ const teamForm = await jotform.getForm('FORM_ID', { 'jf-team-id': 'YOUR_TEAM_ID'
 
 Jotform API documentation is available at https://api.jotform.com/docs/.
 
-## `jotform` vs `@wojtekmaj/jotform`
-
-`@wojtekmaj/jotform` is a fork of `jotform` package. It was created to add TypeScript support, ship some long-awaited
-features, add new features and fix bugs. It was rebuilt from the ground up to benefit from the latest JavaScript
-features and to be more maintainable.
-
-`@wojtekmaj/jotform` is meant to be a drop-in replacement for `jotform` package, so you can use it without any changes to your code.
-
-Here's how the two packages compare:
-
-| Feature                | `jotform`          | `@wojtekmaj/jotform` |
-| ---------------------- | ------------------ | -------------------- |
-| TypeScript support     | ❌                 | ✅                   |
-| Jotform Teams support  | ❌                 | ✅                   |
-| Tests                  | ❌                 | ✅                   |
-| Methods available      | 36                 | 50                   |
-| Number of dependencies | 2                  | 1                    |
-| Bundle size            | 38.3 kB (min+gzip) | 3.5 kB (min+gzip)    |
-| Install size           | 2.35 MB            | 236 kB               |
-
 ## License
 
 GNU General Public License v2.0.
-
-## Author
-
-<table>
-  <tr>
-    <td >
-      <img src="https://avatars.githubusercontent.com/u/5426427?v=4&s=128" width="64" height="64" alt="Wojciech Maj">
-    </td>
-    <td>
-      <a href="https://github.com/wojtekmaj">Wojciech Maj</a>
-    </td>
-  </tr>
-</table>

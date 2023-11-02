@@ -1,6 +1,6 @@
 {
-  "name": "@wojtekmaj/jotform",
-  "version": "1.0.1",
+  "name": "jotform",
+  "version": "1.0.0",
   "description": "Jotform API Node.js Client",
   "type": "module",
   "engines": {
@@ -35,10 +35,13 @@
     "client",
     "nodejs"
   ],
-  "author": {
-    "name": "Wojciech Maj",
-    "email": "kontakt@wojtekmaj.pl"
-  },
+  "author": "Jotform Team",
+  "contributors": [
+    {
+      "name": "Wojciech Maj",
+      "email": "kontakt@wojtekmaj.pl"
+    }
+  ],
   "license": "GPL-2.0",
   "dependencies": {
     "object-to-formdata": "^4.5.1"
@@ -68,8 +71,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wojtekmaj/jotform.git"
+    "url": "https://github.com/jotform/jotform-api-nodejs.git"
   },
-  "funding": "https://github.com/wojtekmaj/jotform?sponsor=1",
   "packageManager": "yarn@4.0.0"
 }
