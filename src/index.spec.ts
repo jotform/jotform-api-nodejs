@@ -680,8 +680,7 @@ describe.todo('addFormToFolder()');
 
 describe.todo('addFormsToFolder()');
 
-// This method returns a Promise that never resolves
-describe.skip('deleteFolder()', () => {
+describe('deleteFolder()', () => {
   let createdFolderId: string;
 
   beforeAll(async () => {
@@ -695,9 +694,7 @@ describe.skip('deleteFolder()', () => {
   it('deletes folder properly', async () => {
     const response = await jotform.deleteFolder(createdFolderId);
 
-    expect(response).toMatchObject({
-      id: createdFolderId,
-    });
+    expect(response).toBe('Folder deleted successfully');
   });
 });
 
