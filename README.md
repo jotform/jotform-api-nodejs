@@ -1,4 +1,4 @@
-[![npm](https://img.shields.io/npm/v/@wojtekmaj/jotform.svg)](https://www.npmjs.com/package/@wojtekmaj/jotform) ![downloads](https://img.shields.io/npm/dt/@wojtekmaj/jotform.svg) [![CI](https://github.com/wojtekmaj/jotform/workflows/CI/badge.svg)](https://github.com/wojtekmaj/jotform/actions)
+[![npm](https://img.shields.io/npm/v/@wojtekmaj/jotform.svg)](https://www.npmjs.com/package/@wojtekmaj/jotform) ![downloads](https://img.shields.io/npm/dt/@wojtekmaj/jotform.svg) [![CI](https://github.com/wojtekmaj/jotform/actions/workflows/ci.yml/badge.svg)](https://github.com/wojtekmaj/jotform/actions)
 
 # @wojtekmaj/jotform
 
