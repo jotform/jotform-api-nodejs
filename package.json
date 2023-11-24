@@ -71,5 +71,5 @@
     "url": "https://github.com/wojtekmaj/jotform.git"
   },
   "funding": "https://github.com/wojtekmaj/jotform?sponsor=1",
-  "packageManager": "yarn@4.0.0"
+  "packageManager": "yarn@4.0.2"
 }
