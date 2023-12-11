@@ -1,8 +1,4 @@
 {
-  "dependencies": {
-    "request": "2.88.0",
-    "q": "0.9.4"
-  },
   "readmeFilename": "README.md",
   "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
   "name": "jotform",
@@ -11,9 +7,17 @@
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@rollup/plugin-swc": "^0.3.0",
+    "@types/node": "^20.10.4",
+    "rollup": "^4.7.0",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.3.3"
+  },
   "scripts": {
-    "test": "mocha test/*.js"
+    "test": "mocha test/*.js",
+    "tsc": "tsc",
+    "build": "rm -rf dist && rollup -c rollup.config.js --bundleConfigAsCjs"
   },
   "repository": {
     "type": "git",
@@ -23,5 +27,10 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jotform/jotform-api-nodejs/issues"
+  },
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "axios": "^1.6.2"
   }
 }
