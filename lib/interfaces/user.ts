@@ -6,7 +6,8 @@ export interface LoginOptions {
 export interface UserHistoryOptions {
   action?: string;
   date?: string;
-  sortBy: string;
-  startDate: string;
-  endDate: string;
+  sortBy?: string;
+  startDate?: string;
+  endDate?: string;
+  [key: string]: unknown;
 }

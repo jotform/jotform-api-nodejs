@@ -2,30 +2,66 @@ import axios, { AxiosError, AxiosInstance } from "axios";
 import { ClientOptions } from "./interfaces/client.ts";
 import { DefaultOptions } from "./constants/clientOptions.ts";
 import { startsWith2 } from "./utils.ts";
+import { RequestConfig } from "./interfaces/request.ts";
+import { JotformResponse } from "./types/response.ts";
+import { Json } from "./types/common.ts";
 
-export default function createClient(apiKey: string, opt: ClientOptions): AxiosInstance {
-  const options: ClientOptions = {...DefaultOptions, ...opt};
+export default class Client {
 
-  if (!apiKey) {
-    throw new Error('"apiKey" is a required parameter to use Jotform Client.');
+  apiKey: string;
+  options: ClientOptions;
+  inner: AxiosInstance;
+
+  constructor(apiKey: string, opt: ClientOptions) {
+    this.apiKey = apiKey;
+    this.options = {...DefaultOptions, ...opt};
+
+    if (!apiKey) {
+      throw new Error('"apiKey" is a required parameter to use Jotform Client.');
+    }
+
+    const instance = axios.create({
+      baseURL: this.options.baseURL,
+      params: {
+        apiKey
+      }
+    });
+
+    instance.interceptors.response.use(resp => {
+      if (resp.data.responseCode) {
+        const code = resp.data.responseCode;
+        if (!startsWith2(code)) {
+          throw new AxiosError(resp.data.message || 'Error occurred!', code);
+        }
+      }
+      return resp.data;
+    });
+
+    this.inner = instance;
+
   }
 
-  const instance = axios.create({
-    baseURL: options.baseURL,
-    params: {
-      apiKey
-    }
-  });
+  get(url: string, config?: RequestConfig): JotformResponse {
+    return this.inner.get(url, config);
+  }
+  
+  post(url: string, body?: Json, config?: RequestConfig): JotformResponse {
+    return this.inner.post(url, body, config);
+  }
 
-  instance.interceptors.response.use(resp => {
-    if (resp.data.responseCode) {
-      const code = resp.data.responseCode;
-      if (!startsWith2(code)) {
-        throw new AxiosError(resp.data.message || 'Error occurred!', code);
-      }
-    }
-    return resp.data;
-  });
+  postForm(url: string, body?: Json, config?: RequestConfig): JotformResponse {
+    return this.inner.post(url, body, {...config, headers: {
+      ...config?.headers,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }});
+  }
 
-  return instance;
+  put(url: string, body?: Json, config?: RequestConfig): JotformResponse {
+    return this.inner.put(url, body, config);
+  }
+
+  delete(url: string, config?: RequestConfig): JotformResponse {
+    return this.inner.delete(url, config);
+  }
+  
 }

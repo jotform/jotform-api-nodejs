@@ -1,13 +1,14 @@
-import { AxiosInstance } from "axios";
 import { JotformResponse } from './types/response.ts';
 import { PaginationParameters } from "./interfaces/request.ts";
 import { LoginOptions, UserHistoryOptions } from "./interfaces/user.ts";
+import { FormParameters } from "./interfaces/form.ts";
+import Client from "./client.ts";
 
 export default class User {
   
-  client: AxiosInstance;
+  client: Client;
   
-  constructor(client: AxiosInstance) {
+  constructor(client: Client) {
     this.client = client;
   }
 
@@ -40,26 +41,18 @@ export default class User {
   }
 
   register(username: string, password: string, email: string): JotformResponse {
-    return this.client.post('/user/register', {
+    return this.client.postForm('/user/register', {
       username,
       password,
       email,
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
     });
   }
 
   login(username: string, password: string, optionalParameters?: LoginOptions): JotformResponse {
-    return this.client.post('/user/login', {
+    return this.client.postForm('/user/login', {
       username,
       password,
       ...optionalParameters,
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
     });
   }
 
@@ -74,19 +67,11 @@ export default class User {
   updateSettings(settings: Record<string, unknown>): JotformResponse {
     return this.client.post('/user/settings', {
       ...settings
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
     });
   }
 
   getHistory(options?: UserHistoryOptions): JotformResponse {
-    return this.client.post('/user/history', options, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    });
+    return this.client.post('/user/history', options);
   }
 
   getForms(pagination?: PaginationParameters): JotformResponse {
@@ -100,10 +85,6 @@ export default class User {
   createForm(parameters: FormParameters): JotformResponse {
     return this.client.post('/user/forms', {
       ...parameters
-    }, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
     });
   }
 

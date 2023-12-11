@@ -1,15 +1,16 @@
-interface FormParameters {
+export interface FormParameters {
   questions?: QuestionProperties[];
   properties?: FormProperties;
   emails?: FormEmailProperties[];
+  [key: string]: unknown;
 }
 
-interface FormProperties {
+export interface FormProperties {
   title: string;
   [key: string]: string;
 }
 
-interface QuestionProperties {
+export interface QuestionProperties {
   type: string;
   text: string;
   order: string;
@@ -17,7 +18,7 @@ interface QuestionProperties {
   [key: string]: string;
 }
 
-interface FormEmailProperties {
+export interface FormEmailProperties {
   type: string;
   from: string;
   to: string;
