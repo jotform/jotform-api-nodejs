@@ -17,7 +17,8 @@
   "scripts": {
     "test": "mocha test/*.js",
     "tsc": "tsc",
-    "build": "rm -rf dist && rollup -c rollup.config.js --bundleConfigAsCjs"
+    "build": "rm -rf dist && rollup -c rollup.config.js --bundleConfigAsCjs",
+    "build:watch": "rollup --watch -c rollup.config.js --bundleConfigAsCjs"
   },
   "repository": {
     "type": "git",
