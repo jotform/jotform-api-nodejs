@@ -16,7 +16,7 @@ export default class Jotform {
   folder: Folder;
   system: System;
 
-  constructor(apiKey: string, options: ClientOptions) {
+  constructor(apiKey: string, options?: ClientOptions) {
     const instance = new Client(apiKey, options);
     this.user = new User(instance);
     this.form = new Form(instance);

@@ -12,7 +12,7 @@ export default class Client {
   options: ClientOptions;
   inner: AxiosInstance;
 
-  constructor(apiKey: string, opt: ClientOptions) {
+  constructor(apiKey: string, opt?: ClientOptions) {
     this.apiKey = apiKey;
     this.options = {...DefaultOptions, ...opt};
 

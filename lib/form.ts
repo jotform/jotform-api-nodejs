@@ -14,11 +14,11 @@ export default class Form {
     this.client = client;
   }
 
-  createForm(parameters: FormParameters): JotformResponse {
-    return this.client.post('/form', parameters);
+  createForm(parameters?: FormParameters): JotformResponse {
+    return this.client.postForm('/form', parameters);
   }
 
-  createFormJSON(parameters: FormParameters): JotformResponse {
+  createFormJSON(parameters?: FormParameters): JotformResponse {
     return this.client.put('/form', parameters);
   }
 
@@ -55,7 +55,7 @@ export default class Form {
   }
 
   updateQuestionProperties(formId: string, questionId: string, properties: Json): JotformResponse {
-    return this.client.post(`/form/${formId}/question/${questionId}`, {
+    return this.client.postForm(`/form/${formId}/question/${questionId}`, {
       question: properties
     });
   }
