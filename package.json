@@ -18,7 +18,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "jest --testRegex=\"[^\\.]+\\.test\\.ts$\" --passWithNoTests --silent",
+    "test": "jest --testRegex=\"[^\\.]+\\.test\\.ts$\" --passWithNoTests -w 1",
     "tsc": "tsc",
     "build": "rm -rf dist && rollup -c rollup.config.js --bundleConfigAsCjs",
     "build:watch": "rollup --watch -c rollup.config.js --bundleConfigAsCjs"

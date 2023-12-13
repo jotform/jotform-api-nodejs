@@ -30,3 +30,9 @@ export async function createAndAssertFormWithQuestions(client: Jotform) {
 
   return { form, questions: content };
 }
+
+export function sleep(timeout: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  })
+};

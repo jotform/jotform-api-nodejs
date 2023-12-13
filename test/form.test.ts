@@ -1,17 +1,22 @@
 import { ReportType } from '../lib/enums/report.ts';
 import Jotform from '../lib/index.ts';
-import { createAndAssertForm, createAndAssertFormWithQuestions } from './utils.ts';
+import { createAndAssertForm, createAndAssertFormWithQuestions, sleep } from './utils.ts';
 
 const client = new Jotform(process.env.JF_API_KEY ?? '');
 
 describe('Form Test Suite', () => {
+
+  beforeEach(async () => {
+    await sleep(1000);
+  });
+
   it('should create and delete empty form', async () => {
     const formId = (await createAndAssertForm(client)).id;
     const deleteResponse = await client.form.delete(formId as string);
     expect(deleteResponse.responseCode).toBe(200);
   });
 
-  it.skip('should create a form with questions then update it', async () => {
+  it('should create a form with questions then update it', async () => {
     const response = await client.form.createForm({
       questions: [
         {
@@ -34,8 +39,6 @@ describe('Form Test Suite', () => {
     const questionsResponse = await client.form.getQuestions(`${formId}`);
     expect(questionsResponse.responseCode).toBe(200);
     const questions = questionsResponse.content;
-    
-    console.error(questions);
     
     const emailField = questions?.['1'] as Record<string, unknown>;
     expect(emailField?.['type']).toBe('control_email');
@@ -112,9 +115,8 @@ describe('Form Test Suite', () => {
 
     const [q1] = questions as unknown as Record<string, unknown>[];
     const qid1 = q1.qid;
-    console.log(`Deleting q1 form id ${form.id} qid ${qid1}`);
+
     await client.form.deleteQuestion(form.id as string, `${qid1}`);
-    console.log('Deleted q1');
 
     const changedQuestionsResp = await client.form.getQuestions(form.id as string);
     const changedQuestionsObj = changedQuestionsResp.content;
@@ -167,7 +169,7 @@ describe('Form Test Suite', () => {
     await client.form.delete(form.id as string);
   });
 
-  it.skip('should create submission properly', async () => {
+  it('should create submission properly', async () => {
     const { form } = await createAndAssertFormWithQuestions(client);
     const dummy = 'john@example.com';
 
@@ -184,12 +186,12 @@ describe('Form Test Suite', () => {
     const q1 = answers?.['1'];
     const q2 = answers?.['2'];
     expect(q1.answer).toBe(dummy);
-    expect(q2.answer).toBeUndefined();
+    expect(q2?.answer).toBeUndefined();
 
     await client.form.delete(form.id as string);
   });
 
-  it.skip('should create submissions properly', async () => {
+  it('should create submissions properly', async () => {
     const { form } = await createAndAssertFormWithQuestions(client);
     const dummy = 'john@example.com';
 
@@ -211,7 +213,7 @@ describe('Form Test Suite', () => {
       const q1 = answers?.['1'];
       const q2 = answers?.['2'];
       expect(q1.answer).toBe(dummy);
-      expect(q2.answer).toBeUndefined();
+      expect(q2?.answer).toBeUndefined();
     });
 
     await client.form.delete(form.id as string);

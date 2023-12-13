@@ -65,13 +65,13 @@ export default class User {
   }
 
   updateSettings(settings: Record<string, unknown>): JotformResponse {
-    return this.client.post('/user/settings', {
+    return this.client.postForm('/user/settings', {
       ...settings
     });
   }
 
   getHistory(options?: UserHistoryOptions): JotformResponse {
-    return this.client.post('/user/history', options);
+    return this.client.postForm('/user/history', options);
   }
 
   getForms(pagination?: PaginationParameters): JotformResponse {
@@ -82,8 +82,8 @@ export default class User {
     });
   }
 
-  createForm(parameters: FormParameters): JotformResponse {
-    return this.client.post('/user/forms', {
+  createForm(parameters?: FormParameters): JotformResponse {
+    return this.client.postForm('/user/forms', {
       ...parameters
     });
   }
