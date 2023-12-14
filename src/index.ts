@@ -174,11 +174,11 @@ function getRequestUrl(
 
   if (orderby) {
     if (typeof orderby !== 'string') {
-      throw new Error('Orderby must be a string');
+      throw new Error('orderby must be a string');
     }
 
     if (direction && typeof direction !== 'string') {
-      throw new Error('Orderby must be a string');
+      throw new Error('direction must be a string');
     }
 
     const orderbyWithDirection = direction ? `${orderby},${direction}` : orderby;
