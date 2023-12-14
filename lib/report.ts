@@ -18,10 +18,18 @@ export default class Report {
     return arr.join(',');
   }
 
+  /**
+   * Get more information about a data report.
+   * @param reportId Report ID.
+   */
   get(reportId: string): JotformResponse {
     return this.client.get(`/report/${reportId}`);
   }
 
+  /**
+   * Delete an existing report.
+   * @param reportId Report ID.
+   */
   delete(reportId: string): JotformResponse {
     return this.client.delete(`/report/${reportId}`);
   }
