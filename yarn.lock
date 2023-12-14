@@ -657,6 +657,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@wojtekmaj/jotform@workspace:."
   dependencies:
+    "@types/node": "npm:*"
     "@wojtekmaj/async-array-utils": "npm:^1.8.0"
     eslint: "npm:^8.26.0"
     eslint-config-wojtekmaj: "npm:^0.9.0"
