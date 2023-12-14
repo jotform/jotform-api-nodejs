@@ -1,11 +1,11 @@
-import { ClientOptions } from './interfaces/client.ts';
-import Form from './form.ts';
-import User from './user.ts';
-import Client from './client.ts';
-import Report from './report.ts';
-import Submission from './submission.ts';
-import Folder from './folder.ts';
-import System from './system.ts';
+import { ClientOptions } from './interfaces/client';
+import Form from './form';
+import User from './user';
+import Client from './client';
+import Report from './report';
+import Submission from './submission';
+import Folder from './folder';
+import System from './system';
 
 export default class Jotform {
   

@@ -1,8 +1,8 @@
-import { JotformResponse } from './types/response.ts';
-import { PaginationParameters } from "./interfaces/request.ts";
-import { LoginOptions, UserHistoryOptions } from "./interfaces/user.ts";
-import { FormParameters } from "./interfaces/form.ts";
-import Client from "./client.ts";
+import { JotformResponse } from './types/response';
+import { PaginationParameters } from "./interfaces/request";
+import { LoginOptions, UserHistoryOptions } from "./interfaces/user";
+import { FormParameters } from "./interfaces/form";
+import Client from "./client";
 
 export default class User {
   

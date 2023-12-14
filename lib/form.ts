@@ -1,10 +1,10 @@
-import { FormParameters, QuestionProperties } from "./interfaces/form.ts";
-import { JotformResponse } from "./types/response.ts";
-import { ReportParameters } from "./interfaces/report.ts";
-import Report from "./report.ts";
-import { PaginationParameters } from "./interfaces/request.ts";
-import Client from "./client.ts";
-import { Json } from "./types/common.ts";
+import { FormParameters, QuestionProperties } from "./interfaces/form";
+import { JotformResponse } from "./types/response";
+import { ReportParameters } from "./interfaces/report";
+import Report from "./report";
+import { PaginationParameters } from "./interfaces/request";
+import Client from "./client";
+import { Json } from "./types/common";
 
 export default class Form {
   

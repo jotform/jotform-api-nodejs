@@ -1,10 +1,10 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { ClientOptions } from "./interfaces/client.ts";
-import { DefaultOptions } from "./constants/clientOptions.ts";
-import { startsWith2 } from "./utils.ts";
-import { RequestConfig } from "./interfaces/request.ts";
-import { JotformResponse } from "./types/response.ts";
-import { Json } from "./types/common.ts";
+import { ClientOptions } from "./interfaces/client";
+import { DefaultOptions } from "./constants/clientOptions";
+import { startsWith2 } from "./utils";
+import { RequestConfig } from "./interfaces/request";
+import { JotformResponse } from "./types/response";
+import { Json } from "./types/common";
 
 export default class Client {
 
