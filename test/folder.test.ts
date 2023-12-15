@@ -1,5 +1,5 @@
-import Jotform from '../lib/index.ts';
-import { sleep } from './utils.ts';
+import Jotform from '../dist/index';
+import { sleep } from './utils';
 
 const client = new Jotform(process.env.JF_API_KEY ?? '');
 

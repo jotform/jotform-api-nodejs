@@ -15,7 +15,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "test": "jest --testRegex=\"[^\\.]+\\.test\\.ts$\" --passWithNoTests -w 1",
+    "test": "npm run build && jest --testRegex=\"[^\\.]+\\user.test\\.ts$\" --passWithNoTests -w 1",
     "tsc": "tsc",
     "build": "npm run tsc"
   },

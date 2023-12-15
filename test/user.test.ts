@@ -1,6 +1,6 @@
-import { ReportType } from '../lib/enums/report.ts';
-import Jotform from '../lib/index.ts';
-import { createAndAssertFormWithQuestions, sleep } from './utils.ts';
+import { ReportType } from '../lib/enums/report';
+import Jotform from '../dist/index';
+import { createAndAssertFormWithQuestions, sleep } from './utils';
 
 const client = new Jotform(process.env.JF_API_KEY ?? '');
 
