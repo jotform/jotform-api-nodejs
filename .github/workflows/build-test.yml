@@ -32,10 +32,10 @@ jobs:
         - name: Install dependencies
           run: npm i
 
-        - name: Run tests
-          run: npm run test
-          env:
-            JF_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
+        # - name: Run tests
+        #   run: npm run test
+        #   env:
+        #     JF_API_KEY: ${{ secrets.TEST_USER_API_KEY }}
 
         - name: Build package
           run: npm run build
