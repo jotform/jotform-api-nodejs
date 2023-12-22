@@ -1,19 +1,23 @@
 {
-  "dependencies": {
-    "request": "2.88.0",
-    "q": "0.9.4"
-  },
   "readmeFilename": "README.md",
   "gitHead": "0faea06f81f0b3c533ec569c5e8f25a9152f444c",
   "name": "jotform",
   "description": "jotform API nodejs client",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "directories": {
     "test": "test"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.4",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.3.3"
+  },
   "scripts": {
-    "test": "mocha test/*.js"
+    "test": "npm run build && jest --testRegex=\"[^\\.]+\\user.test\\.ts$\" --passWithNoTests -w 1",
+    "tsc": "tsc",
+    "build": "npm run tsc"
   },
   "repository": {
     "type": "git",
@@ -23,5 +27,11 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jotform/jotform-api-nodejs/issues"
+  },
+  "main": "dist/index.cjs.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "tslib": "^2.6.2"
   }
 }

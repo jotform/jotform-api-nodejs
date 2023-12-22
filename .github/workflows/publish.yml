@@ -1,0 +1,40 @@
+name: Publish
+on:
+  # on release
+  release:
+    types: [released, prereleased]
+
+jobs:
+  build-test:
+    uses: ./.github/workflows/build-test.yml
+  publish:
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+        - name: Cache
+          uses: actions/cache@v3
+          with:
+            path: node_modules
+            key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+                ${{ runner.os }}-package-
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish package
+        if: github.event_name == 'release' && github.event.release.draft == false
+        run: |
+          if [[ ${{ github.event.release.prerelease }} == true || ${{ github.event.release.tag_name }} =~ -alpha|-beta|-rc ]]; then
+            npm publish --tag next
+          else
+            npm publish --tag latest
+          fi
+
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
