@@ -16,13 +16,13 @@ jobs:
         with:
           node-version: 20
 
-        - name: Cache
-          uses: actions/cache@v3
-          with:
-            path: node_modules
-            key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-                ${{ runner.os }}-package-
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-package-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+              ${{ runner.os }}-package-
 
       - name: Build package
         run: npm run build
