@@ -28,7 +28,7 @@
   "bugs": {
     "url": "https://github.com/jotform/jotform-api-nodejs/issues"
   },
-  "main": "dist/index.cjs.js",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
     "axios": "^1.6.2",
