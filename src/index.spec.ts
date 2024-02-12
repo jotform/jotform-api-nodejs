@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { asyncForEach } from '@wojtekmaj/async-array-utils';
 import { z } from 'zod';
-import jotform from './index';
+import jotform from './index.js';
 
 const TEST_FORM_ID = '232143945675058';
 

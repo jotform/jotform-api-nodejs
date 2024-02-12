@@ -1,4 +1,4 @@
-import jotform from './src/index';
+import jotform from './src/index.js';
 
 const JOTFORM_API_KEY = process.env.JOTFORM_API_KEY;
 
