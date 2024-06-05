@@ -32,7 +32,6 @@ type Options = {
     | 'https://api.jotform.com'
     | 'https://eu-api.jotform.com'
     | 'https://hipaa-api.jotform.com'
-    // eslint-disable-next-line @typescript-eslint/ban-types
     | (string & {});
   /**
    * Version
@@ -40,11 +39,7 @@ type Options = {
    * @description Jotform API version.
    * @default 'latest'
    */
-  version:
-    | 'latest'
-    | '1'
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    | (string & {});
+  version: 'latest' | '1' | (string & {});
 };
 
 type Filter = Record<string, string | number | string[] | undefined>;
@@ -878,7 +873,6 @@ function getFormReport(
   reportID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return getReport(reportID, customHeaders);
 }
 
@@ -928,7 +922,6 @@ function deleteFormReport(
   reportID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return deleteReport(reportID, customHeaders);
 }
 
@@ -1025,7 +1018,6 @@ function getFormSubmission(
   submissionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return getSubmission(submissionID, customHeaders);
 }
 
@@ -1106,7 +1098,6 @@ function deleteFormSubmission(
   submissionID: string,
   customHeaders?: HeadersInit,
 ): Promise<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   return deleteSubmission(submissionID, customHeaders);
 }
 
