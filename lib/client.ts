@@ -52,7 +52,7 @@ export default class Client {
   postForm(url: string, body?: Json, config?: RequestConfig): JotformResponse {
     return this.inner.post(url, body, {...config, headers: {
       ...config?.headers,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     }});
   }
 
