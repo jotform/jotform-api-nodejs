@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://www.jotform.com/resources/assets/logo-nb/jotform-logo-transparent-400x100.png" alt="logo" height="70">
+	<img src="https://cdn.jotfor.ms/assets/resources/logo-nb/jotform-logo-transparent-400x100.png" alt="logo" height="70">
 </p>
 <br />
 
